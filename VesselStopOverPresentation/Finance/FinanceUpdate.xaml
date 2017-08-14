@@ -1,0 +1,65 @@
+﻿<Window x:Class="VesselStopOverPresentation.Finance.FinanceUpdate"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="FinanceUpdate"    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" MinHeight="600" Width="1024" 
+        WindowStartupLocation="CenterScreen" ResizeMode="CanResize" FontFamily="Segoe UI" FontSize="11" Icon="/VesselStopOverPresentation;component/Icons/LogoApp.png" WindowState="Maximized">
+
+    <DockPanel>
+        <StackPanel Name="stackPanelCommands" DockPanel.Dock="Top" Orientation="Horizontal" Background="#3F51B5">
+            <GridSplitter Width="1.5" Background="Transparent"/>
+            <Border Name="enregistrerBorder" BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                <DockPanel Margin="1">
+                    <TextBlock DockPanel.Dock="Bottom" Text="Enregistrer" TextAlignment="Center" Height="18" Width="Auto" TextWrapping="Wrap" Foreground="White" Background="#FF50509D"/>
+                    <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnEnregistrer" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False" >
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                            <Image Source="/VesselStopOverPresentation;component/Icons/Save-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                            <TextBlock Text="Enregistrer" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                        </StackPanel>
+                    </Button>
+                </DockPanel>
+            </Border>
+            <GridSplitter Width="3" Background="Transparent" Cursor="Arrow" />
+            <Border Name="borderActions" BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                <DockPanel Margin="1">
+                    <TextBlock DockPanel.Dock="Bottom" Text="Actions" TextAlignment="Center" Height="18" Width="Auto" TextWrapping="Wrap" Foreground="White" Background="#FF50509D"/>
+                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" HorizontalAlignment="Left">
+                        <StackPanel DockPanel.Dock="Left" Orientation="Vertical" HorizontalAlignment="Left">
+                            <Button DockPanel.Dock="Left" Height="25" Width="150" VerticalAlignment="Top" Name="btnAjoutNote" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Notepad-Bloc-notes-icon.png" Stretch="Uniform" Height="20" Width="20" />
+                                    <TextBlock Text=" Ajouter une note" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+            <GridSplitter Width="3" Background="Transparent" Cursor="Arrow" />
+            <Border Name="borderEtat" BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                <DockPanel Margin="1">
+                    <TextBlock DockPanel.Dock="Bottom" Text="Etat" TextAlignment="Center" Height="18" Width="Auto" TextWrapping="Wrap" Foreground="White" Background="#FF50509D"/>
+                    <StackPanel DockPanel.Dock="Left" Orientation="Vertical" HorizontalAlignment="Left">
+                        <Button DockPanel.Dock="Left" Height="25" Width="150" VerticalAlignment="Top" Name="btnImprimer" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" >
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="/VesselStopOverPresentation;component/Icons/reports-icon.png" Stretch="Uniform" Height="20" Width="20" />
+                                <TextBlock Text=" Imprimer avoir" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+        </StackPanel>
+        <StatusBar DockPanel.Dock="Bottom" Height="30" FlowDirection="RightToLeft">
+            <Label Name="lblStatut" FlowDirection="LeftToRight" FontWeight="SemiBold" FontFamily="Segoe UI" FontSize="11" />
+            <Separator/>
+            <Label Name="lblAcconier" FlowDirection="LeftToRight" FontWeight="SemiBold" FontFamily="Segoe UI" FontSize="11" />
+            <Separator/>
+            <Label Name="lblNavire" FlowDirection="LeftToRight" FontWeight="SemiBold" FontFamily="Segoe UI" FontSize="11" />
+            <Separator/>
+            <Label Name="lblEscale" FlowDirection="LeftToRight" FontWeight="SemiBold" FontFamily="Segoe UI" FontSize="11" />
+        </StatusBar>
+        <DockPanel>
+
+        </DockPanel>
+    </DockPanel>
+</Window>

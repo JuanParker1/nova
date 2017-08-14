@@ -1,0 +1,52 @@
+﻿<StackPanel x:Class="VesselStopOverPresentation.FacturationControlPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Button Name="btnProforma" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnProforma_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Proforma" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnFacture" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnFacture_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Facture" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <!--<Button Name="btnFactureDIT" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnFactureDIT_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Facture DIT" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>-->
+    <Button Name="btnAvoir" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnAvoir_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Avoir" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnPaiement" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnPaiement_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Paiement" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnReduction" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnReduction_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Demande de réduction" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+
+    <Button Name="btnfactureSpot" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnfactureSpot_Click_1">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Facture Spot" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    
+</StackPanel>

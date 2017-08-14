@@ -1,0 +1,200 @@
+﻿<DockPanel x:Class="VesselStopOverPresentation.ConteneurTCPanel"
+           xmlns:local="clr-namespace:VesselStopOverPresentation"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="1024">
+    <Border DockPanel.Dock="Top" BorderThickness="1.5" CornerRadius="1.5" BorderBrush="#FF6A87C8">
+        <StackPanel Name="stackPanelCommands" Orientation="Horizontal" Background="#3F51B5">
+            <GridSplitter Width="1.5" Background="Transparent"/>
+            <Border BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                <DockPanel Margin="1">
+                    <TextBlock DockPanel.Dock="Bottom" Text="Nouveau" TextAlignment="Center" Height="18" Width="Auto" TextWrapping="Wrap" Foreground="White" Background="#FF50509D"/>
+                    <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnNouveau" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnNouveau_Click">
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                            <Image Source="/VesselStopOverPresentation;component/Icons/File-new-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                            <TextBlock Text="Nouveau" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                        </StackPanel>
+                    </Button>
+                </DockPanel>
+            </Border>
+            <GridSplitter Width="3" Background="Transparent" Cursor="Arrow" />
+            <Border Name="actionsBorder" BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                <DockPanel Margin="1">
+                    <TextBlock DockPanel.Dock="Bottom" Text="Actions" TextAlignment="Center" Height="18" Width="Auto" TextWrapping="Wrap" Foreground="White" Background="#FF50509D"/>
+                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" HorizontalAlignment="Left">
+                        <StackPanel DockPanel.Dock="Left" Orientation="Vertical" HorizontalAlignment="Left">
+                            <Button DockPanel.Dock="Left" Height="25" Width="150" VerticalAlignment="Top" Name="btnDebarquer" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnDebarquer_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/bar-code-icon.png" Stretch="Uniform" Height="20" Width="20" />
+                                    <TextBlock Text=" Débarquer" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                                </StackPanel>
+                            </Button>
+                            <Button DockPanel.Dock="Left" Height="25" Width="150" VerticalAlignment="Top" Name="btnSortir" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnSortir_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/export-icon.png" Stretch="Uniform" Height="20" Width="20" />
+                                    <TextBlock Text=" Sortir" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                                </StackPanel>
+                            </Button>
+                            <Button DockPanel.Dock="Left" Height="25" Width="150" VerticalAlignment="Top" Name="btnRetour" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnRetour_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/import-icon.png" Stretch="Uniform" Height="20" Width="20" />
+                                    <TextBlock Text=" Retour" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                        <StackPanel DockPanel.Dock="Left" Orientation="Vertical" HorizontalAlignment="Left">
+                            <Button DockPanel.Dock="Left" Height="25" Width="150" VerticalAlignment="Top" Name="btnParquer" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnParquer_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Actions-mail-mark-task-icon.png" Stretch="Uniform" Height="20" Width="20" />
+                                    <TextBlock Text=" Parquer" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                                </StackPanel>
+                            </Button>
+                            <Button DockPanel.Dock="Left" Height="25" Width="150" VerticalAlignment="Top" Name="btnTransfRep" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnTransfRep_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Jumbo-Crane-with-Movement-icon.png" Stretch="Uniform" Height="20" Width="20" />
+                                    <TextBlock Text=" Transf. zone rep." VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                                </StackPanel>
+                            </Button>
+                            <Button DockPanel.Dock="Left" Height="25" Width="150" VerticalAlignment="Top" Name="btnTransfHabillage" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnTransfHabillage_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Transfer-icon.png" Stretch="Uniform" Height="20" Width="20" />
+                                    <TextBlock Text=" Transf. zone habillage" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                        <StackPanel DockPanel.Dock="Left" Orientation="Vertical" HorizontalAlignment="Left">
+                            <Button DockPanel.Dock="Left" Height="25" Width="150" VerticalAlignment="Top" Name="btnTransfEmpl" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnTransfEmpl_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Transfer-icon.png" Stretch="Uniform" Height="20" Width="20" />
+                                    <TextBlock Text=" Transfert d'empl." VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                                </StackPanel>
+                            </Button>
+                            <Button DockPanel.Dock="Left" Height="25" Width="160" VerticalAlignment="Top" Name="btnMiseDispoVide" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnMiseDispoVide_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/industrial-and-heavy-duty-trailers-tr-1.ico" Stretch="Uniform" Height="20" Width="20" />
+                                    <TextBlock Text=" Mettre à disposition vide" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                                </StackPanel>
+                            </Button>
+                            <Button DockPanel.Dock="Left" Height="25" Width="160" VerticalAlignment="Top" Name="btnRetourPlein" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnRetourPlein_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Container-icon.png" Stretch="Uniform" Height="20" Width="20" />
+                                    <TextBlock Text=" Retour plein" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                                </StackPanel>
+                            </Button>
+                            
+                        </StackPanel>
+                        <StackPanel DockPanel.Dock="Left" Orientation="Vertical" HorizontalAlignment="Left">
+                            <Button DockPanel.Dock="Left" Height="25" Width="160" VerticalAlignment="Top" Name="btnEmbarquer" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnEmbarquer_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Files-New-File-icon.png" Stretch="Uniform" Height="20" Width="20" />
+                                    <TextBlock Text=" Embarquer" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                                </StackPanel>
+                            </Button>
+                            <Button DockPanel.Dock="Left" Height="25" Width="150" VerticalAlignment="Top" Name="btnRetourArmateur" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnRetourArmateur_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Industry-Return-icon.png" Stretch="Uniform" Height="20" Width="20" />
+                                    <TextBlock Text=" Retouner à l'armateur" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                        <StackPanel DockPanel.Dock="Left" Orientation="Vertical" HorizontalAlignment="Left">
+                            <Button DockPanel.Dock="Left" Height="25" Width="150" VerticalAlignment="Top" Name="btnConstatContradictoire" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnConstatContradictoire_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/nouveau.PNG" Stretch="Uniform" Height="20" Width="20" />
+                                    <TextBlock Text=" Constat contradictoire" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                                </StackPanel>
+                            </Button>
+                            <Button DockPanel.Dock="Left" Height="25" Width="150" VerticalAlignment="Top" Name="btnRestitution" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnRestitution_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/workflow.PNG" Stretch="Uniform" Height="20" Width="20" />
+                                    <TextBlock Text=" Restituer conteneur" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+        </StackPanel>
+    </Border>
+    <Border DockPanel.Dock="Top" BorderThickness="1.5" CornerRadius="1.5" BorderBrush="#FFD8D2D2">
+        <DockPanel Name="panelRecherche" Background="#FFD8D2D2">
+            <ComboBox DockPanel.Dock="Right" Name="listRechercher" Width="150" VerticalContentAlignment="Center" Background="#FFD8D2D2" AllowDrop="True">
+                <ComboBoxItem Content="N° conteneur"/>
+                <ComboBoxItem Content="N° connaissement"/>
+                <ComboBoxItem Content="N° escale"/>
+                <ComboBoxItem Content="Description"/>
+                <ComboBoxItem Content="Parc"/>
+            </ComboBox>
+            <Button Name="btnAnnulerRecherche" Width="20" DockPanel.Dock="Right" Focusable="False">
+                <Button.Background>
+                    <ImageBrush ImageSource="/VesselStopOverPresentation;component/Icons/cross.png" Stretch="UniformToFill" TileMode="None" />
+                </Button.Background>
+            </Button>
+            <TextBox Name="txtRechercher" DockPanel.Dock="Right" Width="150" FlowDirection="LeftToRight" TextAlignment="Right" PreviewKeyDown="txtRechercher_PreviewKeyDown" />
+            <Label Content="Rechercher" DockPanel.Dock="Right" FontStyle="Italic" FontWeight="Bold" FlowDirection="LeftToRight"/>
+            <Label Content="Conteneurs : " DockPanel.Dock="Left" FontWeight="Bold" FlowDirection="LeftToRight"/>
+            <ComboBox Name="cbFiltres" DockPanel.Dock="Left" Width="200" HorizontalAlignment="Left" VerticalContentAlignment="Center" Background="#FFD8D2D2" BorderThickness="0" BorderBrush="Transparent" SelectionChanged="cbFiltres_SelectionChanged">
+                <ComboBoxItem Content="Tous les conteneurs"/>
+                <ComboBoxItem Content="Conteneur TC(s) à débarquer"/>
+                <ComboBoxItem Content="Conteneur TC(s) débarqué(s)"/>
+                <ComboBoxItem Content="Conteneur TC(s) sorti(s)"/>
+                <ComboBoxItem Content="Conteneur TC(s) retourné(s)"/>
+                <ComboBoxItem Content="Conteneur TC(s) parqué(s)"/>
+                <ComboBoxItem Content="Conteneur TC(s) en réparation"/>
+                <ComboBoxItem Content="Conteneur TC(s) en habillage"/>
+                <ComboBoxItem Content="Conteneur TC(s) mis à disposition"/>
+                <ComboBoxItem Content="Conteneur TC(s) à embarquer"/>
+                <ComboBoxItem Content="Conteneur TC(s) embarqué(s)"/>
+                <ComboBoxItem Content="Conteneur TC(s) retourné(s) à l'armateur"/>
+            </ComboBox>
+        </DockPanel>
+    </Border>
+    <StatusBar DockPanel.Dock="Bottom" Height="30" FlowDirection="RightToLeft">
+        <Label Name="lblStatut" FlowDirection="LeftToRight" FontWeight="SemiBold" FontFamily="Segoe UI" FontSize="11" />
+    </StatusBar>
+    <DataGrid Name="dataGrid" IsReadOnly="True" ItemsSource="{Binding conteneurs}" AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader" MouseDoubleClick="dataGrid_MouseDoubleClick" SelectionChanged="dataGrid_SelectionChanged">
+        <DataGrid.Resources>
+            <local:ConteneurPositionConverter x:Key="conteneurPositionConverter"/>
+        </DataGrid.Resources>
+        <DataGrid.Columns>
+            <DataGridTextColumn Header=" "></DataGridTextColumn>
+            <DataGridTextColumn Header="N° escale" Width="Auto" Binding="{Binding CONTENEUR.ESCALE.NumEsc}"></DataGridTextColumn>
+            <DataGridTextColumn Header="Navire" Width="Auto" Binding="{Binding CONTENEUR.ESCALE.NAVIRE.NomNav}"></DataGridTextColumn>
+            <DataGridTextColumn Header="Armateur" Width="Auto" Binding="{Binding CONTENEUR.ESCALE.ARMATEUR.NomArm}"></DataGridTextColumn>
+            <DataGridTextColumn Header="N° connaissement" Width="Auto" Binding="{Binding CONTENEUR.CONNAISSEMENT.NumBL}"></DataGridTextColumn>
+            <DataGridTextColumn Header="N° conteneur" Width="Auto" Binding="{Binding NumTC}"></DataGridTextColumn>
+            <DataGridTextColumn Header="Position" Width="Auto" Binding="{Binding IdCtr, Converter={StaticResource ResourceKey=conteneurPositionConverter}}"></DataGridTextColumn>
+            <DataGridTextColumn Header="Etat retour vide" Width="Auto" Binding="{Binding EtatRetourVide}"></DataGridTextColumn>
+            <DataGridTextColumn Header="Description" Width="140" Binding="{Binding CONTENEUR.DescCtr}"></DataGridTextColumn>
+            <DataGridTextColumn Header="Type" Width="Auto" Binding="{Binding CONTENEUR.TypeMCtr}">
+                <DataGridTextColumn.ElementStyle>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="TextAlignment" Value="Center"/>
+                    </Style>
+                </DataGridTextColumn.ElementStyle>
+            </DataGridTextColumn>
+            <DataGridTextColumn Header="Etat" Width="Auto" Binding="{Binding CONTENEUR.StatutCtr}">
+                <DataGridTextColumn.ElementStyle>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="TextAlignment" Value="Center"/>
+                    </Style>
+                </DataGridTextColumn.ElementStyle>
+            </DataGridTextColumn>
+            <DataGridTextColumn Header="Poids" Width="Auto" Binding="{Binding CONTENEUR.PoidsCCtr, ConverterCulture=fr-FR, StringFormat={}{0:N0} Kg}">
+                <DataGridTextColumn.ElementStyle>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="TextAlignment" Value="Right"/>
+                    </Style>
+                </DataGridTextColumn.ElementStyle>
+            </DataGridTextColumn>
+            <DataGridTextColumn Header="Commodity category" Width="Auto" Binding="{Binding CONTENEUR.CatMseCtr}"></DataGridTextColumn>
+            <DataGridTextColumn Header="Seal 1" Width="Auto" Binding="{Binding CONTENEUR.Seal1Ctr}"></DataGridTextColumn>
+            <DataGridTextColumn Header="Seal 2" Width="Auto" Binding="{Binding CONTENEUR.Seal2Ctr}"></DataGridTextColumn>
+            <DataGridTextColumn Header="Statut BL" Width="Auto" Binding="{Binding CONTENEUR.CONNAISSEMENT.StatutBL}"></DataGridTextColumn>
+            <DataGridTextColumn Header="Statut Ctr" Width="Auto" Binding="{Binding StatutTC}"></DataGridTextColumn>
+        </DataGrid.Columns>
+    </DataGrid>
+</DockPanel>

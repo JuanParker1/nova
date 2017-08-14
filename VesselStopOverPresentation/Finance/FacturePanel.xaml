@@ -1,0 +1,114 @@
+﻿<DockPanel x:Class="VesselStopOverPresentation.FacturePanel"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="800">
+    <Border DockPanel.Dock="Top" BorderThickness="1.5" CornerRadius="1.5" BorderBrush="#FF6A87C8">
+        <StackPanel Name="stackPanelCommands" Orientation="Horizontal" Background="#3F51B5">
+            <GridSplitter Width="1.5" Background="Transparent"/>
+            <Border BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                <DockPanel Margin="1">
+                    <TextBlock DockPanel.Dock="Bottom" Text="Nouveau" TextAlignment="Center" Height="18" Width="Auto" TextWrapping="Wrap" Foreground="White" Background="#FF50509D"/>
+                    <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnNouveau" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnNouveau_Click">
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                            <Image Source="/VesselStopOverPresentation;component/Icons/File-new-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                            <TextBlock Text="Nouveau" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                        </StackPanel>
+                    </Button>
+                </DockPanel>
+            </Border>
+        </StackPanel>
+    </Border>
+    <Border DockPanel.Dock="Top" BorderThickness="1.5" CornerRadius="1.5" BorderBrush="#FFD8D2D2">
+        <DockPanel Name="panelRecherche" Background="#FFD8D2D2">
+            <ComboBox DockPanel.Dock="Right" Name="listRechercher" Width="150" VerticalContentAlignment="Center" Background="#FFD8D2D2" AllowDrop="True">
+                <ComboBoxItem Content="N° Facture"/>
+                <ComboBoxItem Content="N° connaissement"/>
+                <ComboBoxItem Content="N° escale"/>
+            </ComboBox>
+            <Button Name="btnAnnulerRecherche" Width="20" DockPanel.Dock="Right" Focusable="False">
+                <Button.Background>
+                    <ImageBrush ImageSource="/VesselStopOverPresentation;component/Icons/cross.png" Stretch="UniformToFill" TileMode="None" />
+                </Button.Background>
+            </Button>
+            <TextBox Name="txtRechercher" DockPanel.Dock="Right" Width="150" FlowDirection="LeftToRight" TextAlignment="Right" PreviewKeyDown="txtRechercher_PreviewKeyDown" />
+            <Label Content="Rechercher" DockPanel.Dock="Right" FontStyle="Italic" FontWeight="Bold" FlowDirection="LeftToRight"/>
+            <Label Content="Factures : " DockPanel.Dock="Left" FontWeight="Bold" FlowDirection="LeftToRight"/>
+            <ComboBox Name="cbFiltres" DockPanel.Dock="Left" Width="200" HorizontalAlignment="Left" VerticalContentAlignment="Center" Background="#FFD8D2D2" BorderThickness="0" BorderBrush="Transparent" SelectionChanged="cbFiltres_SelectionChanged">
+                <ComboBoxItem Content="Toutes les factures"/>
+                <ComboBoxItem Content="Factures en attente de paiement"/>
+                <ComboBoxItem Content="Facture(s) des elements BL"/>
+                <ComboBoxItem Content="Facture(s) des elements BL en attente de paiement"/>
+                <ComboBoxItem Content="Facture(s) vehicule"/>
+                <ComboBoxItem Content="Facture(s) vehicule en attente de paiement"/>
+                <ComboBoxItem Content="Facture(s) conteneur"/>
+                <ComboBoxItem Content="Facture(s) conteneur en attente de paiement"/>
+                <ComboBoxItem Content="Facture(s) conventionnel"/>
+                <ComboBoxItem Content="Facture(s) conventionnel en attente de paiement"/>
+                <ComboBoxItem Content="Facture(s) mafi"/>
+                <ComboBoxItem Content="Facture(s) mafi en attente de paiement"/>
+            </ComboBox>
+        </DockPanel>
+    </Border>
+    <StatusBar DockPanel.Dock="Bottom" Height="30" FlowDirection="RightToLeft">
+        <Label Name="lblStatut" FlowDirection="LeftToRight" FontWeight="SemiBold" FontFamily="Segoe UI" FontSize="11" />
+    </StatusBar>
+    <DataGrid Name="dataGrid" IsReadOnly="True" ItemsSource="{Binding factures}" AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader" MouseDoubleClick="dataGrid_MouseDoubleClick">
+        <DataGrid.Resources>
+            <Style TargetType="DataGridRow">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IdPay}" Value="{x:Null}">
+                        <Setter Property="Foreground" Value="Red" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </DataGrid.Resources>
+        <DataGrid.Columns>
+            <DataGridTextColumn Header=" "></DataGridTextColumn>
+            <DataGridTextColumn Header="N° facture" Width="Auto" Binding="{Binding IdDocSAP}">
+                <DataGridTextColumn.ElementStyle>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="TextAlignment" Value="Right"/>
+                    </Style>
+                </DataGridTextColumn.ElementStyle>
+            </DataGridTextColumn>
+            <DataGridTextColumn Header="Escale" Width="Auto" Binding="{Binding PROFORMA.CONNAISSEMENT.ESCALE.NumEsc}"></DataGridTextColumn>
+            <DataGridTextColumn Header="N° connaissement" Width="Auto" Binding="{Binding PROFORMA.CONNAISSEMENT.NumBL}"></DataGridTextColumn>
+            <DataGridTextColumn Header="Client" Width="Auto" Binding="{Binding PROFORMA.CLIENT.CodeClient}"></DataGridTextColumn>
+            <DataGridTextColumn Header="Consignee BL" Width="Auto" Binding="{Binding PROFORMA.CONNAISSEMENT.ConsigneeBL}"></DataGridTextColumn>
+            <DataGridTextColumn Header="Type BL" Width="Auto" Binding="{Binding PROFORMA.CONNAISSEMENT.TypeBL}">
+                <DataGridTextColumn.ElementStyle>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="TextAlignment" Value="Center"/>
+                    </Style>
+                </DataGridTextColumn.ElementStyle>
+            </DataGridTextColumn>
+            <DataGridTextColumn Header="Date création" Width="Auto" Binding="{Binding DCFD, StringFormat='{}{0:dd/MM/yyyy HH:mm:ss}'}"></DataGridTextColumn>
+            <DataGridTextColumn Header="Date de paiement" Width="Auto" Binding="{Binding PAYEMENT.DatePay, StringFormat='{}{0:dd/MM/yyyy HH:mm:ss}'}"></DataGridTextColumn>
+            <DataGridTextColumn Header="Total HT" Width="Auto" Binding="{Binding MHT, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
+                <DataGridTextColumn.ElementStyle>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="TextAlignment" Value="Right"/>
+                    </Style>
+                </DataGridTextColumn.ElementStyle>
+            </DataGridTextColumn>
+            <DataGridTextColumn Header="Total TVA" Width="Auto" Binding="{Binding MTVA, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
+                <DataGridTextColumn.ElementStyle>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="TextAlignment" Value="Right"/>
+                    </Style>
+                </DataGridTextColumn.ElementStyle>
+            </DataGridTextColumn>
+            <DataGridTextColumn Header="Total TTC" Width="Auto" Binding="{Binding MTTC, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
+                <DataGridTextColumn.ElementStyle>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="TextAlignment" Value="Right"/>
+                    </Style>
+                </DataGridTextColumn.ElementStyle>
+            </DataGridTextColumn>
+            <DataGridTextColumn Header="Remarques" Width="150" Binding="{Binding AIFD}"></DataGridTextColumn>
+        </DataGrid.Columns>
+    </DataGrid>
+</DockPanel>

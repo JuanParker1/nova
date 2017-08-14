@@ -1,0 +1,688 @@
+﻿<Window x:Class="VesselStopOverPresentation.ManifesteForm"
+        xmlns:local="clr-namespace:VesselStopOverPresentation"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        Title="Manifeste" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" MinHeight="600" Width="1024" WindowStartupLocation="CenterScreen" ResizeMode="CanResize" FontFamily="Segoe UI" FontSize="11" Icon="/VesselStopOverPresentation;component/Icons/LogoApp.png" WindowState="Maximized">
+    <DockPanel>
+        <StackPanel Name="stackPanelCommands" DockPanel.Dock="Top" Orientation="Horizontal" Background="#3F51B5">
+            <GridSplitter Width="1.5" Background="Transparent"/>
+            <Border BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                <DockPanel Margin="1">
+                    <TextBlock DockPanel.Dock="Bottom" Text="Enregistrer" TextAlignment="Center" Height="18" Width="Auto" TextWrapping="Wrap" Foreground="White" Background="#FF50509D"/>
+                    <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnEnregistrer" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnEnregistrer_Click">
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                            <Image Source="/VesselStopOverPresentation;component/Icons/Save-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                            <TextBlock Text="Enregistrer" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                        </StackPanel>
+                    </Button>
+                </DockPanel>
+            </Border>
+            <GridSplitter Width="3" Background="Transparent" Cursor="Arrow" />
+            <Border Name="actionsBorder" BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                <DockPanel Margin="1">
+                    <TextBlock DockPanel.Dock="Bottom" Text="Actions" TextAlignment="Center" Height="18" Width="Auto" TextWrapping="Wrap" Foreground="White" Background="#FF50509D"/>
+                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" HorizontalAlignment="Left">
+                        <Button Width="130" Height="75" VerticalAlignment="Top" Name="btnValidMan" HorizontalContentAlignment="Center" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnValidMan_Click">
+                            <StackPanel Orientation="Vertical">
+                                <Image Source="/VesselStopOverPresentation;component/Icons/Accept-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                <TextBlock Text="Valider manifeste" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                            </StackPanel>
+                        </Button>
+                        <Button Width="130" Height="75" VerticalAlignment="Top" Name="btnCloturer" HorizontalContentAlignment="Center" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False">
+                            <StackPanel Orientation="Vertical">
+                                <Image Source="/VesselStopOverPresentation;component/Icons/process-accept-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                <TextBlock Text="Clôturer manifeste" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                            </StackPanel>
+                        </Button>
+                        <StackPanel DockPanel.Dock="Left" Orientation="Vertical" HorizontalAlignment="Left">
+                            <Button DockPanel.Dock="Left" Height="25" Width="150" VerticalAlignment="Top" Name="btnAjoutNote" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnAjoutNote_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Notepad-Bloc-notes-icon.png" Stretch="Uniform" Height="20" Width="20" />
+                                    <TextBlock Text=" Ajouter une note" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+        </StackPanel>
+        <StatusBar DockPanel.Dock="Bottom" Height="30" FlowDirection="RightToLeft">
+            <Label Name="lblStatut" FlowDirection="LeftToRight" FontWeight="SemiBold" FontFamily="Segoe UI" FontSize="11" />
+        </StatusBar>
+        <DockPanel>
+            <GroupBox Name="groupBoxComptes" DockPanel.Dock="Right" Height="Auto" Width="250" Header="Synthèses" HorizontalAlignment="Left" BorderThickness="2" UseLayoutRounding="True">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Orientation="Vertical">
+                        <Expander Name="expanderCompteManifeste" IsExpanded="True">
+                            <Expander.Header>
+                                <Border Background="#FFF0F0F0" Width="210" BorderThickness="1.5" CornerRadius="3">
+                                    <TextBlock Text="Valeur du manifeste" FontWeight="SemiBold"/>
+                                </Border>
+                            </Expander.Header>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="27"/>
+                                    <RowDefinition Height="27"/>
+                                    <RowDefinition Height="27"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Content="Montant HT :" HorizontalAlignment="Left"/>
+                                <Label Grid.Row="1" Grid.Column="0" Content="Montant TVA :" HorizontalAlignment="Left"/>
+                                <Label Grid.Row="2" Grid.Column="0" Content="Montant TTC :" HorizontalAlignment="Left"/>
+                                <Label Grid.Row="0" Grid.Column="1" Name="montantHTCpteManifeste" ContentStringFormat="{}{0:N0} XAF"  HorizontalAlignment="Right" Foreground="Blue" Cursor="Hand" MouseLeftButtonDown="cpteManifeste_MouseLeftButtonDown" />
+                                <Label Grid.Row="1" Grid.Column="1" Name="montantTVACpteManifeste" ContentStringFormat="{}{0:N0} XAF" HorizontalAlignment="Right" Foreground="Blue" Cursor="Hand" MouseLeftButtonDown="cpteManifeste_MouseLeftButtonDown" />
+                                <Label Grid.Row="2" Grid.Column="1" Name="montantTTCCpteManifeste" ContentStringFormat="{}{0:N0} XAF" HorizontalAlignment="Right" Foreground="Blue" Cursor="Hand" MouseLeftButtonDown="cpteManifeste_MouseLeftButtonDown" />
+                            </Grid>
+                        </Expander>
+                        <!--<Expander Name="expanderCompteDIT" IsExpanded="False">
+                            <Expander.Header>
+                                <Border Background="#FFF0F0F0" Width="210" BorderThickness="1.5" CornerRadius="3">
+                                    <TextBlock Text="Synthèse DIT sur le manifeste" FontWeight="SemiBold"/>
+                                </Border>
+                            </Expander.Header>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="27"/>
+                                    <RowDefinition Height="27"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Content="Montant facturé :" HorizontalAlignment="Left"/>
+                                <Label Grid.Row="1" Grid.Column="0" Content="Montant DIT :" HorizontalAlignment="Left"/>
+                                <Label Grid.Row="0" Grid.Column="1" ContentStringFormat="{}{0:N0} XAF" Name="montantFactureCpteDIT" HorizontalAlignment="Right" Foreground="Blue" Cursor="Hand" MouseLeftButtonDown="cpteDIT_MouseLeftButtonDown" />
+                                <Label Grid.Row="1" Grid.Column="1" ContentStringFormat="{}{0:N0} XAF" Name="montantDITCpteDIT" HorizontalAlignment="Right" Foreground="Blue" Cursor="Hand" MouseLeftButtonDown="cpteDIT_MouseLeftButtonDown" />
+                            </Grid>
+                        </Expander>-->
+                        <Expander Name="expanderStatut" IsExpanded="True">
+                            <Expander.Header>
+                                <Border Background="#FFF0F0F0" Width="210" BorderThickness="1.5" CornerRadius="3">
+                                    <TextBlock Text="Statut de traitement" FontWeight="SemiBold"/>
+                                </Border>
+                            </Expander.Header>
+                            <Expander.Resources>
+                                <Style x:Key="alternatingStyle" TargetType="{x:Type ListViewItem}">
+                                    <Style.Triggers>
+                                        <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                                            <Setter Property="Background" Value="Azure"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                    <Style.Setters>
+                                        <Setter Property="Height" Value="25" />
+                                    </Style.Setters>
+                                </Style>
+                            </Expander.Resources>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="27"/>
+                                    <RowDefinition Height="27"/>
+                                    <RowDefinition Height="27"/>
+                                    <RowDefinition Height="27"/>
+                                    <RowDefinition Height="27"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <ListView Grid.RowSpan="5" Grid.ColumnSpan="2" Name="listStatuts" ItemContainerStyle="{StaticResource alternatingStyle}" AlternationCount="2" VerticalContentAlignment="Center" MouseDoubleClick="listStatuts_MouseDoubleClick">
+                                    <ListView.View>
+                                        <GridView>
+                                            <GridViewColumn Header="Opération" DisplayMemberBinding="{Binding TYPE_OPERATION.LibTypeOp}" Width="90"/>
+                                            <GridViewColumn Header="Date" DisplayMemberBinding="{Binding DateOp, StringFormat='{}{0:dd/MM/yyyy HH:mm:ss}'}" Width="120"/>
+                                        </GridView>
+                                    </ListView.View>
+                                </ListView>
+                            </Grid>
+                        </Expander>
+                        <Expander Name="expanderStatMan" IsExpanded="False">
+                            <Expander.Header>
+                                <Border Background="#FFF0F0F0" Width="210" BorderThickness="1.5" CornerRadius="3">
+                                    <TextBlock Text="Etat de déchargement" FontWeight="SemiBold"/>
+                                </Border>
+                            </Expander.Header>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="27"/>
+                                    <RowDefinition Height="27"/>
+                                    <RowDefinition Height="27"/>
+                                    <RowDefinition Height="27"/>
+                                    <RowDefinition Height="27"/>
+                                    <RowDefinition Height="27"/>
+                                    <RowDefinition Height="27"/>
+                                    <RowDefinition Height="27"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="70"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Content="Véhicules :" HorizontalAlignment="Left"/>
+                                <Label Grid.Row="2" Grid.Column="0" Content="Conteneurs :" HorizontalAlignment="Left"/>
+                                <Label Grid.Row="4" Grid.Column="0" Content="Mafis :" HorizontalAlignment="Left"/>
+                                <Label Grid.Row="6" Grid.Column="0" Content="Cargos :" HorizontalAlignment="Left"/>
+                                <Label Grid.Row="0" Grid.Column="1" Name="nbVeh" ContentStringFormat="{}{0:N0}" HorizontalAlignment="Right" Foreground="Blue" Cursor="Hand"/>
+                                <Label Grid.Row="1" Grid.ColumnSpan="2" Name="volTonVeh" ContentStringFormat="{}{0:N0}" HorizontalAlignment="Right" Foreground="Blue" Cursor="Hand"/>
+                                <Label Grid.Row="2" Grid.Column="1" Name="nbCont" ContentStringFormat="{}{0:N0}" HorizontalAlignment="Right" Foreground="Blue" Cursor="Hand"/>
+                                <Label Grid.Row="3" Grid.ColumnSpan="2" Name="volTonCtr" ContentStringFormat="{}{0:N0}" HorizontalAlignment="Right" Foreground="Blue" Cursor="Hand"/>
+                                <Label Grid.Row="4" Grid.Column="1" Name="nbMafi" ContentStringFormat="{}{0:N0}" HorizontalAlignment="Right" Foreground="Blue" Cursor="Hand"/>
+                                <Label Grid.Row="5" Grid.ColumnSpan="2" Name="volTonMafi" ContentStringFormat="{}{0:N0}" HorizontalAlignment="Right" Foreground="Blue" Cursor="Hand"/>
+                                <Label Grid.Row="6" Grid.Column="1" Name="nbCargos" ContentStringFormat="{}{0:N0}" HorizontalAlignment="Right" Foreground="Blue" Cursor="Hand"/>
+                                <Label Grid.Row="7" Grid.ColumnSpan="2" Name="volTonCargo" ContentStringFormat="{}{0:N0}" HorizontalAlignment="Right" Foreground="Blue" Cursor="Hand"/>
+                            </Grid>
+                        </Expander>
+                        <Expander Name="expanderMarchandises" IsExpanded="False">
+                            <Expander.Header>
+                                <Border Background="#FFF0F0F0" Width="210" BorderThickness="1.5" CornerRadius="3">
+                                    <TextBlock Text="Synthèse des marchandises" FontWeight="SemiBold"/>
+                                </Border>
+                            </Expander.Header>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="27"/>
+                                    <RowDefinition Height="27"/>
+                                    <RowDefinition Height="27"/>
+                                    <RowDefinition Height="27"/>
+                                    <RowDefinition Height="27"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Content="Véh. portés :" HorizontalAlignment="Left"/>
+                                <Label Grid.Row="1" Grid.Column="0" Content="Véh. attellés :" HorizontalAlignment="Left"/>
+                                <Label Grid.Row="2" Grid.Column="0" Content="Véh. clés :" HorizontalAlignment="Left"/>
+                                <Label Grid.Row="3" Grid.Column="0" Content="Véh. démarrent  :" HorizontalAlignment="Left"/>
+                                <Label Grid.Row="4" Grid.Column="0" Content="Véh. minutie  :" HorizontalAlignment="Left"/>
+                                <Label Grid.Row="0" Grid.Column="1" Name="nbPortes" ContentStringFormat="{}{0:N0}" HorizontalAlignment="Right" Foreground="Blue" Cursor="Hand"/>
+                                <Label Grid.Row="1" Grid.Column="1" Name="nbAttelle" ContentStringFormat="{}{0:N0}" HorizontalAlignment="Right" Foreground="Blue" Cursor="Hand"/>
+                                <Label Grid.Row="2" Grid.Column="1" Name="nbCle" ContentStringFormat="{}{0:N0}" HorizontalAlignment="Right" Foreground="Blue" Cursor="Hand"/>
+                                <Label Grid.Row="3" Grid.Column="1" Name="nbDemarre" ContentStringFormat="{}{0:N0}" HorizontalAlignment="Right" Foreground="Blue" Cursor="Hand"/>
+                                <Label Grid.Row="4" Grid.Column="1" Name="nbMinutie" ContentStringFormat="{}{0:N0}" HorizontalAlignment="Right" Foreground="Blue" Cursor="Hand"/>
+                            </Grid>
+                        </Expander>
+                        <Expander Name="expanderNotes" IsExpanded="True">
+                            <Expander.Header>
+                                <Border Background="#FFF0F0F0" Width="210" BorderThickness="1.5" CornerRadius="3">
+                                    <TextBlock Text="Notes" FontWeight="SemiBold"/>
+                                </Border>
+                            </Expander.Header>
+                            <Expander.Resources>
+                                <Style x:Key="alternatingStyle" TargetType="{x:Type ListViewItem}">
+                                    <Style.Triggers>
+                                        <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                                            <Setter Property="Background" Value="Azure"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                    <Style.Setters>
+                                        <Setter Property="Height" Value="25" />
+                                    </Style.Setters>
+                                </Style>
+                            </Expander.Resources>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="27"/>
+                                    <RowDefinition Height="27"/>
+                                    <RowDefinition Height="27"/>
+                                    <RowDefinition Height="27"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <ListView Grid.RowSpan="4" Grid.ColumnSpan="2" BorderThickness="0" BorderBrush="Transparent" Foreground="Red" Name="listNotes" ItemContainerStyle="{StaticResource alternatingStyle}" AlternationCount="2" MouseDoubleClick="listNotes_MouseDoubleClick" VerticalContentAlignment="Center">
+                                    <ListView.View>
+                                        <GridView>
+                                            <GridViewColumn Header="Description" DisplayMemberBinding="{Binding DescNote}" Width="180"/>
+                                        </GridView>
+                                    </ListView.View>
+                                </ListView>
+                            </Grid>
+                        </Expander>
+                    </StackPanel>
+                </ScrollViewer>
+            </GroupBox>
+            <GroupBox DockPanel.Dock="Left" Header="Informations sur le manifeste" BorderThickness="2">
+                <DockPanel Background="#FAFAFA">
+                    <Grid DockPanel.Dock="Top" Margin="2" UseLayoutRounding="True">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="27"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="155"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Grid.Row="0" Grid.Column="0" Content="Man. Sys ID : " Margin="0,2,0,2" />
+                        <ComboBox Name="cbIdMan" Grid.Row="0" Grid.Column="1" Width="100" HorizontalAlignment="Left" Margin="0,2,0,2" ItemsSource="{Binding manifs}" IsEditable="True" PreviewTextInput="cbIdMan_PreviewTextInput" PreviewKeyDown="cbIdMan_PreviewKeyDown" />
+                    </Grid>
+                    <Grid Name="gridDetails" Margin="2" UseLayoutRounding="True">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="27"/>
+                            <RowDefinition Height="27"/>
+                            <RowDefinition Height="27"/>
+                            <RowDefinition Height="27"/>
+                            <RowDefinition Height="27"/>
+                            <RowDefinition Height="27"/>
+                            <RowDefinition Height="27"/>
+                            <RowDefinition Height="27"/>
+                            <RowDefinition Height="27"/>
+                            <RowDefinition Height="27"/>
+                            <RowDefinition Height="27"/>
+                            <RowDefinition Height="27"/>
+                            <RowDefinition Height="27"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="155"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <Label Grid.Row="0" Grid.Column="0" Content="Escale associée : " Margin="0,2,0,2"/>
+                        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
+                            <ComboBox Name="cbNumEscale"  Width="100" Margin="0,2,0,2" ItemsSource="{Binding escs}" SelectionChanged="cbNumEscale_SelectionChanged" PreviewKeyDown="cbNumEscale_PreviewKeyDown" />
+                            <TextBox Name="txtNumEscale" Width="70" Margin="2,2,0,2" Background="AntiqueWhite" IsReadOnly="True" TextAlignment="Right"/>
+                        </StackPanel>
+
+                        <Label Grid.Row="1" Grid.Column="0" Content="Port d'embarquement: " Margin="0,2,0,2"/>
+                        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
+                            <ComboBox Name="cbPort"  Width="100" Margin="0,2,0,2" ItemsSource="{Binding prts}" SelectionChanged="cbPort_SelectionChanged" />
+                            <TextBox Name="txtCodePort" Width="70" Margin="2,2,0,2" Background="AntiqueWhite" TextAlignment="Right" IsReadOnly="True"/>
+                        </StackPanel>
+
+                        <Label Grid.Row="2" Grid.Column="0" Content="Date de création : " Margin="0,2,0,2"/>
+                        <DatePicker Grid.Row="2" Grid.Column="1" Name="txtDateCreation" Width="100" Margin="0,2,0,2" HorizontalAlignment="Left" SelectedDate="{x:Static sys:DateTime.Now}" IsEnabled="False"/>
+
+                        <Label Grid.Row="3" Grid.Column="0" Content="Connaissement (prév./Imp.) : " Margin="0,2,0,2"/>
+                        <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1">
+                            <TextBox Name="txtNbPrevBL" Width="100" Margin="0,2,0,2" TextAlignment="Right" PreviewTextInput="txtNbPrev_PreviewTextInput" Text="0" />
+                            <TextBox Name="txtNbEffBL" Width="70" Margin="2,2,0,2" TextAlignment="Right" Background="AntiqueWhite" IsReadOnly="True"/>
+                        </StackPanel>
+
+                        <Label Grid.Row="4" Grid.Column="0" Content="Vehicule (prév./Imp.) : " Margin="0,2,0,2"/>
+                        <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="1">
+                            <TextBox Name="txtNbPrevVeh" Width="100" Margin="0,2,0,2" TextAlignment="Right" PreviewTextInput="txtNbPrev_PreviewTextInput" Text="0" />
+                            <TextBox Name="txtNbEffVeh" Width="70" Margin="2,2,0,2" TextAlignment="Right" Background="AntiqueWhite" IsReadOnly="True"/>
+                        </StackPanel>
+
+                        <Label Grid.Row="5" Grid.Column="0" Content="Conteneur (prév./Imp.) : " Margin="0,2,0,2"/>
+                        <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.Column="1">
+                            <TextBox Name="txtNbPrevCont" Width="100" Margin="0,2,0,2" TextAlignment="Right" PreviewTextInput="txtNbPrev_PreviewTextInput" Text="0" />
+                            <TextBox Name="txtNbEffCont" Width="70" Margin="2,2,0,2" TextAlignment="Right" Background="AntiqueWhite" IsReadOnly="True"/>
+                        </StackPanel>
+
+                        <Label Grid.Row="6" Grid.Column="0" Content="Mafi (prév./Imp.) : " Margin="0,2,0,2"/>
+                        <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.Column="1">
+                            <TextBox Name="txtNbPrevMafi" Width="100" Margin="0,2,0,2" TextAlignment="Right" PreviewTextInput="txtNbPrev_PreviewTextInput" Text="0" />
+                            <TextBox Name="txtNbEffMafi" Width="70" Margin="2,2,0,2" TextAlignment="Right" Background="AntiqueWhite" IsReadOnly="True"/>
+                        </StackPanel>
+
+                        <Label Grid.Row="7" Grid.Column="0" Content="General cargo (prév./Imp.) : " Margin="0,2,0,2"/>
+                        <StackPanel Orientation="Horizontal" Grid.Row="7" Grid.Column="1">
+                            <TextBox Name="txtNbPrevGC" Width="100" Margin="0,2,0,2" TextAlignment="Right" PreviewTextInput="txtNbPrev_PreviewTextInput" Text="0" />
+                            <TextBox Name="txtNbEffGC" Width="70" Margin="2,2,0,2" TextAlignment="Right" Background="AntiqueWhite" IsReadOnly="True"/>
+                        </StackPanel>
+
+                        <Label Grid.Row="8" Grid.Column="0" Content="Observations : " Margin="0,2,0,2"/>
+                        <RichTextBox Grid.Row="8" Grid.Column="1" Name="txtObservations" HorizontalAlignment="Left" Width="173" Grid.RowSpan="2" Margin="0,2,0,2" VerticalScrollBarVisibility="Auto" />
+
+                        <Label Grid.Row="10" Grid.Column="0" Content="Format de fichier : " Margin="0,2,0,2"/>
+                        <ComboBox Grid.Row="10" Grid.Column="1" Name="cbFormat" IsReadOnly="True" MaxWidth="173" Margin="0,2,0,2" IsEnabled="True" SelectionChanged="cbFormat_SelectionChanged">
+                            <ComboBoxItem Content="EXTRACT ALL"/>
+                            <ComboBoxItem Content="EXTRACT ALL Files Extended"/>
+                            <ComboBoxItem Content="Excel Véhicules Autres Acconiers (Excel xls)"/>
+                            <ComboBoxItem Content="Excel Véhicules Autres Acconiers (Excel xlsx)"/>
+                            <ComboBoxItem Content="Excel Manifeste Conteneurs NDS (Excel xlsx)"/>
+                            <ComboBoxItem Content="Manifeste manuel"/>
+                        </ComboBox>
+
+                        <Button Grid.Row="11" Grid.Column="0" Name="btnSelectFile" Content="Selectionner le fichier" Margin="2" Background="Beige" BorderThickness="3" Click="btnSelectFile_Click" />
+                        <TextBox Grid.Row="11" Grid.Column="1" Name="txtCheminFichier" Margin="0,2,0,2" IsReadOnly="True" MaxWidth="173" />
+
+                    </Grid>
+                </DockPanel>
+            </GroupBox>
+            <GroupBox Header="Contenu du manifeste" BorderThickness="2">
+                <TabControl>
+                    <TabItem Header="Valeur Man." Name="compteManTab">
+                        <DockPanel>
+                            <DataGrid DockPanel.Dock="Top" Name="dataGridValeurMan" Height="Auto" IsReadOnly="True" ItemsSource="{Binding eltsValeurMan}" AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header=" "></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Famille de service" Width="Auto" Binding="{Binding FamilleService}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Montant HT" Width="Auto" Binding="{Binding MontantHT, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="TextAlignment" Value="Right"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Montant TVA" Width="Auto" Binding="{Binding MontantTVA, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="TextAlignment" Value="Right"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Montant TTC" Width="Auto" Binding="{Binding MontantTTC, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="TextAlignment" Value="Right"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </DockPanel>
+                    </TabItem>
+                    <TabItem Header="Compte Man." Name="compteTab">
+                        <DataGrid Name="dataGridCompteMan" IsReadOnly="True" ItemsSource="{Binding elementsCompteMan}" AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader" MouseDoubleClick="dataGridCompteMan_MouseDoubleClick">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header=" "></DataGridTextColumn>
+                                <DataGridTextColumn Header="Libellé" Width="150" Binding="{Binding Libelle}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Date comptable" Width="Auto" Binding="{Binding DateComptable, StringFormat='{}{0:dd/MM/yyyy}'}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Debit" Width="Auto" Binding="{Binding Debit, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Right"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Credit" Width="Auto" Binding="{Binding Credit, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Right"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </TabItem>
+                    <!--<TabItem Header="Compte DIT" Name="compteDITTab">
+                        <DockPanel>
+                            <DataGrid DockPanel.Dock="Top" Name="dataGridCompteDIT" Height="Auto" IsReadOnly="True" ItemsSource="{Binding eltsCompteDIT}" AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header=" "></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Rubrique de facturation" Width="Auto" Binding="{Binding RubriqueFacturation}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Montant facturé" Width="Auto" Binding="{Binding MontantFacture, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="TextAlignment" Value="Right"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Montant DIT" Width="Auto" Binding="{Binding MontantDIT, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="TextAlignment" Value="Right"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </DockPanel>
+                    </TabItem>-->
+                    <TabItem Header="Connaissement(s)" Name="conTab">
+                        <DockPanel>
+                            <Border DockPanel.Dock="Top" BorderThickness="1.5" CornerRadius="1.5" BorderBrush="#FFD8D2D2">
+                                <DockPanel Background="#FFD8D2D2">
+                                    <TextBox Name="txtRechercher" DockPanel.Dock="Right" Width="150" IsEnabled="False" FlowDirection="LeftToRight" TextAlignment="Right" PreviewKeyDown="txtRechercher_PreviewKeyDown" />
+                                    <Label Content="Rechercher" DockPanel.Dock="Right" FontStyle="Italic" FontWeight="Bold" FlowDirection="RightToLeft"/>
+                                    <Label Content="Connaissements : " DockPanel.Dock="Left" FontWeight="Bold" FlowDirection="LeftToRight"/>
+                                    <ComboBox Name="cbFiltres" DockPanel.Dock="Left" Width="200" HorizontalAlignment="Left" VerticalContentAlignment="Center" Background="#FFD8D2D2" BorderThickness="0" BorderBrush="Transparent" SelectionChanged="cbFiltres_SelectionChanged">
+                                        <ComboBoxItem Content="Tous les BLs"/>
+                                        <ComboBoxItem Content="BLs à initier"/>
+                                        <ComboBoxItem Content="BLs à traiter"/>
+                                        <ComboBoxItem Content="BLs à valider"/>
+                                        <ComboBoxItem Content="BLs à accomplir"/>
+                                        <ComboBoxItem Content="BLs à facturer"/>
+                                        <ComboBoxItem Content="BLs pour enlèvement"/>
+                                        <ComboBoxItem Content="BLs pour livraison"/>
+                                        <ComboBoxItem Content="BLs pour sortie"/>
+                                        <ComboBoxItem Content="BLs à clôturer"/>
+                                        <ComboBoxItem Content="BLs clôturés"/>
+                                        <ComboBoxItem Content="BLs SOCAR"/>
+                                    </ComboBox>
+                                </DockPanel>
+                            </Border>
+                            <DataGrid Name="dataGridConnaissement" IsReadOnly="True" ItemsSource="{Binding connaissements}" AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader" MouseDoubleClick="dataGridConnaissement_MouseDoubleClick">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header=" "></DataGridTextColumn>
+                                    <DataGridTextColumn Header="N° connaissement" Width="Auto" Binding="{Binding NumBL}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Hint." Width="Auto" Binding="{Binding BLIL}">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="TextAlignment" Value="Center"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Charge collected" Width="60" Binding="{Binding CCBL}">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="TextAlignment" Value="Center"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Type" Width="Auto" Binding="{Binding TypeBL}">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="TextAlignment" Value="Center"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="BL Socar" Width="Auto" Binding="{Binding BLSocar}">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="TextAlignment" Value="Center"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Consignee" Width="150" Binding="{Binding ConsigneeBL}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Adresses" Width="100" Binding="{Binding AdresseBL}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Notify" Width="100" Binding="{Binding NotifyBL}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="LPBL" Width="Auto" Binding="{Binding LPBL}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="DPBL" Width="Auto" Binding="{Binding DPBL}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Statut" Width="Auto" Binding="{Binding StatutBL}"></DataGridTextColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </DockPanel>
+                    </TabItem>
+                    <TabItem Header="Véhicules(s)" Name="vehTab">
+                        <DataGrid Name="dataGridVehicules" IsReadOnly="True" ItemsSource="{Binding vehicules}" AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader" MouseDoubleClick="dataGridVehicules_MouseDoubleClick">
+                            <DataGrid.Resources>
+                                <local:VehiculeCubedConverter x:Key="vehiculeCubedConverter"/>
+                                <local:VehiculePositionConverter x:Key="vehiculePositionConverter"/>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding CUBAGE_VEHICULE, Converter={StaticResource ResourceKey=vehiculeCubedConverter}}" Value="true">
+                                            <Setter Property="Foreground" Value="Red" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding VehPorte}" Value="Y">
+                                            <Setter Property="Foreground" Value="LimeGreen" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding VehAttelle}" Value="Y">
+                                            <Setter Property="Foreground" Value="LimeGreen" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Resources>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header=" "></DataGridTextColumn>
+                                <DataGridTextColumn Header="N° BL" Width="Auto" Binding="{Binding CONNAISSEMENT.NumBL}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="N° chassis" Width="Auto" Binding="{Binding NumChassis}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Description" Width="150" Binding="{Binding DescVeh}"></DataGridTextColumn>
+                                <!--<DataGridTextColumn Header="Position" Width="Auto" Binding="{Binding IdVeh, Converter={StaticResource ResourceKey=vehiculePositionConverter}}"></DataGridTextColumn>-->
+                                <DataGridTextColumn Header="Type" Width="Auto" Binding="{Binding TypeCVeh}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Neuf ?" Width="Auto" Binding="{Binding StatutCVeh}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Poids" Width="Auto" Binding="{Binding PoidsCVeh, ConverterCulture=fr-FR, StringFormat={}{0:N0} Kg}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Right"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Volume" Width="Auto" Binding="{Binding VolCVeh, ConverterCulture=fr-FR, StringFormat={}{0:N3} m³}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Right"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Longueur" Width="Auto" Binding="{Binding LongCVeh, ConverterCulture=fr-FR, StringFormat={}{0:N2} m}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Right"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Largeur" Width="Auto" Binding="{Binding LargCVeh, ConverterCulture=fr-FR, StringFormat={}{0:N2} m}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Right"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Hauteur" Width="Auto" Binding="{Binding HautCVeh, ConverterCulture=fr-FR, StringFormat={}{0:N2} m}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Right"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Statut" Width="Auto" Binding="{Binding StatVeh}"></DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </TabItem>
+                    <TabItem Header="Conteneur(s)" Name="contTab">
+                        <DataGrid Name="dataGridCont" IsReadOnly="True" ItemsSource="{Binding conteneurs}" AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader" MouseDoubleClick="dataGridCont_MouseDoubleClick">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header=" "></DataGridTextColumn>
+                                <DataGridTextColumn Header="N° BL" Width="Auto" Binding="{Binding CONNAISSEMENT.NumBL}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="N° conteneur" Width="Auto" Binding="{Binding NumCtr}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Description" Width="140" Binding="{Binding DescCtr}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Type" Width="Auto" Binding="{Binding TypeCCtr}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Statut" Width="Auto" Binding="{Binding StatutCtr}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Poids" Width="70" Binding="{Binding PoidsCCtr, ConverterCulture=fr-FR, StringFormat={}{0:N0} Kg}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Right"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Seal 1" Width="70" Binding="{Binding Seal1Ctr}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Seal 2" Width="70" Binding="{Binding Seal2Ctr}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Statut" Width="Auto" Binding="{Binding StatCtr}"></DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </TabItem>
+                    <TabItem Header="Mafi(s)" Name="mafiTab">
+                        <DataGrid Name="dataGridMafi" IsReadOnly="True" ItemsSource="{Binding mafis}" AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader" MouseDoubleClick="dataGridMafi_MouseDoubleClick">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header=" "></DataGridTextColumn>
+                                <DataGridTextColumn Header="N° BL" Width="Auto" Binding="{Binding CONNAISSEMENT.NumBL}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="N° Mafi" Width="Auto" Binding="{Binding NumMafi}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Description" Width="140" Binding="{Binding DescMafi}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Type" Width="Auto" Binding="{Binding TypeCMafi}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Statut" Width="Auto" Binding="{Binding StatutMafi}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Center"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Poids" Width="70" Binding="{Binding PoidsCMafi, ConverterCulture=fr-FR, StringFormat={}{0:N0} Kg}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Right"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Statut" Width="Auto" Binding="{Binding StatMafi}"></DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </TabItem>
+                    <TabItem Header="General cargo" Name="gcTab">
+                        <DataGrid Name="dataGridGC" IsReadOnly="True" ItemsSource="{Binding conventionnels}" AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader" MouseDoubleClick="dataGridGC_MouseDoubleClick">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header=" "></DataGridTextColumn>
+                                <DataGridTextColumn Header="N° BL" Width="Auto" Binding="{Binding CONNAISSEMENT.NumBL}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="N° GC" Width="Auto" Binding="{Binding NumGC}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Description" Width="140" Binding="{Binding DescGC}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Type" Width="Auto" Binding="{Binding TypeCGC}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Neuf ?" Width="Auto" Binding="{Binding aa}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Poids" Width="Auto" Binding="{Binding PoidsCGC, ConverterCulture=fr-FR, StringFormat={}{0:N0} Kg}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Right"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Volume" Width="Auto" Binding="{Binding VolCGC, ConverterCulture=fr-FR, StringFormat={}{0:N3} m³}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Right"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Longueur" Width="Auto" Binding="{Binding LongCGC, ConverterCulture=fr-FR, StringFormat={}{0:N2} m}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Right"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Largeur" Width="Auto" Binding="{Binding LargCGC, ConverterCulture=fr-FR, StringFormat={}{0:N2} m}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Right"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Hauteur" Width="Auto" Binding="{Binding HautCGC, ConverterCulture=fr-FR, StringFormat={}{0:N2} m}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Right"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Statut" Width="Auto" Binding="{Binding StatGC}"></DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </TabItem>
+                </TabControl>
+            </GroupBox>
+        </DockPanel>
+    </DockPanel>
+</Window>

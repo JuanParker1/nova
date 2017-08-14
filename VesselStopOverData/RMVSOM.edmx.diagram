@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="a10f2e887fea49d59181ceb9a1e47585" Name="Diagramme1" ZoomLevel="94" >
+        <EntityTypeShape EntityType="RM_VSOMModel.acces" Width="1.5" PointX="3.8071568644638907" PointY="25.510096844988919" />
+        <EntityTypeShape EntityType="RM_VSOMModel.compte_rule" Width="1.5" PointX="1.3268630454907489" PointY="18.666170188536015" />
+        <EntityTypeShape EntityType="RM_VSOMModel.comptes" Width="1.5" PointX="5.375" PointY="1.25" />
+        <EntityTypeShape EntityType="RM_VSOMModel.entreprises" Width="1.5" PointX="3.25" PointY="4.5" />
+        <EntityTypeShape EntityType="RM_VSOMModel.log" Width="1.5" PointX="5.5" PointY="5.25" />
+        <EntityTypeShape EntityType="RM_VSOMModel.quotation" Width="1.5" PointX="7.5" PointY="3.375" />
+        <EntityTypeShape EntityType="RM_VSOMModel.requetes" Width="1.5" PointX="10" PointY="3.375" />
+        <EntityTypeShape EntityType="RM_VSOMModel.rules" Width="1.5" PointX="0.625" PointY="4.5" />
+        <AssociationConnector Association="RM_VSOMModel.FK_requetes_quotation" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

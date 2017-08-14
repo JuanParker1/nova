@@ -1,0 +1,110 @@
+﻿<Window x:Class="VesselStopOverPresentation.VAEForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        Title="VAEForm" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Height="500" Width="400" WindowStartupLocation="CenterScreen" FontFamily="Segoe UI" FontSize="11" Icon="/VesselStopOverPresentation;component/Icons/LogoApp.png" ResizeMode="NoResize">
+    <DockPanel Background="#FAFAFA">
+        <StackPanel Name="stackPanelCommands" DockPanel.Dock="Top" Orientation="Horizontal" Background="#3F51B5">
+            <GridSplitter Width="1.5" Background="Transparent"/>
+            <Border BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                <DockPanel Margin="1">
+                    <TextBlock DockPanel.Dock="Bottom" Text="VAE" TextAlignment="Center" Height="18" Width="Auto" TextWrapping="Wrap" Foreground="White" Background="#FF50509D"/>
+                    <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnVAE" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnVAE_Click">
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                            <Image Source="/VesselStopOverPresentation;component/Icons/Auction.png" Stretch="Uniform" Height="50" Width="50" />
+                            <TextBlock Text="VAE" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                        </StackPanel>
+                    </Button>
+                </DockPanel>
+            </Border>
+        </StackPanel>
+        <StatusBar DockPanel.Dock="Bottom" Height="30" FlowDirection="RightToLeft">
+            <Label Name="lblStatut" FlowDirection="LeftToRight" FontWeight="SemiBold" FontFamily="Segoe UI" FontSize="11" />
+        </StatusBar>
+        <DockPanel>
+            <Grid DockPanel.Dock="Top" Margin="2" UseLayoutRounding="True">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="27"/>
+                    <RowDefinition Height="27"/>
+                    <RowDefinition Height="27"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" Content="N° BL / Sys ID : " Margin="0,2,0,2" />
+                <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
+                    <ComboBox Name="cbNumBL" Width="130" Margin="0,2,0,2" IsEditable="True" />
+                    <TextBox Name="txtIdBL" Width="100" Margin="2,2,0,2" Background="AntiqueWhite" IsReadOnly="True" TextAlignment="Right"/>
+                </StackPanel>
+
+                <Label Grid.Row="1" Grid.Column="0" Content="Client : " Margin="0,2,0,2"/>
+                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
+                    <ComboBox Name="cbClient" Width="130" Margin="0,2,0,2" ItemsSource="{Binding clts}" SelectionChanged="cbClient_SelectionChanged" />
+                    <TextBox Name="txtCodeClient" Width="100" Margin="2,2,0,2" Background="AntiqueWhite" IsReadOnly="True" TextAlignment="Right"/>
+                </StackPanel>
+
+                <Label Grid.Row="2" Grid.Column="0" Content="Date VAE : " Margin="0,2,0,2"/>
+                <DatePicker Grid.Row="2" Grid.Column="1" Name="txtDateVAE" HorizontalAlignment="Left" Width="130" Margin="0,2,0,2"/>
+            </Grid>
+            <Grid DockPanel.Dock="Top" Name="gridInfosBL" Margin="2" UseLayoutRounding="True">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="27"/>
+                    <RowDefinition Height="27"/>
+                    <RowDefinition Height="27"/>
+                    <RowDefinition Height="27"/>
+                    <RowDefinition Height="27"/>
+                    <RowDefinition Height="27"/>
+                    <RowDefinition Height="27"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" Content="Escale associée : " Margin="0,2,0,2"/>
+                <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
+                    <ComboBox Name="cbEscale" Width="130" Margin="0,2,0,2" ItemsSource="{Binding escs}" SelectionChanged="cbEscale_SelectionChanged"/>
+                    <TextBox Name="txtNumVoyage" Width="100" Margin="2,2,0,2" Background="AntiqueWhite" IsReadOnly="True" TextAlignment="Right"/>
+                </StackPanel>
+
+                <Label Grid.Row="1" Grid.Column="0" Content="Manifeste/Port : " Margin="0,2,0,2"/>
+                <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
+                    <ComboBox Name="cbManifeste" Width="130" Margin="0,2,0,2" ItemsSource="{Binding manifs}" SelectionChanged="cbManifeste_SelectionChanged" />
+                    <TextBox Name="txtCodePort" Width="100" Margin="2,2,0,2" Background="AntiqueWhite" IsReadOnly="True" TextAlignment="Right"/>
+                </StackPanel>
+
+                <Label Grid.Row="2" Grid.Column="0" Content="Prov./Dest. finale : " Margin="0,2,0,2"/>
+                <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1">
+                    <TextBox Name="txtPortProv" Width="130" Margin="0,2,0,2" Background="AntiqueWhite" IsReadOnly="True" TextAlignment="Right"/>
+                    <ComboBox Name="cbDestFinale" Width="100" Margin="2,2,0,2" Background="AntiqueWhite">
+                        <ComboBoxItem Content="DLA"/>
+                        <ComboBoxItem Content="CMR"/>
+                        <ComboBoxItem Content="HINT"/>
+                    </ComboBox>
+                </StackPanel>
+
+                <Label Grid.Row="3" Grid.Column="0" Content="Consignee : " Margin="0,2,0,2"/>
+                <TextBox Grid.Row="3" Grid.Column="1" Name="txtConsignee" HorizontalAlignment="Left" Width="232" Margin="0,2,0,2"/>
+
+                <Label Grid.Row="4" Grid.Column="0" Content="Adresse : " Margin="0,2,0,2"/>
+                <TextBox Grid.Row="4" Grid.Column="1" Name="txtAdresse" HorizontalAlignment="Left" Width="232" Margin="0,2,0,2"/>
+
+                <Label Grid.Row="5" Grid.Column="0" Content="Notify : " Margin="0,2,0,2"/>
+                <TextBox Grid.Row="5" Grid.Column="1" Name="txtNotify" HorizontalAlignment="Left" Width="232" Margin="0,2,0,2"/>
+
+                <Label Grid.Row="6" Grid.Column="0" Content="Email : " Margin="0,2,0,2"/>
+                <TextBox Grid.Row="6" Grid.Column="1" Name="txtEmail" HorizontalAlignment="Left" Width="232" Margin="0,2,0,2"/>
+            </Grid>
+            <GroupBox DockPanel.Dock="Top" Name="groupIncoterms" Header="Incoterms" Margin="0,2,0,2" IsEnabled="False">
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox Name="chkHinterland" Content="Hinterland" Margin="2" VerticalAlignment="Center"/>
+                    <CheckBox Name="chkGN" Content="Grand Nord" Margin="2" VerticalAlignment="Center"/>
+                    <CheckBox Name="chkLineTerm" Content="Line Term" Margin="2" VerticalAlignment="Center"/>
+                    <CheckBox Name="chkFreeOut" Content="Free Out" Margin="2" VerticalAlignment="Center"/>
+                </StackPanel>
+            </GroupBox>
+        </DockPanel>
+    </DockPanel>
+</Window>

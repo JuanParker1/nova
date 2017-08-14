@@ -1,0 +1,400 @@
+﻿<Window x:Class="VesselStopOverPresentation.ProformaForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        Title="Vehicule" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" MinHeight="600" Width="1024" WindowStartupLocation="CenterScreen" ResizeMode="CanResize" FontFamily="Segoe UI" FontSize="11" Icon="/VesselStopOverPresentation;component/Icons/LogoApp.png" WindowState="Maximized">
+    <DockPanel>
+        <StackPanel Name="stackPanelCommands" DockPanel.Dock="Top" Orientation="Horizontal" Background="#3F51B5">
+            <GridSplitter Width="1.5" Background="Transparent"/>
+            <Border Name="enregistrerBorder" BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                <DockPanel Margin="1">
+                    <TextBlock DockPanel.Dock="Bottom" Text="Enregistrer" TextAlignment="Center" Height="18" Width="Auto" TextWrapping="Wrap" Foreground="White" Background="#FF50509D"/>
+                    <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnEnregistrer" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnEnregistrer_Click">
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                            <Image Source="/VesselStopOverPresentation;component/Icons/Save-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                            <TextBlock Text="Enregistrer" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                        </StackPanel>
+                    </Button>
+                </DockPanel>
+            </Border>
+            <GridSplitter Width="3" Background="Transparent" Cursor="Arrow" />
+            <Border Name="borderActions" BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                <DockPanel Margin="1">
+                    <TextBlock DockPanel.Dock="Bottom" Text="Actions" TextAlignment="Center" Height="18" Width="Auto" TextWrapping="Wrap" Foreground="White" Background="#FF50509D"/>
+                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" HorizontalAlignment="Left">
+                        <Button Width="130" Height="75" VerticalAlignment="Top" Name="btnValider" HorizontalContentAlignment="Center" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnValider_Click">
+                            <StackPanel Orientation="Vertical">
+                                <Image Source="/VesselStopOverPresentation;component/Icons/Accept-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                <TextBlock Text="Valider proforma" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                            </StackPanel>
+                        </Button>
+                        <Button Width="130" Height="75" VerticalAlignment="Top" Name="btnAnnuler" HorizontalContentAlignment="Center" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnAnnuler_Click">
+                            <StackPanel Orientation="Vertical">
+                                <Image Source="/VesselStopOverPresentation;component/Icons/Document-Delete-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                <TextBlock Text="Annuler proforma" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                            </StackPanel>
+                        </Button>
+                        <StackPanel DockPanel.Dock="Left" Orientation="Vertical" HorizontalAlignment="Left">
+                            <Button DockPanel.Dock="Left" Height="25" Width="150" VerticalAlignment="Top" Name="btnFacture" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnFacture_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/invoice-icon.png" Stretch="Uniform" Height="20" Width="20" />
+                                    <TextBlock Text=" Facture associée" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                                </StackPanel>
+                            </Button>
+                            <Button DockPanel.Dock="Left" Height="25" Width="150" VerticalAlignment="Top" Name="btnAjoutNote" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Notepad-Bloc-notes-icon.png" Stretch="Uniform" Height="20" Width="20" />
+                                    <TextBlock Text=" Ajouter une note" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+            <GridSplitter Width="3" Background="Transparent" Cursor="Arrow" />
+            <Border Name="borderEtat" BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                <DockPanel Margin="1">
+                    <TextBlock DockPanel.Dock="Bottom" Text="Etat" TextAlignment="Center" Height="18" Width="Auto" TextWrapping="Wrap" Foreground="White" Background="#FF50509D"/>
+                    <StackPanel DockPanel.Dock="Left" Orientation="Vertical" HorizontalAlignment="Left">
+                        <Button DockPanel.Dock="Left" Height="25" Width="150" VerticalAlignment="Top" Name="btnImprimerProforma" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnImprimerProforma_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="/VesselStopOverPresentation;component/Icons/reports-icon.png" Stretch="Uniform" Height="20" Width="20" />
+                                <TextBlock Text=" Imprimer proforma" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+        </StackPanel>
+        <StatusBar DockPanel.Dock="Bottom" Height="30" FlowDirection="RightToLeft">
+            <Label Name="lblStatut" FlowDirection="LeftToRight" FontWeight="SemiBold" FontFamily="Segoe UI" FontSize="11" />
+            <Separator/>
+            <Label Name="lblAcconier" FlowDirection="LeftToRight" FontWeight="SemiBold" FontFamily="Segoe UI" FontSize="11" />
+            <Separator/>
+            <Label Name="lblNavire" FlowDirection="LeftToRight" FontWeight="SemiBold" FontFamily="Segoe UI" FontSize="11" />
+            <Separator/>
+            <Label Name="lblEscale" FlowDirection="LeftToRight" FontWeight="SemiBold" FontFamily="Segoe UI" FontSize="11" />
+        </StatusBar>
+        <DockPanel>
+            <GroupBox Name="groupBoxComptes" DockPanel.Dock="Right" Height="Auto" Width="250" Header="Synthèses" HorizontalAlignment="Left" BorderThickness="2" UseLayoutRounding="True">
+                <StackPanel Orientation="Vertical">
+                    <Expander Name="expanderCompteVeh" IsExpanded="True">
+                        <Expander.Header>
+                            <Border Background="#FFF0F0F0" Width="210" BorderThickness="1.5" CornerRadius="3">
+                                <TextBlock Text="Synthèse de la proforma" FontWeight="SemiBold"/>
+                            </Border>
+                        </Expander.Header>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Content="Montant HT :" HorizontalAlignment="Left"/>
+                            <Label Grid.Row="1" Grid.Column="0" Content="Montant TVA :" HorizontalAlignment="Left"/>
+                            <Label Grid.Row="2" Grid.Column="0" Content="Montant TTC :" HorizontalAlignment="Left"/>
+                            <Label Grid.Row="0" Grid.Column="1" Name="montantHTCpteProf" ContentStringFormat="{}{0:N0} XAF"  HorizontalAlignment="Right" Foreground="Blue" Cursor="Hand" />
+                            <Label Grid.Row="1" Grid.Column="1" Name="montantTVACpteProf" ContentStringFormat="{}{0:N0} XAF" HorizontalAlignment="Right" Foreground="Blue" Cursor="Hand" />
+                            <Label Grid.Row="2" Grid.Column="1" Name="montantTTCCpteProf" ContentStringFormat="{}{0:N0} XAF" HorizontalAlignment="Right" Foreground="Blue" Cursor="Hand" />
+                        </Grid>
+                    </Expander>
+                    <Expander Name="expanderCompteBL" IsExpanded="True">
+                        <Expander.Header>
+                            <Border Background="#FFF0F0F0" Width="210" BorderThickness="1.5" CornerRadius="3">
+                                <TextBlock Text="Valeur du BL" FontWeight="SemiBold"/>
+                            </Border>
+                        </Expander.Header>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Content="Montant HT :" HorizontalAlignment="Left"/>
+                            <Label Grid.Row="1" Grid.Column="0" Content="Montant TVA :" HorizontalAlignment="Left"/>
+                            <Label Grid.Row="2" Grid.Column="0" Content="Montant TTC :" HorizontalAlignment="Left"/>
+                            <Label Grid.Row="0" Grid.Column="1" Name="montantHTCpteBL" ContentStringFormat="{}{0:N0} XAF"  HorizontalAlignment="Right" Foreground="Blue" Cursor="Hand" />
+                            <Label Grid.Row="1" Grid.Column="1" Name="montantTVACpteBL" ContentStringFormat="{}{0:N0} XAF" HorizontalAlignment="Right" Foreground="Blue" Cursor="Hand" />
+                            <Label Grid.Row="2" Grid.Column="1" Name="montantTTCCpteBL" ContentStringFormat="{}{0:N0} XAF" HorizontalAlignment="Right" Foreground="Blue" Cursor="Hand" />
+                        </Grid>
+                    </Expander>
+                    <Expander Name="expanderNotes" IsExpanded="True">
+                        <Expander.Header>
+                            <Border Background="#FFF0F0F0" Width="210" BorderThickness="1.5" CornerRadius="3">
+                                <TextBlock Text="Notes" FontWeight="SemiBold"/>
+                            </Border>
+                        </Expander.Header>
+                        <Expander.Resources>
+                            <Style x:Key="alternatingStyle" TargetType="{x:Type ListViewItem}">
+                                <Style.Triggers>
+                                    <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                                        <Setter Property="Background" Value="Azure"></Setter>
+                                    </Trigger>
+                                </Style.Triggers>
+                                <Style.Setters>
+                                    <Setter Property="Height" Value="25" />
+                                </Style.Setters>
+                            </Style>
+                        </Expander.Resources>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <ListView Grid.RowSpan="4" Grid.ColumnSpan="2" BorderThickness="0" BorderBrush="Transparent" Foreground="Red" Name="listNotes" ItemContainerStyle="{StaticResource alternatingStyle}" AlternationCount="2" MouseDoubleClick="listNotes_MouseDoubleClick" VerticalContentAlignment="Center">
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn Header="Description" DisplayMemberBinding="{Binding DescNote}" Width="180"/>
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                        </Grid>
+                    </Expander>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox DockPanel.Dock="Left" Header="Informations sur la proforma" Background="#FAFAFA" BorderThickness="2">
+                <DockPanel>
+                    <Grid DockPanel.Dock="Top" Background="#FAFAFA" Margin="2" UseLayoutRounding="True">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="27"/>
+                            <RowDefinition Height="27"/>
+                            <RowDefinition Height="27"/>
+                            <RowDefinition Height="27"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="110"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Grid.Row="0" Grid.Column="0" Content="Sys. ID : " Margin="0,2,0,2" />
+                        <ComboBox Grid.Row="0" Grid.Column="1" Name="cbIdProf" Width="125" Margin="0,2,0,2" ItemsSource="{Binding profs}" HorizontalAlignment="Left" IsEditable="True" PreviewKeyDown="cbIdProf_PreviewKeyDown" PreviewTextInput="cbIdProf_PreviewTextInput" />
+                        
+                        <Label Grid.Row="1" Grid.Column="0" Content="Date de création : " Margin="0,2,0,2"/>
+                        <DatePicker Grid.Row="1" Grid.Column="1" Name="txtDateCreation" Width="125" Margin="0,2,0,2" IsEnabled="False" SelectedDate="{x:Static sys:DateTime.Now}" HorizontalAlignment="Left"/>
+
+                        <!--<Label Grid.Row="2" Grid.Column="0" Content="Ref. AS400 : " Margin="0,2,0,2" />
+                        <TextBox Grid.Row="2" Grid.Column="1" Name="txtRefAS400" Width="125" Margin="0,2,0,2" HorizontalAlignment="Left"/>-->
+
+                        <Label Grid.Row="2" Grid.Column="0" Content="Observations : " Margin="0,2,0,2"/>
+                        <RichTextBox Grid.Row="2" Grid.Column="1" Name="txtObservations" Grid.RowSpan="2" MaxWidth="230" Margin="0,2,0,2" HorizontalAlignment="Left" VerticalScrollBarVisibility="Auto" />
+                    </Grid>
+                    <GroupBox DockPanel.Dock="Top" Header="Connaissement" Background="#FAFAFA" Margin="0,2,0,2">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="105"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Content="Connaissement : " Margin="0,2,0,2"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
+                                <ComboBox Name="cbNumBL" Width="125" Margin="0,2,0,2" ItemsSource="{Binding cons}" IsEditable="True" PreviewKeyDown="cbNumBL_PreviewKeyDown" />
+                                <TextBox Name="txtIdBL" Width="100" Margin="2,2,0,2" Background="AntiqueWhite" IsReadOnly="True" TextAlignment="Right"/>
+                            </StackPanel>
+
+                            <Label Grid.Row="1" Grid.Column="0" Content="Client : " Margin="0,2,0,2"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
+                                <ComboBox Width="125" Name="cbClient" Margin="0,2,0,2" ItemsSource="{Binding clts}" IsEnabled="False" SelectionChanged="cbClient_SelectionChanged" />
+                                <TextBox Width="100" Name="txtCodeClient" Margin="2,2,0,2" Background="AntiqueWhite" IsReadOnly="True" TextAlignment="Right" />
+                            </StackPanel>
+                            
+                            <Label Grid.Row="2" Grid.Column="0" Content="Consignee : " Margin="0,2,0,2"/>
+                            <TextBox Grid.Row="2" Grid.Column="1" Name="txtConsignee" Grid.ColumnSpan="2" Width="227" Margin="0,2,0,2" Background="AntiqueWhite" IsReadOnly="True" HorizontalAlignment="Left"/>
+
+                            <Label Grid.Row="3" Grid.Column="0" Content="Client à facturer : " Margin="0,2,0,2"/>
+                            <TextBox Grid.Row="3" Grid.Column="1" Name="txtClientAFacturer" Grid.ColumnSpan="2" Width="227" Margin="0,2,0,2" HorizontalAlignment="Left"/>
+
+                            <Label Grid.Row="4" Grid.Column="0" Content="Escale : " Margin="0,2,0,2"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="1">
+                                <ComboBox Name="cbNumEsc" Width="74" Margin="0,2,0,2" ItemsSource="{Binding escs}" IsEnabled="False" SelectionChanged="cbNumEsc_SelectionChanged" />
+                                <TextBox Name="txtNumVoy" Width="74" Margin="2,2,0,2" Background="AntiqueWhite" IsReadOnly="True" TextAlignment="Right"/>
+                                <ComboBox Name="cbNavire" Width="74" Margin="2,2,0,2" ItemsSource="{Binding navs}" IsEnabled="False"/>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" IsEnabled="False">
+                                <CheckBox Name="chkHinterland" Content="Hint." Margin="2" VerticalAlignment="Center"/>
+                                <CheckBox Name="chkGN" Content="Grand Nord" Margin="2" VerticalAlignment="Center"/>
+                                <CheckBox Name="chkBloque" Content="BL Bloqué" Margin="2" VerticalAlignment="Center"/>
+                                <CheckBox Name="chkExpressRelease" Content="BL Express Release" Margin="2" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+                    </GroupBox>
+
+                    <GroupBox MaxWidth="350" Header="Marchandises" Background="#FAFAFA" Margin="0,2,0,0">
+                        <TabControl>
+                            <TabItem Header="Vehicule(s)" Name="vehTab">
+                                <DataGrid Name="dataGridVehicules" IsReadOnly="True" ItemsSource="{Binding vehicules}" AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header=" "></DataGridTextColumn>
+                                        <DataGridTextColumn Header="N° chassis" Width="65" Binding="{Binding NumChassis}"></DataGridTextColumn>
+                                        <DataGridTextColumn Header="Description" Width="100" Binding="{Binding DescVeh}"></DataGridTextColumn>
+                                        <DataGridTextColumn Header="Volume" Width="Auto" Binding="{Binding VolCVeh, ConverterCulture=fr-FR, StringFormat={}{0:N3} m³}">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="TextAlignment" Value="Right"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Header="Statut" Width="70" Binding="{Binding StatVeh}"></DataGridTextColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </TabItem>
+                            <TabItem Header="Conteneurs(s)" Name="contTab">
+                                <DataGrid Name="dataGridConteneurs" IsReadOnly="True" ItemsSource="{Binding conteneurs}" AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header=" "></DataGridTextColumn>
+                                        <DataGridTextColumn Header="N° conteneur" Width="Auto" Binding="{Binding NumCtr}"></DataGridTextColumn>
+                                        <DataGridTextColumn Header="Description" Width="100" Binding="{Binding DescCtr}"></DataGridTextColumn>
+                                        <DataGridTextColumn Header="Type" Width="Auto" Binding="{Binding TypeMCtr}">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="TextAlignment" Value="Center"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Header="Statut" Width="Auto" Binding="{Binding StatCtr}"></DataGridTextColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </TabItem>
+                            <TabItem Header="General cargo" Name="gcTab">
+                                <DataGrid Name="dataGridGC" IsReadOnly="True" ItemsSource="{Binding conventionnels}" AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header=" "></DataGridTextColumn>
+                                        <DataGridTextColumn Header="N° Cargo" Width="Auto" Binding="{Binding NumGC}"></DataGridTextColumn>
+                                        <DataGridTextColumn Header="Description" Width="100" Binding="{Binding DescGC}"></DataGridTextColumn>
+                                        <DataGridTextColumn Header="Poids" Width="Auto" Binding="{Binding PoidsMGC, ConverterCulture=fr-FR, StringFormat={}{0:N0} Kg}">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="TextAlignment" Value="Right"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Header="Volume" Width="Auto" Binding="{Binding VolMGC, ConverterCulture=fr-FR, StringFormat={}{0:N3} m³}">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="TextAlignment" Value="Right"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Header="Statut" Width="Auto" Binding="{Binding StatGC}"></DataGridTextColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </TabItem>
+                        </TabControl>
+                    </GroupBox>
+                </DockPanel>
+            </GroupBox>
+            <GroupBox Header="Finances" BorderThickness="2">
+                <DockPanel>
+                    <Border Name="eltBorder" DockPanel.Dock="Top" BorderThickness="1.5" CornerRadius="1.5" BorderBrush="#FFD8D2D2">
+                        <DockPanel Background="#FFD8D2D2">
+                            <Label Content="Eléments de facturation : " DockPanel.Dock="Left" FontWeight="Bold" FlowDirection="LeftToRight"/>
+                            <ComboBox Name="cbFiltres" DockPanel.Dock="Left" Width="200" HorizontalAlignment="Left" VerticalContentAlignment="Center" Background="#FFD8D2D2" BorderThickness="0" BorderBrush="Transparent" SelectionChanged="cbFiltres_SelectionChanged">
+                                <ComboBoxItem Content="Tous les éléments du BL"/>
+                                <ComboBoxItem Content="Eléments non facturés"/>
+                                <ComboBoxItem Content="Eléments facturés"/>
+                            </ComboBox>
+                        </DockPanel>
+                    </Border>
+                    <DataGrid Name="dataGridEltsFact" IsReadOnly="True" ItemsSource="{Binding eltsFact}" AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader">
+                        <DataGrid.Resources>
+                            <Style TargetType="DataGridRow">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsNew}" Value="true">
+                                        <Setter Property="Foreground" Value="Red" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsProforma}" Value="true">
+                                        <Setter Property="Foreground" Value="Green" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsFacture}" Value="true">
+                                        <Setter Property="Foreground" Value="Black" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.Resources>
+                        <DataGrid.RowHeaderTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <CheckBox IsChecked="{Binding Path=IsSelected, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGridRow}}}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </DataGrid.RowHeaderTemplate>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header=" "></DataGridTextColumn>
+                            <DataGridTextColumn Header="Code article" Width="Auto" Binding="{Binding CodeArticle}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Right"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Libellé article" Width="200" Binding="{Binding LibArticle}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Quantité" Width="Auto" Binding="{Binding Qte, ConverterCulture=fr-FR}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Right"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Unité" Width="Auto" Binding="{Binding Unite}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Prix unitaire" Width="Auto" Binding="{Binding PrixUnitaire, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Right"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Montant HT" Width="Auto" Binding="{Binding MontantHT, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Right"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Montant TVA" Width="Auto" Binding="{Binding MontantTVA, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Right"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Montant Total" Width="Auto" Binding="{Binding MontantTTC, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Right"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </GroupBox>
+        </DockPanel>
+    </DockPanel>
+</Window>

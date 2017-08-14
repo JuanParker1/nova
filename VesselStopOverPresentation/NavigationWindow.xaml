@@ -1,0 +1,5 @@
+﻿<NavigationWindow x:Class="VesselStopOverPresentation.Container"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  Title="Vessel Stop Over Management System" Height="Auto" Width="Auto" WindowState="Maximized" WindowStartupLocation="CenterScreen" Icon="/VesselStopOverPresentation;component/Icons/LogoApp.png">
+</NavigationWindow>

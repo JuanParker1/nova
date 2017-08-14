@@ -1,0 +1,231 @@
+﻿<Window x:Class="VesselStopOverPresentation.PaiementClient"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        Title="Paiement Client" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" MinHeight="600" Width="1024" WindowStartupLocation="CenterScreen" ResizeMode="CanResize" FontFamily="Segoe UI" FontSize="11" Icon="/VesselStopOverPresentation;component/Icons/LogoApp.png" WindowState="Maximized">
+    <Window.Resources>
+        <Style TargetType="DataGridRow">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsFacture}" Value="true">
+                    <Setter Property="Foreground" Value="Red" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <DockPanel>
+        <StackPanel Name="stackPanelCommands" DockPanel.Dock="Top" Orientation="Horizontal" Background="#3F51B5">
+            <GridSplitter Width="1.5" Background="Transparent"/>
+            <Border Name="enregistrerBorder" BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                <DockPanel Margin="1">
+                    <TextBlock DockPanel.Dock="Bottom" Text="Enregistrer" TextAlignment="Center" Height="18" Width="Auto" TextWrapping="Wrap" Foreground="White" Background="#FF50509D"/>
+                    <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnEnregistrer" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnEnregistrer_Click_1">
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                            <Image Source="/VesselStopOverPresentation;component/Icons/Save-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                            <TextBlock Text="Enregistrer" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                        </StackPanel>
+                    </Button>
+                </DockPanel>
+            </Border>
+            <GridSplitter Width="3" Background="Transparent" Cursor="Arrow" />
+            <Border Name="borderActions" BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                <DockPanel Margin="1">
+                    <TextBlock DockPanel.Dock="Bottom" Text="Actions" TextAlignment="Center" Height="18" Width="Auto" TextWrapping="Wrap" Foreground="White" Background="#FF50509D"/>
+                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" HorizontalAlignment="Left">
+                        <Button Width="130" Height="75" VerticalAlignment="Top" Name="btnAnnuler" HorizontalContentAlignment="Center" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnAnnuler_Click_1">
+                            <StackPanel Orientation="Vertical">
+                                <Image Source="/VesselStopOverPresentation;component/Icons/Document-Delete-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                <TextBlock Text="Annuler paiement" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                            </StackPanel>
+                        </Button>
+                       
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+            <GridSplitter Width="3" Background="Transparent" Cursor="Arrow" />
+            <Border Name="borderEtat" BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                <DockPanel Margin="1">
+                    <TextBlock DockPanel.Dock="Bottom" Text="Etat" TextAlignment="Center" Height="18" Width="Auto" TextWrapping="Wrap" Foreground="White" Background="#FF50509D"/>
+                    <StackPanel DockPanel.Dock="Left" Orientation="Vertical" HorizontalAlignment="Left">
+                        <Button DockPanel.Dock="Left" Height="25" Width="150" VerticalAlignment="Top" Name="btnImprimerRecu" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnImprimerRecu_Click_1">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="/VesselStopOverPresentation;component/Icons/reports-icon.png" Stretch="Uniform" Height="20" Width="20" />
+                                <TextBlock Text=" Imprimer reçu" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+        </StackPanel>
+        <StatusBar DockPanel.Dock="Bottom" Height="30" FlowDirection="RightToLeft">
+            <Label Name="lblStatut" FlowDirection="LeftToRight" FontWeight="SemiBold" FontFamily="Segoe UI" FontSize="11" />
+            <Separator/> 
+        </StatusBar>
+        <DockPanel>
+            <GroupBox Name="groupBoxComptes" DockPanel.Dock="Right" Height="Auto" Width="250" Header="Synthèses" HorizontalAlignment="Left" BorderThickness="2" UseLayoutRounding="True">
+                <StackPanel Orientation="Vertical">
+                    <Expander Name="expanderNotes" IsExpanded="True">
+                        <Expander.Header>
+                            <Border Background="#FFF0F0F0" Width="210" BorderThickness="1.5" CornerRadius="3">
+                                <TextBlock Text="Notes" FontWeight="SemiBold"/>
+                            </Border>
+                        </Expander.Header>
+                    </Expander>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox DockPanel.Dock="Left" Header="Informations sur le paiement" Background="#FAFAFA" BorderThickness="2">
+                <DockPanel>
+                    
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                            <RowDefinition Height="27"/>
+                            <RowDefinition Height="27"/>
+                        </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="130"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions> 
+                            
+                        <Label Grid.Row="0" Grid.Column="0" Content="Sys. ID/ Ref SAP : " Margin="0,2,0,2" />
+                        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
+                            <ComboBox Name="cbIdPay" Width="125" Margin="0,2,0,2"  HorizontalAlignment="Left" IsEditable="True"  />
+                            <TextBox Name="txtIdPaySAP" Width="100" Margin="2,2,0,2" Background="AntiqueWhite" IsReadOnly="True" TextAlignment="Right"/>
+                        </StackPanel>
+                            
+                        <Label Grid.Row="1" Grid.Column="0" Content="Client : " Margin="0,2,0,2"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
+                                <ComboBox Width="130" Name="cbCodeClient" Margin="0,2,0,2"  SelectionChanged="cbCodeClient_SelectionChanged_1" PreviewTextInput="cbCodeClient_PreviewTextInput_1" />
+                                <TextBox Width="90" Name="txtClientSysID" Margin="2,2,0,2" Background="AntiqueWhite" IsReadOnly="True" TextAlignment="Right" />
+                            </StackPanel>
+
+                            <Label Grid.Row="2" Grid.Column="0" Content="Mode de paiement : " Margin="0,2,0,2"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1">
+                                <ComboBox Name="cbModePay"  Width="125" Margin="0,2,0,2" SelectionChanged="cbModePay_SelectionChanged_1"/>
+                                <TextBox Name="txtComptePay" Width="100" Margin="2,2,0,2" Background="AntiqueWhite" IsReadOnly="True" TextAlignment="Right"/>
+                            </StackPanel>
+
+                            <Label Grid.Row="3" Grid.Column="0" Content="Banque/Agence : " Margin="0,2,0,2"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1">
+                                <TextBox Name="txtBanque" Width="125" Margin="0,2,0,2" IsEnabled="False" TextAlignment="Left"/>
+                                <TextBox Name="txtAgence" Width="100" Margin="2,2,0,2" IsEnabled="False" TextAlignment="Left"/>
+                            </StackPanel>
+
+                            <Label Grid.Row="4" Grid.Column="0" Content="N° Compte/N° Chèque : " Margin="0,2,0,2"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="1">
+                                <TextBox Name="txtNumCompte" Width="125" Margin="0,2,0,2" IsEnabled="False" TextAlignment="Left" PreviewTextInput="txtNumCompte_PreviewTextInput_1" />
+                                <TextBox Name="txtNumCheque" Width="100" Margin="2,2,0,2" IsEnabled="False" TextAlignment="Left" PreviewTextInput="txtNumCompte_PreviewTextInput_1" />
+                            </StackPanel>
+
+                            <Label Grid.Row="5" Grid.Column="0" Content="Ref. Virt/Banque : " Margin="0,2,0,2"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.Column="1">
+                                <TextBox Name="txtRefVirt" Width="75" Margin="0,2,0,2" IsEnabled="False" TextAlignment="Left"/>
+                                <ComboBox Name="cbBanque" Width="75" Margin="2,2,0,2" ItemsSource="{Binding banks}" IsEnabled="False" SelectionChanged="cbBanque_SelectionChanged_1" />
+                                <TextBox Name="txtCCBanque" Width="75" Margin="2,2,0,2" IsReadOnly="True" Background="AntiqueWhite" TextAlignment="Left"/>
+                            </StackPanel>
+
+                            <Label Grid.Row="6" Grid.Column="0" Content="A payer/Reçu/A rendre : " Margin="0,2,0,2"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.Column="1">
+                                <TextBox Name="txtMAPay" Width="75" Margin="0,2,0,2" Background="AntiqueWhite" IsReadOnly="True" TextAlignment="Right"/>
+                                <TextBox Name="txtMRPay" Width="75" Margin="2,2,0,2" TextAlignment="Right" PreviewTextInput="txtMRPay_PreviewTextInput_1" LostFocus="txtMRPay_LostFocus_1" />
+                                <TextBox Name="txtMRendrePay" Width="75" Margin="2,2,0,2" Background="AntiqueWhite" IsReadOnly="True" TextAlignment="Right"/>
+                            </StackPanel>
+
+                            <Label Grid.Row="7" Grid.Column="0" Content="Retenue IS / Caisse : " Margin="0,2,0,2"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="7" Grid.Column="1">
+                                <CheckBox Name="chkRetenueIS" Width="100" Margin="0,2,0,2" IsEnabled="False" Content="Retenue IS" VerticalAlignment="Center"/>
+                                <ComboBox Grid.Row="7" Grid.Column="1" Name="cbCompteCaisse" IsEnabled="False" Width="125" HorizontalAlignment="Left" Margin="2,2,0,2">
+                                    <ComboBoxItem Content="5711101"/>
+                                    <ComboBoxItem Content="5711102"/>
+                                    <ComboBoxItem Content="5711103"/>
+                                </ComboBox>
+                            </StackPanel>
+
+
+                            <Label Grid.Row="8" Grid.Column="0" Content="Observations : " Margin="0,2,0,2"/>
+                            <RichTextBox Grid.Row="7" Grid.Column="1" Name="txtObservations" Grid.RowSpan="2" Width="230" Margin="0,2,0,2" HorizontalAlignment="Left"/>
+
+                        </Grid>
+                     
+                </DockPanel>
+            </GroupBox>
+            <GroupBox Header="Factures" BorderThickness="2">
+
+                <DataGrid Name="dataGridEltsFact" IsReadOnly="True"   ItemsSource="{Binding _ligneFacture}" AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" 
+                          GridLinesVisibility="Vertical" VerticalGridLinesBrush="Silver" SelectionMode="Extended" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridRow">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsNew}" Value="true">
+                                    <Setter Property="Foreground" Value="Red" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsProforma}" Value="true">
+                                    <Setter Property="Foreground" Value="Green" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsFacture}" Value="true">
+                                    <Setter Property="Foreground" Value="Black" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.RowHeaderTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <CheckBox  Click="CheckBox_Click_1"  Unchecked="CheckBox_Unchecked_1" IsChecked="{Binding Path=IsSelected, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGridRow}}}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGrid.RowHeaderTemplate>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header=" "></DataGridTextColumn>
+                        <DataGridTextColumn Header="N° Facture" Width="Auto" Binding="{Binding NumElmt}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextAlignment" Value="Right"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Date Facture" Width="Auto" Binding="{Binding Date, ConverterCulture=fr-FR}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextAlignment" Value="Right"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Montant HT" Width="Auto" Binding="{Binding MHT, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextAlignment" Value="Right"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Montant TVA" Width="Auto" Binding="{Binding MTVA, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextAlignment" Value="Right"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Montant Total" Width="Auto" Binding="{Binding MTTC, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextAlignment" Value="Right"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <DataGridTextColumn Header="Connaissement" Width="100" Binding="{Binding BL}"></DataGridTextColumn> 
+                        <DataGridTextColumn Header="Escale" Width="100" Binding="{Binding Escale}"></DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+            
+            </GroupBox>
+        </DockPanel>
+    </DockPanel>
+</Window>

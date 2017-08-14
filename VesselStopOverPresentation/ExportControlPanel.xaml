@@ -1,0 +1,62 @@
+﻿<StackPanel x:Class="VesselStopOverPresentation.ExportControlPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Button Name="btnBooking" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnBooking_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Booking" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnClearance" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnClearance_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Clearance" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnFinalBooking" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnFinalBooking_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Final booking" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnCargoLoading" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnCargoLoading_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Cargo Loading" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnConteneur" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnConteneur_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Conteneurs" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnConventionnel" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnConventionnel_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" General cargo" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnCargoLoaded" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnCargoLoaded_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Cargo Loaded" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnBillOfLading" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnBillOfLading_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Bill of Lading" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnManifest" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnManifest_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Manifeste export" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+</StackPanel>

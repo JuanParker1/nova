@@ -1,0 +1,214 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{58EFA862-3883-4CB4-ABBB-6F5397B8DC87}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VesselStopOverDataEF</RootNamespace>
+    <AssemblyName>VesselStopOverDataEF</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ACCONIER.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ARMATEUR.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ARTICLE.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BON_ENLEVEMENT.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BON_SORTIE.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Class1.cs" />
+    <Compile Include="CLIENT.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CODE_TVA.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CONNAISSEMENT.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CUBAGE.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CUBAGE_VEHICULE.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DEMANDE_LIVRAISON.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DEMANDE_REDUCTION.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ELEMENT_FACTURATION.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EMPLACEMENT.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ESCALE.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="FACTURE.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="FAMILLE_ARTICLE.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="HIST_CONNAISSEMENT.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="LIGNE_PRIX.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="LIGNE_PROFORMA.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MANIFESTE.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="NAVIRE.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="NAVY.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>NAVY.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="NAVY.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="NAVY.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>NAVY.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="NOTE.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="OCCUPATION.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="OPERATION.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="OPERATION_CONNAISSEMENT.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="OPERATION_MANIFESTE.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="OPERATION_VEHICULE.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ORDRE_SERVICE.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PARAMETRE.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PARC.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PAYEMENT.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PROFORMA.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TYPE_OPERATION.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TYPE_VEHICULE.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UTILISATEUR.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="VEHICULE.cs">
+      <DependentUpon>NAVY.tt</DependentUpon>
+    </Compile>
+    <Compile Include="VSOM_EF_Marchal.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config" />
+    <EntityDeploy Include="NAVY.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>NAVY.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="NAVY.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>NAVY.edmx</DependentUpon>
+      <LastGenOutput>NAVY.Context.cs</LastGenOutput>
+    </None>
+    <None Include="NAVY.edmx.diagram">
+      <DependentUpon>NAVY.edmx</DependentUpon>
+    </None>
+    <None Include="NAVY.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>NAVY.edmx</DependentUpon>
+      <LastGenOutput>NAVY.cs</LastGenOutput>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

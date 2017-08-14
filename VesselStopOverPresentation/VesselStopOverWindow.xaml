@@ -1,0 +1,98 @@
+﻿<Page x:Class="VesselStopOverPresentation.VesselStopOverWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Vessel Stop Over Management System" Height="Auto" Width="Auto" FontFamily="Segoe UI" FontSize="11">
+    <DockPanel>
+        <Border DockPanel.Dock="Top" BorderThickness="1.5" CornerRadius="3" BorderBrush="#FF6A87C8">
+            <Label Foreground="White" HorizontalContentAlignment="Center" Content="Vessel Stop Over Management System" BorderThickness="2" FontStretch="Expanded" FontWeight="Bold" Background="#3F51B5" ClipToBounds="False">
+                <Label.LayoutTransform>
+                    <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+                </Label.LayoutTransform>
+                <Label.BorderBrush>
+                    <ImageBrush />
+                </Label.BorderBrush>
+            </Label>
+        </Border>
+        <StatusBar DockPanel.Dock="Bottom" Height="30">
+            <Label Name="lblSociete" FontFamily="Segoe UI" FontSize="11" FontWeight="SemiBold" />
+            <Separator/>
+            <Label Name="lblDate" FontFamily="Segoe UI" FontSize="11" FontWeight="SemiBold"/>
+            <Separator/>
+            <Label Name="lblUser" FontFamily="Segoe UI" FontSize="11" FontWeight="SemiBold"/>
+        </StatusBar>
+        <GroupBox DockPanel.Dock="Left" Header="Panneau de contrôle" Height="Auto" Width="200" Name="controlPanel" HorizontalAlignment="Left" BorderThickness="2" UseLayoutRounding="True">
+            <DockPanel Name="dockPanel2">
+                <Border DockPanel.Dock="Top" BorderThickness="1.5" CornerRadius="3" BorderBrush="#FF6A87C8">
+                    <Label Height="40" Name="controlHeader" Content="Tableau de bord" FontWeight="Bold" Background="#1A000000" HorizontalContentAlignment="Center" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+                </Border>
+                <Button DockPanel.Dock="Bottom" Height="40" Name="btnAdministration" HorizontalContentAlignment="Left" ClickMode="Press" Click="btnAdministration_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/VesselStopOverPresentation;component/Icons/Categories-preferences-other-icon.png" Stretch="Uniform" Height="25" Width="25" />
+                        <TextBlock Text=" Administration" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Button>
+                <Button DockPanel.Dock="Bottom" Height="40" Name="btnFinance" HorizontalContentAlignment="Left" ClickMode="Press" Click="btnFinance_Click_1">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/VesselStopOverPresentation;component/Icons/Categories-preferences-other-icon.png" Stretch="Uniform" Height="25" Width="25" />
+                        <TextBlock Text=" Finance" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Button>
+                <Button DockPanel.Dock="Bottom" Height="40" Name="btnReporting" HorizontalContentAlignment="Left" ClickMode="Press" Click="btnReporting_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/VesselStopOverPresentation;component/Icons/report-icon.png" Stretch="Uniform" Height="25" Width="25" />
+                        <TextBlock Text=" Reporting" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Button>
+                <Button DockPanel.Dock="Bottom" Height="40" Name="btnFacturation" HorizontalContentAlignment="Left" ClickMode="Press" Click="btnFacturation_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/VesselStopOverPresentation;component/Icons/Cash-register-icon.png" Stretch="Uniform" Height="25" Width="25" />
+                        <TextBlock Text=" Facturation" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Button>
+                <Button DockPanel.Dock="Bottom" Height="40" Name="btnTracking" HorizontalContentAlignment="Left" ClickMode="Press" Click="btnTracking_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/VesselStopOverPresentation;component/Icons/Jumbo-Crane-with-Movement-icon.png" Stretch="Uniform" Height="25" Width="25" />
+                        <TextBlock Text=" Tracking Conteneur" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Button>
+                <Button DockPanel.Dock="Bottom" Height="40" Name="btnParc" HorizontalContentAlignment="Left" ClickMode="Press" Click="btnParc_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/VesselStopOverPresentation;component/Icons/car-icon.png" Stretch="Uniform" Height="25" Width="25" />
+                        <TextBlock Text=" Activités du parc auto" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Button>
+                <Button DockPanel.Dock="Bottom" Height="40" Name="btnExport" HorizontalContentAlignment="Left" ClickMode="Press" Click="btnExport_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/VesselStopOverPresentation;component/Icons/export-icon.png" Stretch="Uniform" Height="25" Width="25" />
+                        <TextBlock Text=" Activités d'exportation" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Button>
+                <Button DockPanel.Dock="Bottom" Height="40" Name="btnImport" HorizontalContentAlignment="Left" ClickMode="Press" Click="btnImport_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/VesselStopOverPresentation;component/Icons/import-icon.png" Stretch="Uniform" Height="25" Width="25" />
+                        <TextBlock Text=" Activités d'importation" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Button>
+                <Button DockPanel.Dock="Bottom" Height="40" Name="btnExploitation" HorizontalContentAlignment="Left" ClickMode="Press" Click="btnExploitation_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/VesselStopOverPresentation;component/Icons/home-icon.png" Stretch="Uniform" Height="25" Width="25" />
+                        <TextBlock Text=" Activités d'escale" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Button>
+                <Button DockPanel.Dock="Bottom" Height="40" Name="btnDashboard" HorizontalContentAlignment="Left" ClickMode="Press" Click="btnDashboard_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/VesselStopOverPresentation;component/Icons/performance-tools-icon.png" Stretch="Uniform" Height="25" Width="25" />
+                        <TextBlock Text=" Tableau de bord" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Button>
+                <ScrollViewer Name="scrollViewer" VerticalScrollBarVisibility="Auto" BorderBrush="Transparent" BorderThickness="0">
+
+                </ScrollViewer>
+            </DockPanel>
+        </GroupBox>
+        <GridSplitter Width="5" Background="AliceBlue" ResizeBehavior="PreviousAndNext"/>
+        <GroupBox Header="Panneau principal" Name="mainPanel" BorderThickness="2" UseLayoutRounding="True">
+            
+        </GroupBox>
+    </DockPanel>
+</Page>

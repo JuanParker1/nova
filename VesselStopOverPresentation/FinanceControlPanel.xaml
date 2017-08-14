@@ -1,0 +1,55 @@
+﻿<StackPanel x:Class="VesselStopOverPresentation.FinanceControlPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Button Name="btnExtract" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnExtract_Click_1">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Journal Comptable" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+
+    <Button Name="btnAvoirSpot" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnAvoirSpot_Click_1">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Avoir Spot" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+
+
+    <Button Name="btnCentralisationPaie"  HorizontalContentAlignment="Left" Click="btnEscaleMAJ_Click_1" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" >
+
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Centralisation Paie" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+
+    <Button Name="btnAppointement"  HorizontalContentAlignment="Left" Click="btnAppointement_Click_1" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" >
+
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Appointement Paie" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    
+    <Button Name="btnDotationDeCharge"  HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" 
+            BorderBrush="{x:Null}" Click="btnDotationDeCharge_Click_1">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Dotation de Charge" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+
+    <Button Name="btnSageUnlockUser"  HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" 
+            BorderBrush="{x:Null}" Click="btnSageUnlockUser_Click_1">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Utilisateur Sage" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    
+</StackPanel>

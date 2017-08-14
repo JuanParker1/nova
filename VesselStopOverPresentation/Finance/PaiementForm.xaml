@@ -1,0 +1,454 @@
+﻿<Window x:Class="VesselStopOverPresentation.PaiementForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        Title="Paiement" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" MinHeight="600" Width="1024" WindowStartupLocation="CenterScreen" ResizeMode="CanResize" FontFamily="Segoe UI" FontSize="11" Icon="/VesselStopOverPresentation;component/Icons/LogoApp.png" WindowState="Maximized">
+    <Window.Resources>
+        <Style TargetType="DataGridRow">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsFacture}" Value="true">
+                    <Setter Property="Foreground" Value="Red" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <DockPanel>
+        <StackPanel Name="stackPanelCommands" DockPanel.Dock="Top" Orientation="Horizontal" Background="#3F51B5">
+            <GridSplitter Width="1.5" Background="Transparent"/>
+            <Border Name="enregistrerBorder" BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                <DockPanel Margin="1">
+                    <TextBlock DockPanel.Dock="Bottom" Text="Enregistrer" TextAlignment="Center" Height="18" Width="Auto" TextWrapping="Wrap" Foreground="White" Background="#FF50509D"/>
+                    <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnEnregistrer" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnEnregistrer_Click">
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                            <Image Source="/VesselStopOverPresentation;component/Icons/Save-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                            <TextBlock Text="Enregistrer" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                        </StackPanel>
+                    </Button>
+                </DockPanel>
+            </Border>
+            <GridSplitter Width="3" Background="Transparent" Cursor="Arrow" />
+            <Border Name="borderActions" BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                <DockPanel Margin="1">
+                    <TextBlock DockPanel.Dock="Bottom" Text="Actions" TextAlignment="Center" Height="18" Width="Auto" TextWrapping="Wrap" Foreground="White" Background="#FF50509D"/>
+                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" HorizontalAlignment="Left">
+                        <Button Width="130" Height="75" VerticalAlignment="Top" Name="btnAnnuler" HorizontalContentAlignment="Center" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnAnnuler_Click">
+                            <StackPanel Orientation="Vertical">
+                                <Image Source="/VesselStopOverPresentation;component/Icons/Document-Delete-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                <TextBlock Text="Annuler paiement" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                            </StackPanel>
+                        </Button>
+                        <StackPanel DockPanel.Dock="Left" Orientation="Vertical" HorizontalAlignment="Left">
+                            <Button DockPanel.Dock="Left" Height="25" Width="150" VerticalAlignment="Top" Name="btnAjoutNote" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Notepad-Bloc-notes-icon.png" Stretch="Uniform" Height="20" Width="20" />
+                                    <TextBlock Text=" Ajouter une note" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+            <GridSplitter Width="3" Background="Transparent" Cursor="Arrow" />
+            <Border Name="borderEtat" BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                <DockPanel Margin="1">
+                    <TextBlock DockPanel.Dock="Bottom" Text="Etat" TextAlignment="Center" Height="18" Width="Auto" TextWrapping="Wrap" Foreground="White" Background="#FF50509D"/>
+                    <StackPanel DockPanel.Dock="Left" Orientation="Vertical" HorizontalAlignment="Left">
+                        <Button DockPanel.Dock="Left" Height="25" Width="150" VerticalAlignment="Top" Name="btnImprimerRecu" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnImprimerRecu_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="/VesselStopOverPresentation;component/Icons/reports-icon.png" Stretch="Uniform" Height="20" Width="20" />
+                                <TextBlock Text=" Imprimer reçu" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+        </StackPanel>
+        <StatusBar DockPanel.Dock="Bottom" Height="30" FlowDirection="RightToLeft">
+            <Label Name="lblStatut" FlowDirection="LeftToRight" FontWeight="SemiBold" FontFamily="Segoe UI" FontSize="11" />
+            <Separator/>
+            <Label Name="lblAcconier" FlowDirection="LeftToRight" FontWeight="SemiBold" FontFamily="Segoe UI" FontSize="11" />
+            <Separator/>
+            <Label Name="lblNavire" FlowDirection="LeftToRight" FontWeight="SemiBold" FontFamily="Segoe UI" FontSize="11" />
+            <Separator/>
+            <Label Name="lblEscale" FlowDirection="LeftToRight" FontWeight="SemiBold" FontFamily="Segoe UI" FontSize="11" />
+        </StatusBar>
+        <DockPanel>
+            <GroupBox Name="groupBoxComptes" DockPanel.Dock="Right" Height="Auto" Width="250" Header="Synthèses" HorizontalAlignment="Left" BorderThickness="2" UseLayoutRounding="True">
+                <StackPanel Orientation="Vertical">
+                    <Expander Name="expanderNotes" IsExpanded="True">
+                        <Expander.Header>
+                            <Border Background="#FFF0F0F0" Width="210" BorderThickness="1.5" CornerRadius="3">
+                                <TextBlock Text="Notes" FontWeight="SemiBold"/>
+                            </Border>
+                        </Expander.Header>
+                    </Expander>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox DockPanel.Dock="Left" Header="Informations sur le paiement" Background="#FAFAFA" BorderThickness="2">
+                <DockPanel>
+                    <Grid DockPanel.Dock="Top" Background="#FAFAFA" Margin="2" UseLayoutRounding="True">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="27"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="134"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Grid.Row="0" Grid.Column="0" Content="Sys. ID/ Ref SAP : " Margin="0,2,0,2" />
+                        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
+                            <ComboBox Name="cbIdPay" Width="125" Margin="0,2,0,2" ItemsSource="{Binding pays}" HorizontalAlignment="Left" IsEditable="True" PreviewKeyDown="cbIdPay_PreviewKeyDown" PreviewTextInput="cbIdPay_PreviewTextInput" />
+                            <TextBox Name="txtIdPaySAP" Width="100" Margin="2,2,0,2" Background="AntiqueWhite" IsReadOnly="True" TextAlignment="Right"/>
+                        </StackPanel>
+                    </Grid>
+                    <GroupBox DockPanel.Dock="Top" Header="Connaissement" Background="#FAFAFA" Margin="0,2,0,2">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="130"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <Label Grid.Row="0" Grid.Column="0" Content="Connaissement : " Margin="0,2,0,2"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
+                                <ComboBox Name="cbNumBL" Width="125" Margin="0,2,0,2" ItemsSource="{Binding cons}" IsEditable="True" PreviewKeyDown="cbNumBL_PreviewKeyDown" />
+                                <TextBox Name="txtIdBL" Width="100" Margin="2,2,0,2" Background="AntiqueWhite" IsReadOnly="True" TextAlignment="Right"/>
+                            </StackPanel>
+
+                            <Label Grid.Row="1" Grid.Column="0" Content="Mode de paiement : " Margin="0,2,0,2"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
+                                <ComboBox Name="cbModePay" ItemsSource="{Binding modePays}" Width="125" Margin="0,2,0,2" SelectionChanged="cbModePay_SelectionChanged"/>
+                                <TextBox Name="txtComptePay" Width="100" Margin="2,2,0,2" Background="AntiqueWhite" IsReadOnly="True" TextAlignment="Right"/>
+                            </StackPanel>
+
+                            <Label Grid.Row="2" Grid.Column="0" Content="Banque/Agence : " Margin="0,2,0,2"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1">
+                                <TextBox Name="txtBanque" Width="125" Margin="0,2,0,2" IsEnabled="False" TextAlignment="Left"/>
+                                <TextBox Name="txtAgence" Width="100" Margin="2,2,0,2" IsEnabled="False" TextAlignment="Left"/>
+                            </StackPanel>
+
+                            <Label Grid.Row="3" Grid.Column="0" Content="N° Compte/N° Chèque : " Margin="0,2,0,2"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1">
+                                <TextBox Name="txtNumCompte" Width="125" Margin="0,2,0,2" IsEnabled="False" TextAlignment="Left" PreviewTextInput="txtNumCheque_PreviewTextInput" />
+                                <TextBox Name="txtNumCheque" Width="100" Margin="2,2,0,2" IsEnabled="False" TextAlignment="Left" PreviewTextInput="txtNumCheque_PreviewTextInput" />
+                            </StackPanel>
+
+                            <Label Grid.Row="4" Grid.Column="0" Content="Ref. Virt/Banque : " Margin="0,2,0,2"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="1">
+                                <TextBox Name="txtRefVirt" Width="75" Margin="0,2,0,2" IsEnabled="False" TextAlignment="Left"/>
+                                <ComboBox Name="cbBanque" Width="75" Margin="2,2,0,2" ItemsSource="{Binding banks}" IsEnabled="False" SelectionChanged="cbBanque_SelectionChanged" />
+                                <TextBox Name="txtCCBanque" Width="75" Margin="2,2,0,2" IsReadOnly="True" Background="AntiqueWhite" TextAlignment="Left"/>
+                            </StackPanel>
+
+                            <Label Grid.Row="5" Grid.Column="0" Content="A payer/Reçu/A rendre : " Margin="0,2,0,2"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.Column="1">
+                                <TextBox Name="txtMAPay" Width="75" Margin="0,2,0,2" Background="AntiqueWhite" IsReadOnly="True" TextAlignment="Right"/>
+                                <TextBox Name="txtMRPay" Width="75" Margin="2,2,0,2" TextAlignment="Right" PreviewTextInput="txtMRPay_PreviewTextInput" LostFocus="txtMRPay_LostFocus" />
+                                <TextBox Name="txtMRendrePay" Width="75" Margin="2,2,0,2" Background="AntiqueWhite" IsReadOnly="True" TextAlignment="Right"/>
+                            </StackPanel>
+
+                            <Label Grid.Row="6" Grid.Column="0" Content="Retenue IS / Caisse : " Margin="0,2,0,2"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.Column="1">
+                                <CheckBox Name="chkRetenueIS" Width="100" Margin="0,2,0,2" Content="Retenue IS" VerticalAlignment="Center"/>
+                                <ComboBox Grid.Row="6" Grid.Column="1" Name="cbCompteCaisse" IsEnabled="False" Width="125" HorizontalAlignment="Left" Margin="2,2,0,2">
+                                    <ComboBoxItem Content="5711101"/>
+                                    <ComboBoxItem Content="5711102"/>
+                                    <ComboBoxItem Content="5711103"/>
+                                    <ComboBoxItem Content="5711104"/>
+                                </ComboBox>
+                            </StackPanel>
+                            
+
+                            <Label Grid.Row="7" Grid.Column="0" Content="Observations : " Margin="0,2,0,2"/>
+                            <RichTextBox Grid.Row="7" Grid.Column="1" Name="txtObservations" Grid.RowSpan="2" Width="230" Margin="0,2,0,2" HorizontalAlignment="Left"/>
+
+                        </Grid>
+                    </GroupBox>
+
+                    <GroupBox DockPanel.Dock="Top" Header="Informations sur le paiement" Background="#FAFAFA" Margin="0,2,0,2">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="130"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <Label Grid.Row="0" Grid.Column="0" Content="Client : " Margin="0,2,0,2"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
+                                <ComboBox Width="125" Name="cbClient" Margin="0,2,0,2" ItemsSource="{Binding clts}" IsEnabled="False" SelectionChanged="cbClient_SelectionChanged" />
+                                <TextBox Width="100" Name="txtCodeClient" Margin="2,2,0,2" Background="AntiqueWhite" IsReadOnly="True" TextAlignment="Right" />
+                            </StackPanel>
+                            <Label Grid.Row="1" Grid.Column="0" Content="Consignee : " Margin="0,2,0,2"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" Name="txtConsignee" Grid.ColumnSpan="2" Width="227" Margin="0,2,0,2" Background="AntiqueWhite" IsReadOnly="True" HorizontalAlignment="Left"/>
+
+                            <Label Grid.Row="2" Grid.Column="0" Content="Adr./N° Contrib : " Margin="0,2,0,2"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1">
+                                <TextBox Name="txtAdresse" Width="125" Margin="0,2,0,2" Background="AntiqueWhite" IsReadOnly="True" TextAlignment="Right"/>
+                                <TextBox Name="txtContrib" Width="100" Margin="2,2,0,2" Background="AntiqueWhite" IsReadOnly="True" TextAlignment="Right"/>
+                            </StackPanel>
+
+                            <Label Grid.Row="3" Grid.Column="0" Content="Escale : " Margin="0,2,0,2"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1">
+                                <ComboBox Name="cbNumEsc" Width="73" Margin="2,2,0,2" ItemsSource="{Binding escs}" SelectionChanged="cbNumEsc_SelectionChanged" />
+                                <TextBox Name="txtNumVoy" Width="73" Margin="2,2,0,2" Background="AntiqueWhite" IsReadOnly="True" TextAlignment="Right"/>
+                                <ComboBox Name="cbNavire" Width="74" Margin="2,2,0,2" ItemsSource="{Binding navs}"/>
+                            </StackPanel>
+                        </Grid>
+                    </GroupBox>
+
+                    <GroupBox MaxWidth="365" Header="Marchandises" Background="#FAFAFA" Margin="0,2,0,0">
+                        <TabControl>
+                            <TabItem Header="Vehicule(s)" Name="vehTab">
+                                <DataGrid Name="dataGridVehicules" IsReadOnly="True" ItemsSource="{Binding vehicules}" AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header=" "></DataGridTextColumn>
+                                        <DataGridTextColumn Header="N° chassis" Width="65" Binding="{Binding NumChassis}"></DataGridTextColumn>
+                                        <DataGridTextColumn Header="Description" Width="100" Binding="{Binding DescVeh}"></DataGridTextColumn>
+                                        <DataGridTextColumn Header="Volume" Width="Auto" Binding="{Binding VolMVeh, ConverterCulture=fr-FR, StringFormat={}{0:N3} m³}">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="TextAlignment" Value="Right"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Header="Statut" Width="Auto" Binding="{Binding StatVeh}"></DataGridTextColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </TabItem>
+                            <TabItem Header="Conteneurs(s)" Name="contTab">
+                                <DataGrid Name="dataGridConteneurs" IsReadOnly="True" ItemsSource="{Binding conteneurs}" AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header=" "></DataGridTextColumn>
+                                        <DataGridTextColumn Header="N° conteneur" Width="Auto" Binding="{Binding NumCtr}"></DataGridTextColumn>
+                                        <DataGridTextColumn Header="Description" Width="100" Binding="{Binding DescCtr}"></DataGridTextColumn>
+                                        <DataGridTextColumn Header="Type" Width="Auto" Binding="{Binding TypeMCtr}">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="TextAlignment" Value="Center"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Header="Statut" Width="Auto" Binding="{Binding StatCtr}"></DataGridTextColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </TabItem>
+                            <TabItem Header="General cargo" Name="gcTab">
+                                <DataGrid Name="dataGridGC" IsReadOnly="True" ItemsSource="{Binding conventionnels}" AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header=" "></DataGridTextColumn>
+                                        <DataGridTextColumn Header="N° Cargo" Width="Auto" Binding="{Binding NumGC}"></DataGridTextColumn>
+                                        <DataGridTextColumn Header="Description" Width="100" Binding="{Binding DescGC}"></DataGridTextColumn>
+                                        <DataGridTextColumn Header="Poids" Width="Auto" Binding="{Binding PoidsMGC, ConverterCulture=fr-FR, StringFormat={}{0:N0} Kg}">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="TextAlignment" Value="Right"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Header="Volume" Width="Auto" Binding="{Binding VolMGC, ConverterCulture=fr-FR, StringFormat={}{0:N3} m³}">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="TextAlignment" Value="Right"/>
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Header="Statut" Width="Auto" Binding="{Binding StatGC}"></DataGridTextColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </TabItem>
+                        </TabControl>
+                    </GroupBox>
+                </DockPanel>
+            </GroupBox>
+            <GroupBox Header="Finances" BorderThickness="2">
+                <TabControl>
+                    <TabItem Header="Proforma(s)" Name="profTab">
+                        <DataGrid Name="dataGridProfs" IsReadOnly="True" ItemsSource="{Binding proformas}" AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader" SelectionChanged="dataGridProfs_SelectionChanged">
+                            <DataGrid.Resources>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding DVFP}" Value="{x:Null}">
+                                            <Setter Property="Foreground" Value="Red" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Resources>
+                            <DataGrid.RowHeaderTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <CheckBox IsChecked="{Binding Path=IsSelected, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGridRow}}}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGrid.RowHeaderTemplate>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header=" "></DataGridTextColumn>
+                                <DataGridTextColumn Header="Id. prof." Width="Auto" Binding="{Binding IdFP}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Right"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Date création" Width="Auto" Binding="{Binding DCFP, StringFormat='{}{0:dd/MM/yyyy HH:mm:ss}'}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Date validation" Width="Auto" Binding="{Binding DVFP, StringFormat='{}{0:dd/MM/yyyy HH:mm:ss}'}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Total HT" Width="Auto" Binding="{Binding MHT, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Right"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Total TVA" Width="Auto" Binding="{Binding MTVA, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Right"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Total TTC" Width="Auto" Binding="{Binding MTTC, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Right"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Remarques" Width="140" Binding="{Binding AIFD}"></DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </TabItem>
+                    <TabItem Header="Facture(s)" Name="factTab">
+                        <DataGrid Name="dataGridFacts" IsReadOnly="True" ItemsSource="{Binding factures}" AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader" SelectionChanged="dataGridFacts_SelectionChanged" MouseDoubleClick="dataGridFacts_MouseDoubleClick">
+                            <DataGrid.Resources>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IdPay}" Value="{x:Null}">
+                                            <Setter Property="Foreground" Value="Red" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Resources>
+                            <DataGrid.RowHeaderTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <CheckBox IsChecked="{Binding Path=IsSelected, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGridRow}}}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGrid.RowHeaderTemplate>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header=" "></DataGridTextColumn>
+                                <DataGridTextColumn Header="Id. fact." Width="Auto" Binding="{Binding IdDocSAP}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Right"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Date création" Width="Auto" Binding="{Binding DCFD, StringFormat='{}{0:dd/MM/yyyy HH:mm:ss}'}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Total HT" Width="Auto" Binding="{Binding MHT, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Right"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Total TVA" Width="Auto" Binding="{Binding MTVA, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Right"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Total TTC" Width="Auto" Binding="{Binding MTTC, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Right"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Remarques" Width="140" Binding="{Binding AIFD}"></DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </TabItem>
+                    <TabItem Header="Caution(s)" Name="cautionsTab">
+                        <DataGrid Name="dataGridCautions" IsReadOnly="True" ItemsSource="{Binding conteneurs}" AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader" SelectionChanged="dataGridCtrs_SelectionChanged">
+                            <DataGrid.RowHeaderTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <CheckBox IsChecked="{Binding Path=IsSelected, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGridRow}}}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGrid.RowHeaderTemplate>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header=" "></DataGridTextColumn>
+                                <DataGridTextColumn Header="N° conteneur" Width="Auto" Binding="{Binding NumCtr}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Description" Width="140" Binding="{Binding DescCtr}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Montant" Width="Auto" Binding="{Binding MCCtr, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Right"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Description marchandises" Width="140" Binding="{Binding DescMses}"></DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </TabItem>
+
+                    <TabItem Header="Restitution(s) de caution" Name="restCautionTab">
+                        <DataGrid Name="dataGridRestCautions" IsReadOnly="True" ItemsSource="{Binding restCautions}" AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader" SelectionChanged="dataGridRestCautions_SelectionChanged">
+                            <DataGrid.RowHeaderTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <CheckBox IsChecked="{Binding Path=IsSelected, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGridRow}}}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGrid.RowHeaderTemplate>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header=" "></DataGridTextColumn>
+                                <DataGridTextColumn Header="Id. paiement" Width="Auto" Binding="{Binding IdPay}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Right"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Date paiement" Width="Auto" Binding="{Binding DatePay, StringFormat='{}{0:dd/MM/yyyy HH:mm:ss}'}"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Montant à payer" Width="Auto" Binding="{Binding MAPay, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Right"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Montant restant" Width="Auto" Binding="{Binding MRPay, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Right"/>
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Remarques" Width="140" Binding="{Binding AIPay}"></DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </TabItem>
+                </TabControl>
+                
+            </GroupBox>
+        </DockPanel>
+    </DockPanel>
+</Window>

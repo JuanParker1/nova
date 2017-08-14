@@ -1,0 +1,103 @@
+﻿<DockPanel x:Class="VesselStopOverPresentation.Finance.AvoirSpotPanel"
+              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d"  xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             d:DesignHeight="300" d:DesignWidth="800">
+    <Border DockPanel.Dock="Top" BorderThickness="1.5" CornerRadius="1.5" BorderBrush="#FF6A87C8">
+        <StackPanel Name="stackPanelCommands" Orientation="Horizontal" Background="#3F51B5">
+            <GridSplitter Width="1.5" Background="Transparent"/>
+            <Border BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                <DockPanel Margin="1">
+                    <TextBlock DockPanel.Dock="Bottom" Text="Nouveau" TextAlignment="Center" Height="18" Width="Auto" TextWrapping="Wrap" Foreground="White" Background="#FF50509D"/>
+                    <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnNouveau" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnNouveau_Click_1">
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                            <Image Source="/VesselStopOverPresentation;component/Icons/File-new-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                            <TextBlock Text="Nouveau" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                        </StackPanel>
+                    </Button>
+                </DockPanel>
+            </Border>
+        </StackPanel>
+    </Border>
+
+
+    <Border DockPanel.Dock="Top" BorderThickness="1.5" CornerRadius="1.5" BorderBrush="#FFD8D2D2">
+        <DockPanel Name="panelRecherche" Background="#FFD8D2D2">
+
+            <TextBox Name="txtRechercher" DockPanel.Dock="Right" Width="140" FlowDirection="LeftToRight" TextAlignment="Right" PreviewKeyDown="txtRechercher_PreviewKeyDown_1" />
+            <Label Content="N° " DockPanel.Dock="Right" FontStyle="Italic" FontWeight="Bold" FlowDirection="LeftToRight"/>
+
+            <Grid Height="28" Width="630" DockPanel.Dock="Left" HorizontalAlignment="Left">
+                <Label Content="Filtre : " IsEnabled="False" FontWeight="Bold" FlowDirection="LeftToRight" Margin="0,0,581,0"/>
+                <ComboBox x:Name="cbFiltres" Width="150" IsEnabled="False" HorizontalAlignment="Left" VerticalContentAlignment="Center" Background="#FFD8D2D2" BorderThickness="0" BorderBrush="Transparent" Margin="49,0,0,0">
+                    <ComboBoxItem Content="Factures non validées"/>
+                    <ComboBoxItem Content="Factures validées"/>
+                    <ComboBoxItem Content="Factures payées"/>
+                </ComboBox>
+
+                <Label Content="Date Debut" FontStyle="Italic" FontWeight="Bold" FlowDirection="LeftToRight" Margin="199,0,357,0"/>
+                <DatePicker x:Name="txtdebut" HorizontalAlignment="Left" SelectedDate="{x:Static sys:DateTime.Now}" Width="130" Margin="273,2,0,2"/>
+
+                <Label Content="Date FIn" FontStyle="Italic" FontWeight="Bold" FlowDirection="LeftToRight" Margin="403,0,170,0"/>
+                <DatePicker x:Name="txtfin" HorizontalAlignment="Left" SelectedDate="{x:Static sys:DateTime.Now}" Width="130" Margin="460,2,0,2"/>
+
+                <Button x:Name="btnRechercher" Focusable="False" Margin="590,2,0,2" Click="btnRechercher_Click_1">
+                    <Button.Background>
+                        <ImageBrush ImageSource="/VesselStopOverPresentation;component/Icons/Filter-List-icon.png" Stretch="UniformToFill" TileMode="None" />
+                    </Button.Background>
+                </Button>
+
+            </Grid>
+
+        </DockPanel>
+    </Border>
+
+    <StatusBar DockPanel.Dock="Bottom" Height="30" FlowDirection="RightToLeft">
+        <Label Name="lblStatut" FlowDirection="LeftToRight" FontWeight="SemiBold" FontFamily="Segoe UI" FontSize="11" />
+    </StatusBar>
+
+    <DataGrid Name="dataGrid" IsReadOnly="True" ItemsSource="{Binding factures}" AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader" MouseDoubleClick="dataGrid_MouseDoubleClick_1">
+       
+        <DataGrid.Columns>
+            <DataGridTextColumn Header=" "></DataGridTextColumn>
+            <DataGridTextColumn Header="N° Avoir" Width="Auto" Binding="{Binding IdDocSAP}">
+                <DataGridTextColumn.ElementStyle>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="TextAlignment" Value="Right"/>
+                    </Style>
+                </DataGridTextColumn.ElementStyle>
+            </DataGridTextColumn>
+
+            <DataGridTextColumn Header="Code Client" Width="Auto" Binding="{Binding CLIENT.CodeClient}"></DataGridTextColumn>
+            <DataGridTextColumn Header="Client" Width="Auto" Binding="{Binding CLIENT.NomClient}"></DataGridTextColumn>
+            <DataGridTextColumn Header="Date création" Width="Auto" Binding="{Binding DCFD, StringFormat='{}{0:dd/MM/yyyy HH:mm:ss}'}"></DataGridTextColumn>
+            <!--<DataGridTextColumn Header="Date de paiement" Width="Auto" Binding="{Binding PAYEMENT.DatePay, StringFormat='{}{0:dd/MM/yyyy HH:mm:ss}'}"></DataGridTextColumn>-->
+            <DataGridTextColumn Header="Total HT" Width="Auto" Binding="{Binding MHT, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
+                <DataGridTextColumn.ElementStyle>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="TextAlignment" Value="Right"/>
+                    </Style>
+                </DataGridTextColumn.ElementStyle>
+            </DataGridTextColumn>
+            <DataGridTextColumn Header="Total TVA" Width="Auto" Binding="{Binding MTVA, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
+                <DataGridTextColumn.ElementStyle>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="TextAlignment" Value="Right"/>
+                    </Style>
+                </DataGridTextColumn.ElementStyle>
+            </DataGridTextColumn>
+            <DataGridTextColumn Header="Total TTC" Width="Auto" Binding="{Binding MTTC, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
+                <DataGridTextColumn.ElementStyle>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="TextAlignment" Value="Right"/>
+                    </Style>
+                </DataGridTextColumn.ElementStyle>
+            </DataGridTextColumn>
+            <DataGridTextColumn Header="Remarques" Width="180" Binding="{Binding AIFD}"></DataGridTextColumn>
+        </DataGrid.Columns>
+    </DataGrid>
+
+
+</DockPanel>

@@ -1,0 +1,288 @@
+﻿<Window x:Class="VesselStopOverPresentation.CubageForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        Title="Cubage" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" MinHeight="600" Width="1024" WindowStartupLocation="CenterScreen" ResizeMode="CanResize" FontFamily="Segoe UI" FontSize="11" Icon="/VesselStopOverPresentation;component/Icons/LogoApp.png" WindowState="Maximized">
+    <DockPanel>
+        <StackPanel Name="stackPanelCommands" DockPanel.Dock="Top" Orientation="Horizontal" Background="#3F51B5">
+            <GridSplitter Width="1.5" Background="Transparent"/>
+            <Border Name="enregistrerBorder" BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                <DockPanel Margin="1">
+                    <TextBlock DockPanel.Dock="Bottom" Text="Enregistrer" TextAlignment="Center" Height="18" Width="Auto" TextWrapping="Wrap" Foreground="White" Background="#FF50509D"/>
+                    <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnEnregistrer" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnEnregistrer_Click">
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                            <Image Source="/VesselStopOverPresentation;component/Icons/Save-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                            <TextBlock Text="Enregistrer" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                        </StackPanel>
+                    </Button>
+                </DockPanel>
+            </Border>
+            <GridSplitter Width="3" Background="Transparent" Cursor="Arrow" />
+            <Border Name="borderActions" BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                <DockPanel Margin="1">
+                    <TextBlock DockPanel.Dock="Bottom" Text="Actions" TextAlignment="Center" Height="18" Width="Auto" TextWrapping="Wrap" Foreground="White" Background="#FF50509D"/>
+                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" HorizontalAlignment="Left">
+                        <Button DockPanel.Dock="Left" Height="75" Width="130" VerticalAlignment="Top" Name="btnCloturerCub" HorizontalContentAlignment="Center" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnCloturerCub_Click">
+                            <StackPanel Orientation="Vertical">
+                                <Image Source="/VesselStopOverPresentation;component/Icons/process-accept-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                <TextBlock Text=" Clôturer le cubage" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                            </StackPanel>
+                        </Button>
+                        <StackPanel DockPanel.Dock="Left" Orientation="Vertical" HorizontalAlignment="Left">
+                            <Button DockPanel.Dock="Left" Height="25" Width="150" VerticalAlignment="Top" Name="btnCuber" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnCuber_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Drawing-icon.png" Stretch="Uniform" Height="20" Width="20" />
+                                    <TextBlock Text=" Cuber" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                                </StackPanel>
+                            </Button>
+                            <Button DockPanel.Dock="Left" Height="25" Width="150" VerticalAlignment="Top" Name="btnValiderCubage" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnValiderCubage_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Accept-icon.png" Stretch="Uniform" Height="20" Width="20" />
+                                    <TextBlock Text=" Valider cubage" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                                </StackPanel>
+                            </Button>
+                            <Button DockPanel.Dock="Left" Height="25" Width="150" VerticalAlignment="Top" Name="btnAjoutNote" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Notepad-Bloc-notes-icon.png" Stretch="Uniform" Height="20" Width="20" />
+                                    <TextBlock Text=" Ajouter une note" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                        <StackPanel DockPanel.Dock="Left" Orientation="Vertical" HorizontalAlignment="Left">
+                            <Button DockPanel.Dock="Left" Height="25" Width="150" VerticalAlignment="Top" Name="btnAjout" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnAjout_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/new-file-icon.png" Stretch="Uniform" Height="20" Width="20" />
+                                    <TextBlock Text=" Ajouter véhicules" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                                </StackPanel>
+                            </Button>
+                            <Button DockPanel.Dock="Left" Height="25" Width="150" VerticalAlignment="Top" Name="btnRetirer" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnRetirer_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Document-Delete-icon.png" Stretch="Uniform" Height="20" Width="20" />
+                                    <TextBlock Text=" Retirer véhicules" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+            <GridSplitter Width="3" Background="Transparent" Cursor="Arrow" />
+            <Border Name="borderEtat" BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                <DockPanel Margin="1">
+                    <TextBlock DockPanel.Dock="Bottom" Text="Etat" TextAlignment="Center" Height="18" Width="Auto" TextWrapping="Wrap" Foreground="White" Background="#FF50509D"/>
+                    <StackPanel DockPanel.Dock="Left" Orientation="Vertical" HorizontalAlignment="Left">
+                        <Button DockPanel.Dock="Left" Height="25" Width="150" VerticalAlignment="Top" Name="btnEtat" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnEtat_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="/VesselStopOverPresentation;component/Icons/reports-icon.png" Stretch="Uniform" Height="20" Width="20" />
+                                <TextBlock Text=" Imprimer projet de cub." VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+        </StackPanel>
+        <StatusBar DockPanel.Dock="Bottom" Height="30" FlowDirection="RightToLeft">
+            <Label Name="lblStatut" FlowDirection="LeftToRight" FontWeight="SemiBold" FontFamily="Segoe UI" FontSize="11" />
+            <Separator/>
+            <Label Name="lblEtat" FlowDirection="LeftToRight" FontWeight="SemiBold" FontFamily="Segoe UI" FontSize="11" />
+            <Separator/>
+            <Label Name="lblEscale" FlowDirection="LeftToRight" FontWeight="SemiBold" FontFamily="Segoe UI" FontSize="11" />
+        </StatusBar>
+        <DockPanel>
+            <GroupBox Name="groupBoxSyntheses" DockPanel.Dock="Right" Height="Auto" Width="250" Header="Synthèses" HorizontalAlignment="Left" BorderThickness="2" UseLayoutRounding="True">
+                <StackPanel Orientation="Vertical">
+                    <Expander Name="expanderStatCubage" IsExpanded="True">
+                        <Expander.Header>
+                            <Border Background="#FFF0F0F0" Width="210" BorderThickness="1.5" CornerRadius="3">
+                                <TextBlock Text="Statut du cubage" FontWeight="SemiBold"/>
+                            </Border>
+                        </Expander.Header>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Content="Total à cuber :" HorizontalAlignment="Left"/>
+                            <Label Grid.Row="1" Grid.Column="0" Content="Véhicules cubés :" HorizontalAlignment="Left"/>
+                            <Label Grid.Row="2" Grid.Column="0" Content="Véhicules restants :" HorizontalAlignment="Left"/>
+                            <Label Grid.Row="0" Grid.Column="1" Name="nbVehTotal" ContentStringFormat="{}{0:N0}" HorizontalAlignment="Right" Foreground="Blue" Cursor="Hand"/>
+                            <Label Grid.Row="1" Grid.Column="1" Name="nbVehCubes" ContentStringFormat="{}{0:N0}" HorizontalAlignment="Right" Foreground="Blue" Cursor="Hand"/>
+                            <Label Grid.Row="2" Grid.Column="1" Name="nbVehRestant" ContentStringFormat="{}{0:N0}" HorizontalAlignment="Right" Foreground="Blue" Cursor="Hand"/>
+                        </Grid>
+                    </Expander>
+                    <Expander Name="expanderNotes" IsExpanded="True">
+                        <Expander.Header>
+                            <Border Background="#FFF0F0F0" Width="210" BorderThickness="1.5" CornerRadius="3">
+                                <TextBlock Text="Notes" FontWeight="SemiBold"/>
+                            </Border>
+                        </Expander.Header>
+                    </Expander>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox DockPanel.Dock="Left" Header="Informations sur le projet de cubage" BorderThickness="2">
+                <Grid Background="#FAFAFA" Margin="2" UseLayoutRounding="True">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="27"/>
+                        <RowDefinition Height="27"/>
+                        <RowDefinition Height="27"/>
+                        <RowDefinition Height="27"/>
+                        <RowDefinition Height="27"/>
+                        <RowDefinition Height="27"/>
+                        <RowDefinition Height="27"/>
+                        <RowDefinition Height="27"/>
+                        <RowDefinition Height="27"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="0" Content="Sys ID : " Margin="0,2,0,2" />
+                    <ComboBox Grid.Row="0" Grid.Column="1" Name="cbIdCub" Width="100" Margin="0,2,0,2" ItemsSource="{Binding cubs}" HorizontalAlignment="Left" IsEditable="True" PreviewKeyDown="cbIdCub_PreviewKeyDown"/>
+
+                    <Label Grid.Row="1" Grid.Column="0" Content="Escale : " Margin="0,2,0,2" />
+                    <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
+                        <ComboBox Width="100" Name="cbNumEscale" Margin="0,2,0,2" ItemsSource="{Binding escs}" IsEditable="True" PreviewKeyDown="cbNumEscale_PreviewKeyDown" />
+                        <TextBox Width="70" Name="txtEscaleSysID" Margin="2,2,0,2" Background="AntiqueWhite" IsReadOnly="True" TextAlignment="Right" />
+                    </StackPanel>
+
+                    <Label Grid.Row="2" Grid.Column="0" Content="Voyage/Navire : " Margin="0,2,0,2"/>
+                    <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1">
+                        <TextBox Name="txtVoyage" Width="100" Margin="0,2,0,2" Background="AntiqueWhite" IsReadOnly="True" />
+                        <TextBox Name="txtNavire" Width="70" Margin="2,2,0,2" Background="AntiqueWhite" IsReadOnly="True" />
+                    </StackPanel>
+
+                    <Label Grid.Row="3" Grid.Column="0" Content="Acconier/Armateur : " Margin="0,2,0,2"/>
+                    <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1">
+                        <TextBox Name="txtAcconier" Width="100" Margin="0,2,0,2" Background="AntiqueWhite" IsReadOnly="True" />
+                        <TextBox Name="txtArmateur" Width="70" Margin="2,2,0,2" Background="AntiqueWhite" IsReadOnly="True" />
+                    </StackPanel>
+
+                    <Label Grid.Row="4" Grid.Column="0" Content="Date de création : " Margin="0,2,0,2"/>
+                    <DatePicker Grid.Row="4" Grid.Column="1" Name="txtEnregistreLe" Width="175" Margin="0,2,0,2" IsEnabled="False" SelectedDate="{x:Static sys:DateTime.Now}" HorizontalAlignment="Left"/>
+
+                    <Label Grid.Row="5" Grid.Column="0" Content="Date d'exécution : " Margin="0,2,0,2"/>
+                    <DatePicker Grid.Row="5" Grid.Column="1" Name="txtDateExecution" Width="175" Margin="0,2,0,2" HorizontalAlignment="Left"/>
+
+                    <Label Grid.Row="6" Grid.Column="0" Content="Date de clôture : " Margin="0,2,0,2"/>
+                    <DatePicker Grid.Row="6" Grid.Column="1" Name="txtDateCloture" Width="175" Margin="0,2,0,2" IsEnabled="False" HorizontalAlignment="Left"/>
+
+                    <Label Grid.Row="7" Grid.Column="0" Content="Remarques : " Margin="0,2,0,2"/>
+                    <RichTextBox Grid.Row="7" Grid.Column="1" Grid.RowSpan="2" Name="txtRemarques" Width="175" Margin="0,2,0,2" VerticalScrollBarVisibility="Auto" />
+                </Grid>
+            </GroupBox>
+            <GroupBox Header="Véhicules" BorderThickness="2">
+                <DockPanel>
+                    <Border Name="eltBorder" DockPanel.Dock="Top" BorderThickness="1.5" CornerRadius="1.5" BorderBrush="#FFD8D2D2">
+                        <DockPanel Background="#FFD8D2D2">
+                            <Label Content="Véhicules : " DockPanel.Dock="Left" FontWeight="Bold" FlowDirection="LeftToRight"/>
+                            <ComboBox Name="cbFiltres" DockPanel.Dock="Left" Width="200" HorizontalAlignment="Left" VerticalContentAlignment="Center" Background="#FFD8D2D2" BorderThickness="0" BorderBrush="Transparent" SelectionChanged="cbFiltres_SelectionChanged">
+                                <ComboBoxItem Content="Tous les véhicules"/>
+                                <ComboBoxItem Content="Cubage(s) à effectuer"/>
+                                <ComboBoxItem Content="Cubage(s) à valider"/>
+                                <ComboBoxItem Content="Cubage(s) validé(s)"/>
+                            </ComboBox>
+                        </DockPanel>
+                    </Border>
+                    <DataGrid Name="dataGridVehicules" IsReadOnly="True" ItemsSource="{Binding vehicules}" AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader" MouseDoubleClick="dataGridVehicules_MouseDoubleClick" SelectionChanged="dataGridVehicules_SelectionChanged">
+                        <DataGrid.Resources>
+                            <Style TargetType="DataGridRow">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsCubed}" Value="false">
+                                        <Setter Property="Foreground" Value="Red" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsCubed}" Value="true">
+                                        <Setter Property="Foreground" Value="Blue" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsValidated}" Value="true">
+                                        <Setter Property="Foreground" Value="Black" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.Resources>
+                        <DataGrid.RowHeaderTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <CheckBox IsChecked="{Binding Path=IsSelected, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGridRow}}}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </DataGrid.RowHeaderTemplate>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header=" "></DataGridTextColumn>
+                            <DataGridTextColumn Header="N° chassis" Width="Auto" Binding="{Binding NumChassis}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="N° BL" Width="Auto" Binding="{Binding NumBL}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Description" Width="150" Binding="{Binding Description}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Etat" Width="Auto" Binding="{Binding Etat}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Vol. manif." Width="50" Binding="{Binding VolumeManifeste, ConverterCulture=fr-FR, StringFormat={}{0:N3} m³}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Right"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Long. manif" Width="50" Binding="{Binding LongueurManifeste, ConverterCulture=fr-FR, StringFormat={}{0:N2} m}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Right"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Larg. manif." Width="50" Binding="{Binding LargeurManifeste, ConverterCulture=fr-FR, StringFormat={}{0:N2} m}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Right"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Haut. manif." Width="50" Binding="{Binding HauteurManifeste, ConverterCulture=fr-FR, StringFormat={}{0:N2} m}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Right"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Vol. cub." Width="50" Binding="{Binding VolumeCube, ConverterCulture=fr-FR, StringFormat={}{0:N3} m³}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Right"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Long. cub." Width="50" Binding="{Binding LongueurCube, ConverterCulture=fr-FR, StringFormat={}{0:N2} m}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Right"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Larg. cub." Width="50" Binding="{Binding LargeurCube, ConverterCulture=fr-FR, StringFormat={}{0:N2} m}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Right"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Haut. cub." Width="Auto" Binding="{Binding HauteurCube, ConverterCulture=fr-FR, StringFormat={}{0:N2} m}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Right"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </GroupBox>
+        </DockPanel>
+    </DockPanel>
+</Window>

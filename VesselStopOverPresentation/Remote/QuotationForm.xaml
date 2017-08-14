@@ -1,0 +1,248 @@
+﻿ <Window x:Class="VesselStopOverPresentation.Remote.QuotationForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        Title="Requetes de quotation" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" MinHeight="600" Width="1024" 
+        WindowStartupLocation="CenterScreen" ResizeMode="CanResize" FontFamily="Segoe UI" FontSize="11" Icon="/VesselStopOverPresentation;component/Icons/LogoApp.png" WindowState="Maximized">
+    <DockPanel>
+        <StackPanel Name="stackPanelCommands" DockPanel.Dock="Top" Orientation="Horizontal" Background="#3F51B5">
+            <GridSplitter Width="1.5" Background="Transparent"/>
+            <Border Name="enregistrerBorder" BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                <DockPanel Margin="1">
+                    <TextBlock DockPanel.Dock="Bottom" Text="Valider" TextAlignment="Center" Height="18" Width="Auto" TextWrapping="Wrap" Foreground="White" Background="#FF50509D"/>
+                    <Button DockPanel.Dock="Left" Height="75" Width="80"  Name="btnEnregistrer" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnEnregistrer_Click_1">
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                            <Image Source="/VesselStopOverPresentation;component/Icons/Accept-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                             
+                        </StackPanel>
+                    </Button>
+                </DockPanel>
+            </Border><GridSplitter Width="3" Background="Transparent" Cursor="Arrow" />
+            <Border Name="borderEtat" BorderThickness="1.5"  Visibility="Collapsed" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                <DockPanel Margin="1">
+                    <TextBlock DockPanel.Dock="Bottom" Text="Proforma" TextAlignment="Center" Height="18" Width="Auto" TextWrapping="Wrap" Foreground="White" Background="#FF50509D"/>
+                    <Button DockPanel.Dock="Left" Height="75" Width="80" Name="BtnProforma" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False" Click="BtnProforma_Click_1">
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                            <Image Source="/VesselStopOverPresentation;component/Icons/ajouter.png" Stretch="Uniform" Height="50" Width="50" />
+
+                        </StackPanel>
+                    </Button>
+                </DockPanel>
+            </Border>
+
+            <GridSplitter Width="3" Background="Transparent" Cursor="Arrow" />
+            <Border Name="borderfacture" BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                <DockPanel Margin="1">
+                    <TextBlock DockPanel.Dock="Bottom" Text="Facturer" TextAlignment="Center" Height="18" Width="Auto" TextWrapping="Wrap" Foreground="White" Background="#FF50509D"/>
+                    <Button DockPanel.Dock="Left" Height="75" Width="80" Name="BtnFacturer" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False" Click="BtnFacturer_Click_1">
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                            <Image Source="/VesselStopOverPresentation;component/Icons/process-accept-icon.png" Stretch="Uniform" Height="50" Width="50" />
+
+                        </StackPanel>
+                    </Button>
+                </DockPanel>
+            </Border>
+
+            <GridSplitter Width="3" Background="Transparent" Cursor="Arrow" />
+            <Border Name="borderActions" BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                <DockPanel Margin="1">
+                    <TextBlock DockPanel.Dock="Bottom" Text="Annuler" TextAlignment="Center" Height="18" Width="Auto" TextWrapping="Wrap" Foreground="White" Background="#FF50509D"/>
+                    <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnAnnuler" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnAnnuler_Click_1">
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                            <Image Source="/VesselStopOverPresentation;component/Icons/Document-Delete-icon.png" Stretch="Uniform" Height="50" Width="50" />
+
+                        </StackPanel>
+                    </Button>
+                </DockPanel>
+            </Border>
+
+            <GridSplitter Width="3" Background="Transparent" Cursor="Arrow" />
+            <Border Name="borderPrint" BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                <DockPanel Margin="1">
+                    <TextBlock DockPanel.Dock="Bottom" Text="Renvoyer" TextAlignment="Center" Height="18" Width="Auto" TextWrapping="Wrap" Foreground="White" Background="#FF50509D"/>
+                    <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnPrint" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnPrint_Click_1">
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                            <Image Source="/VesselStopOverPresentation;component/Icons/report-icon.png" Stretch="Uniform" Height="50" Width="50" />
+
+                        </StackPanel>
+                    </Button>
+                </DockPanel>
+            </Border>
+
+        </StackPanel>
+        <StatusBar DockPanel.Dock="Bottom" Height="30" FlowDirection="RightToLeft">
+            <Label Name="lblStatut" FlowDirection="LeftToRight" FontWeight="SemiBold"  Content="{Binding Statut}" FontFamily="Segoe UI" FontSize="11" />
+            <Separator/>
+            <Label Name="lblQuotHT" FlowDirection="LeftToRight" FontWeight="SemiBold" Foreground="Red" Content="{Binding HT}" FontFamily="Segoe UI" FontSize="11" />
+            <Separator/>
+            <Label Name="lblQuotTVA" FlowDirection="LeftToRight" FontWeight="SemiBold" Foreground="Red" Content="{Binding TVA}" FontFamily="Segoe UI" FontSize="11" />
+            <Separator/>
+            <Label Name="lblQuotTTC" FlowDirection="LeftToRight" FontWeight="SemiBold" Foreground="Red" Content="{Binding TTC}" FontFamily="Segoe UI" FontSize="11" />
+            <Separator/>
+            <Label Name="lblNewHT" FlowDirection="LeftToRight" FontWeight="SemiBold" Content="{Binding NHT}" FontFamily="Segoe UI" FontSize="11" />
+            <Separator/>
+            <Label Name="lblNewTVA" FlowDirection="LeftToRight" FontWeight="SemiBold" Content="{Binding NTVA}" FontFamily="Segoe UI" FontSize="11" />
+            <Separator/>
+            <Label Name="lblNewTTC" FlowDirection="LeftToRight" FontWeight="SemiBold" Content="{Binding NTTC}" FontFamily="Segoe UI" FontSize="11" />
+        </StatusBar>
+        <DockPanel>
+            <GroupBox DockPanel.Dock="Left" Header="Informations sur la requête" Background="#FAFAFA" BorderThickness="2">
+                <DockPanel>
+                    <Grid DockPanel.Dock="Top" Background="#FAFAFA" Margin="2" UseLayoutRounding="True">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="27"/>
+                            <RowDefinition Height="27"/>
+                            <RowDefinition Height="27"/>
+                            <RowDefinition Height="27"/>
+                            <RowDefinition Height="27"/>
+                            <RowDefinition Height="27"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="110"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Grid.Row="0" Grid.Column="0" Content="Ref. Requetes  : " Margin="0,2,0,2" />
+                        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
+                            <TextBox Name="txtIdAvoir" Width="125" Margin="0,2,0,2" Text="{Binding NumRequete}"  Background="AntiqueWhite" IsReadOnly="True" TextAlignment="Right"/>
+                         </StackPanel>
+                        <!--AH 13juillet avoir manuel sans impacte SAP-->
+                        <Label Grid.Row="1" Grid.Column="0" Content="N° cotation: " Margin="0,2,0,2"/>
+                        <TextBox Grid.Row="1" Grid.Column="1" Margin="0,2,105,2" Text="{Binding NumQuotation}" IsEnabled="False" TextAlignment="Right" Name="txtnuquotation"  />
+                        
+                        <Label Grid.Row="2" Grid.Column="0" Content="Date de création : " Margin="0,2,0,2"/>
+                        <DatePicker Grid.Row="2" Grid.Column="1" Name="txtDateCreation" Width="125" Margin="0,2,0,2" IsEnabled="False" SelectedDate="{x:Static sys:DateTime.Now}" HorizontalAlignment="Left"/>
+
+                        <Label Grid.Row="3" Grid.Column="0" Content="Type de quotation : " Margin="0,2,0,2"/>
+                        <TextBox Grid.Row="3" Grid.Column="1" Margin="0,2,105,2" Text="{Binding Level}" IsEnabled="False" Name="txtLevel" />
+
+                        <Label Grid.Row="4" Grid.Column="0" Content="Client a facturer : " Margin="0,2,0,2"/>
+                        <TextBox Grid.Row="4" Grid.Column="1" Margin="0,2,105,2" Text="" IsEnabled="False" Name="txtClientFature" />
+
+                    </Grid>
+                    <GroupBox DockPanel.Dock="Top" Header="Connaissement" Background="#FAFAFA" Margin="0,2,0,2">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                                <RowDefinition Height="27"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="105"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Content="Bl : " Margin="0,2,0,2"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
+                                <TextBox Name="txtNumBL" Width="100" Text="{Binding NumBL}" Margin="0,2,0,2"  IsReadOnly="True"/>
+                                <TextBox x:Name="txtBlID" Width="100" Margin="2,2,0,2" Text="{Binding IdBL}" Background="AntiqueWhite" IsReadOnly="True"/>
+                            </StackPanel>
+
+                            <!--<Label Grid.Row="1" Grid.Column="0" Content="Client : " Margin="0,2,0,2"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
+                                <ComboBox Width="125" Name="cbClient" Margin="0,2,0,2" ItemsSource="{Binding clts}" IsEnabled="False" SelectionChanged="cbClient_SelectionChanged" />
+                                <TextBox Width="100" Name="txtCodeClient" Margin="2,2,0,2" Background="AntiqueWhite" IsReadOnly="True" TextAlignment="Right" />
+                            </StackPanel>-->
+                            <Label Grid.Row="2" Grid.Column="0" Content="Consignee : " Margin="0,2,0,2"/>
+                            <TextBox Grid.Row="2" Grid.Column="1" Name="txtConsignee" Text="{Binding Consignee}" Grid.ColumnSpan="2" Width="227" Margin="0,2,0,2" Background="AntiqueWhite" IsReadOnly="True" HorizontalAlignment="Left"/>
+
+                            <Label Grid.Row="3" Grid.Column="0" Content="Navire : " Margin="0,2,0,2"/>
+                            <TextBox Grid.Row="3" Grid.Column="1" Name="cbnavire" Text="{Binding Navire}" Grid.ColumnSpan="2" Width="227" Margin="0,2,0,2" Background="AntiqueWhite" IsReadOnly="True" HorizontalAlignment="Left"/>
+
+                            <Label Grid.Row="4" Grid.Column="0" Content="Escale : " Margin="0,2,0,2"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="1">
+                                <TextBox Name="cbNumEsc" Width="74" Margin="0,2,0,2" Text="{Binding Escal}"   IsEnabled="False" IsReadOnly="True" TextAlignment="Right" />
+                                <TextBox Name="txtNumVoy" Width="74" Margin="2,2,0,2" Text="{Binding NumVoy}" Background="AntiqueWhite" IsReadOnly="True" TextAlignment="Right"/>
+                                <TextBox Name="cbdbNavire" Width="74" Margin="2,2,0,2"  Text="{Binding NavireDateArrivee}" IsEnabled="False" IsReadOnly="True" TextAlignment="Right"/>
+                            </StackPanel>
+                        </Grid>
+                    </GroupBox>
+
+                </DockPanel>
+            </GroupBox>
+            <GroupBox Header="Finances" BorderThickness="2">
+                <DockPanel>
+                    <DataGrid Name="dataGridEltsFact" IsReadOnly="True" ItemsSource="{Binding eltsFact}" AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader">
+                        <DataGrid.Resources>
+                            <Style TargetType="DataGridRow">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsNew}" Value="true">
+                                        <Setter Property="Foreground" Value="Red" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsProforma}" Value="true">
+                                        <Setter Property="Foreground" Value="Green" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsFacture}" Value="true">
+                                        <Setter Property="Foreground" Value="Black" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.Resources>
+                        <DataGrid.RowHeaderTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <CheckBox IsChecked="{Binding Path=IsSelected, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGridRow}}}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </DataGrid.RowHeaderTemplate>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header=" "></DataGridTextColumn>
+                            <DataGridTextColumn Header="Code article" Width="Auto" Binding="{Binding CodeArticle}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Right"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Libellé article" Width="200" Binding="{Binding LibArticle}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Quantité" Width="Auto" Binding="{Binding Qte, ConverterCulture=fr-FR}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Right"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Unité" Width="Auto" Binding="{Binding Unite}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Center"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Prix unitaire" Width="Auto" Binding="{Binding PrixUnitaire, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Right"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Montant HT" Width="Auto" Binding="{Binding MontantHT, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Right"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Montant TVA" Width="Auto" Binding="{Binding MontantTVA, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Right"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="Montant Total" Width="Auto" Binding="{Binding MontantTTC, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Right"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </GroupBox>
+        </DockPanel>
+    </DockPanel>
+</Window>

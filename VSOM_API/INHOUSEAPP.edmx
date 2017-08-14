@@ -1,0 +1,490 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="INHOUSEAPPModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="INHOUSEAPPModelStoreContainer">
+          <EntitySet Name="POINTAGES" EntityType="INHOUSEAPPModel.Store.POINTAGES" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PRM_CALENDRE" EntityType="INHOUSEAPPModel.Store.PRM_CALENDRE" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PRM_EMPL" EntityType="INHOUSEAPPModel.Store.PRM_EMPL" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PRM_GROUPE" EntityType="INHOUSEAPPModel.Store.PRM_GROUPE" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PRM_PERIODE" EntityType="INHOUSEAPPModel.Store.PRM_PERIODE" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PRM_PROGRAM" EntityType="INHOUSEAPPModel.Store.PRM_PROGRAM" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PRM_SVC" EntityType="INHOUSEAPPModel.Store.PRM_SVC" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PRM_SVC_HOUR" EntityType="INHOUSEAPPModel.Store.PRM_SVC_HOUR" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_POINTAGES_PRM_EMPL" Association="INHOUSEAPPModel.Store.FK_POINTAGES_PRM_EMPL">
+            <End Role="PRM_EMPL" EntitySet="PRM_EMPL" />
+            <End Role="POINTAGES" EntitySet="POINTAGES" />
+          </AssociationSet>
+          <AssociationSet Name="FK_POINTAGES_PRM_PERIODE" Association="INHOUSEAPPModel.Store.FK_POINTAGES_PRM_PERIODE">
+            <End Role="PRM_PERIODE" EntitySet="PRM_PERIODE" />
+            <End Role="POINTAGES" EntitySet="POINTAGES" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PRM_PROGRAM_PRM_PERIODE" Association="INHOUSEAPPModel.Store.FK_PRM_PROGRAM_PRM_PERIODE">
+            <End Role="PRM_PERIODE" EntitySet="PRM_PERIODE" />
+            <End Role="PRM_PROGRAM" EntitySet="PRM_PROGRAM" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="POINTAGES">
+          <Key>
+            <PropertyRef Name="IDAUTO" />
+          </Key>
+          <Property Name="IDAUTO" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ID_EMPL" Type="int" Nullable="false" />
+          <Property Name="ID_PERIODE" Type="int" Nullable="false" />
+          <Property Name="JOUR" Type="date" Nullable="false" />
+          <Property Name="MHE" Type="time" Nullable="false" Precision="0" />
+          <Property Name="MHS" Type="time" Nullable="false" Precision="0" />
+          <Property Name="OP" Type="int" Nullable="false" />
+          <Property Name="DATE_ENREG" Type="datetime" Nullable="false" />
+          <Property Name="VALID" Type="int" Nullable="false" />
+          <Property Name="VISA" Type="int" Nullable="false" />
+          <Property Name="SHE" Type="time" Nullable="false" Precision="0" />
+          <Property Name="SHS" Type="time" Nullable="false" Precision="0" />
+          <Property Name="DIFF" Type="int" Nullable="false" />
+          <Property Name="HN" Type="int" Nullable="false" />
+          <Property Name="T120" Type="int" Nullable="false" />
+          <Property Name="T140" Type="int" Nullable="false" />
+          <Property Name="T150" Type="int" Nullable="false" />
+          <Property Name="T200" Type="int" Nullable="false" />
+          <Property Name="HM" Type="int" Nullable="false" />
+          <Property Name="IDCAL" Type="int" Nullable="false" />
+          <Property Name="T130" Type="int" Nullable="false" />
+          <Property Name="HNE" Type="time" Precision="0" />
+          <Property Name="SHIFT" Type="int" />
+        </EntityType>
+        <EntityType Name="PRM_CALENDRE">
+          <Key>
+            <PropertyRef Name="IDAUTO" />
+          </Key>
+          <Property Name="IDAUTO" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="DEBUT" Type="date" Nullable="false" />
+          <Property Name="FIN" Type="date" Nullable="false" />
+          <Property Name="DATE_ENREG" Type="datetime" Nullable="false" />
+          <Property Name="IDPRD" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PRM_EMPL">
+          <Key>
+            <PropertyRef Name="IDAUTO" />
+          </Key>
+          <Property Name="IDAUTO" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="NOM" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="PRENOMS" Type="nvarchar" Nullable="false" MaxLength="80" />
+          <Property Name="MLE" Type="int" Nullable="false" />
+          <Property Name="DATE_ENREG" Type="datetime" />
+          <Property Name="STATUS" Type="nvarchar" Nullable="false" MaxLength="10" />
+          <Property Name="IDSERVICE" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PRM_GROUPE">
+          <Key>
+            <PropertyRef Name="IDAUTO" />
+          </Key>
+          <Property Name="IDAUTO" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="LIBELLE" Type="nvarchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="PRM_PERIODE">
+          <Key>
+            <PropertyRef Name="IDAUTO" />
+          </Key>
+          <Property Name="IDAUTO" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="DEBUT" Type="date" Nullable="false" />
+          <Property Name="FIN" Type="date" Nullable="false" />
+          <Property Name="ANNEE" Type="int" Nullable="false" />
+          <Property Name="STATUT" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PRM_PROGRAM">
+          <Key>
+            <PropertyRef Name="IDAUTO" />
+          </Key>
+          <Property Name="IDAUTO" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="IDPERIODE" Type="int" Nullable="false" />
+          <Property Name="JOUR" Type="date" Nullable="false" />
+          <Property Name="FERIE" Type="int" Nullable="false" />
+          <Property Name="OP" Type="int" Nullable="false" />
+          <Property Name="DATE_ENREG" Type="datetime" Nullable="false" />
+          <Property Name="LIBELLE" Type="nvarchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="PRM_SVC">
+          <Key>
+            <PropertyRef Name="IDAUTO" />
+          </Key>
+          <Property Name="IDAUTO" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="LIBELLE" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="MAX_HOUR" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PRM_SVC_HOUR">
+          <Key>
+            <PropertyRef Name="IDSERVICE" />
+            <PropertyRef Name="OP" />
+          </Key>
+          <Property Name="IDSERVICE" Type="int" Nullable="false" />
+          <Property Name="OP" Type="int" Nullable="false" />
+          <Property Name="ME" Type="time" Nullable="false" Precision="2" />
+          <Property Name="MS" Type="time" Nullable="false" Precision="2" />
+          <Property Name="SE" Type="time" Precision="2" />
+          <Property Name="SS" Type="time" Precision="2" />
+        </EntityType>
+        <Association Name="FK_POINTAGES_PRM_EMPL">
+          <End Role="PRM_EMPL" Type="INHOUSEAPPModel.Store.PRM_EMPL" Multiplicity="1" />
+          <End Role="POINTAGES" Type="INHOUSEAPPModel.Store.POINTAGES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PRM_EMPL">
+              <PropertyRef Name="IDAUTO" />
+            </Principal>
+            <Dependent Role="POINTAGES">
+              <PropertyRef Name="ID_EMPL" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_POINTAGES_PRM_PERIODE">
+          <End Role="PRM_PERIODE" Type="INHOUSEAPPModel.Store.PRM_PERIODE" Multiplicity="1" />
+          <End Role="POINTAGES" Type="INHOUSEAPPModel.Store.POINTAGES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PRM_PERIODE">
+              <PropertyRef Name="IDAUTO" />
+            </Principal>
+            <Dependent Role="POINTAGES">
+              <PropertyRef Name="ID_PERIODE" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PRM_PROGRAM_PRM_PERIODE">
+          <End Role="PRM_PERIODE" Type="INHOUSEAPPModel.Store.PRM_PERIODE" Multiplicity="1" />
+          <End Role="PRM_PROGRAM" Type="INHOUSEAPPModel.Store.PRM_PROGRAM" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PRM_PERIODE">
+              <PropertyRef Name="IDAUTO" />
+            </Principal>
+            <Dependent Role="PRM_PROGRAM">
+              <PropertyRef Name="IDPERIODE" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="EmplWeekStat" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="idempl" Type="int" Mode="In" />
+          <Parameter Name="idweek" Type="int" Mode="In" />
+        </Function>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="INHOUSEAPPModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="INHOUSEAPPEntities1" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="POINTAGES" EntityType="INHOUSEAPPModel.POINTAGES" />
+          <EntitySet Name="PRM_CALENDRE" EntityType="INHOUSEAPPModel.PRM_CALENDRE" />
+          <EntitySet Name="PRM_EMPL" EntityType="INHOUSEAPPModel.PRM_EMPL" />
+          <EntitySet Name="PRM_GROUPE" EntityType="INHOUSEAPPModel.PRM_GROUPE" />
+          <EntitySet Name="PRM_PERIODE" EntityType="INHOUSEAPPModel.PRM_PERIODE" />
+          <EntitySet Name="PRM_PROGRAM" EntityType="INHOUSEAPPModel.PRM_PROGRAM" />
+          <EntitySet Name="PRM_SVC" EntityType="INHOUSEAPPModel.PRM_SVC" />
+          <EntitySet Name="PRM_SVC_HOUR" EntityType="INHOUSEAPPModel.PRM_SVC_HOUR" />
+          <AssociationSet Name="FK_POINTAGES_PRM_EMPL" Association="INHOUSEAPPModel.FK_POINTAGES_PRM_EMPL">
+            <End Role="PRM_EMPL" EntitySet="PRM_EMPL" />
+            <End Role="POINTAGES" EntitySet="POINTAGES" />
+          </AssociationSet>
+          <AssociationSet Name="FK_POINTAGES_PRM_PERIODE" Association="INHOUSEAPPModel.FK_POINTAGES_PRM_PERIODE">
+            <End Role="PRM_PERIODE" EntitySet="PRM_PERIODE" />
+            <End Role="POINTAGES" EntitySet="POINTAGES" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PRM_PROGRAM_PRM_PERIODE" Association="INHOUSEAPPModel.FK_PRM_PROGRAM_PRM_PERIODE">
+            <End Role="PRM_PERIODE" EntitySet="PRM_PERIODE" />
+            <End Role="PRM_PROGRAM" EntitySet="PRM_PROGRAM" />
+          </AssociationSet>
+          <FunctionImport Name="EmplWeekStat" ReturnType="Collection(INHOUSEAPPModel.EmplWeekStat_Result)">
+            <Parameter Name="idempl" Mode="In" Type="Int32" />
+            <Parameter Name="idweek" Mode="In" Type="Int32" />
+          </FunctionImport>
+        </EntityContainer>
+        <EntityType Name="POINTAGES">
+          <Key>
+            <PropertyRef Name="IDAUTO" />
+          </Key>
+          <Property Name="IDAUTO" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="ID_EMPL" Type="Int32" Nullable="false" />
+          <Property Name="ID_PERIODE" Type="Int32" Nullable="false" />
+          <Property Name="JOUR" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="MHE" Type="Time" Nullable="false" Precision="0" />
+          <Property Name="MHS" Type="Time" Nullable="false" Precision="0" />
+          <Property Name="OP" Type="Int32" Nullable="false" />
+          <Property Name="DATE_ENREG" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="VALID" Type="Int32" Nullable="false" />
+          <Property Name="VISA" Type="Int32" Nullable="false" />
+          <Property Name="SHE" Type="Time" Nullable="false" Precision="0" />
+          <Property Name="SHS" Type="Time" Nullable="false" Precision="0" />
+          <Property Name="DIFF" Type="Int32" Nullable="false" />
+          <Property Name="HN" Type="Int32" Nullable="false" />
+          <Property Name="T120" Type="Int32" Nullable="false" />
+          <Property Name="T140" Type="Int32" Nullable="false" />
+          <Property Name="T150" Type="Int32" Nullable="false" />
+          <Property Name="T200" Type="Int32" Nullable="false" />
+          <Property Name="HM" Type="Int32" Nullable="false" />
+          <Property Name="IDCAL" Type="Int32" Nullable="false" />
+          <Property Name="T130" Type="Int32" Nullable="false" />
+          <Property Name="HNE" Type="Time" Precision="0" />
+          <Property Name="SHIFT" Type="Int32" />
+          <NavigationProperty Name="PRM_EMPL" Relationship="INHOUSEAPPModel.FK_POINTAGES_PRM_EMPL" FromRole="POINTAGES" ToRole="PRM_EMPL" />
+          <NavigationProperty Name="PRM_PERIODE" Relationship="INHOUSEAPPModel.FK_POINTAGES_PRM_PERIODE" FromRole="POINTAGES" ToRole="PRM_PERIODE" />
+        </EntityType>
+        <EntityType Name="PRM_CALENDRE">
+          <Key>
+            <PropertyRef Name="IDAUTO" />
+          </Key>
+          <Property Name="IDAUTO" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="DEBUT" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="FIN" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="DATE_ENREG" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IDPRD" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PRM_EMPL">
+          <Key>
+            <PropertyRef Name="IDAUTO" />
+          </Key>
+          <Property Name="IDAUTO" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="NOM" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="PRENOMS" Type="String" Nullable="false" MaxLength="80" Unicode="true" FixedLength="false" />
+          <Property Name="MLE" Type="Int32" Nullable="false" />
+          <Property Name="DATE_ENREG" Type="DateTime" Precision="3" />
+          <Property Name="STATUS" Type="String" Nullable="false" MaxLength="10" Unicode="true" FixedLength="false" />
+          <Property Name="IDSERVICE" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="POINTAGES" Relationship="INHOUSEAPPModel.FK_POINTAGES_PRM_EMPL" FromRole="PRM_EMPL" ToRole="POINTAGES" />
+        </EntityType>
+        <EntityType Name="PRM_GROUPE">
+          <Key>
+            <PropertyRef Name="IDAUTO" />
+          </Key>
+          <Property Name="IDAUTO" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="LIBELLE" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="PRM_PERIODE">
+          <Key>
+            <PropertyRef Name="IDAUTO" />
+          </Key>
+          <Property Name="IDAUTO" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="DEBUT" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="FIN" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="ANNEE" Type="Int32" Nullable="false" />
+          <Property Name="STATUT" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="POINTAGES" Relationship="INHOUSEAPPModel.FK_POINTAGES_PRM_PERIODE" FromRole="PRM_PERIODE" ToRole="POINTAGES" />
+          <NavigationProperty Name="PRM_PROGRAM" Relationship="INHOUSEAPPModel.FK_PRM_PROGRAM_PRM_PERIODE" FromRole="PRM_PERIODE" ToRole="PRM_PROGRAM" />
+        </EntityType>
+        <EntityType Name="PRM_PROGRAM">
+          <Key>
+            <PropertyRef Name="IDAUTO" />
+          </Key>
+          <Property Name="IDAUTO" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="IDPERIODE" Type="Int32" Nullable="false" />
+          <Property Name="JOUR" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="FERIE" Type="Int32" Nullable="false" />
+          <Property Name="OP" Type="Int32" Nullable="false" />
+          <Property Name="DATE_ENREG" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LIBELLE" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="PRM_PERIODE" Relationship="INHOUSEAPPModel.FK_PRM_PROGRAM_PRM_PERIODE" FromRole="PRM_PROGRAM" ToRole="PRM_PERIODE" />
+        </EntityType>
+        <EntityType Name="PRM_SVC">
+          <Key>
+            <PropertyRef Name="IDAUTO" />
+          </Key>
+          <Property Name="IDAUTO" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="LIBELLE" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="MAX_HOUR" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PRM_SVC_HOUR">
+          <Key>
+            <PropertyRef Name="IDSERVICE" />
+            <PropertyRef Name="OP" />
+          </Key>
+          <Property Name="IDSERVICE" Type="Int32" Nullable="false" />
+          <Property Name="OP" Type="Int32" Nullable="false" />
+          <Property Name="ME" Type="Time" Nullable="false" Precision="2" />
+          <Property Name="MS" Type="Time" Nullable="false" Precision="2" />
+          <Property Name="SE" Type="Time" Precision="2" />
+          <Property Name="SS" Type="Time" Precision="2" />
+        </EntityType>
+        <Association Name="FK_POINTAGES_PRM_EMPL">
+          <End Role="PRM_EMPL" Type="INHOUSEAPPModel.PRM_EMPL" Multiplicity="1" />
+          <End Role="POINTAGES" Type="INHOUSEAPPModel.POINTAGES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PRM_EMPL">
+              <PropertyRef Name="IDAUTO" />
+            </Principal>
+            <Dependent Role="POINTAGES">
+              <PropertyRef Name="ID_EMPL" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_POINTAGES_PRM_PERIODE">
+          <End Role="PRM_PERIODE" Type="INHOUSEAPPModel.PRM_PERIODE" Multiplicity="1" />
+          <End Role="POINTAGES" Type="INHOUSEAPPModel.POINTAGES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PRM_PERIODE">
+              <PropertyRef Name="IDAUTO" />
+            </Principal>
+            <Dependent Role="POINTAGES">
+              <PropertyRef Name="ID_PERIODE" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PRM_PROGRAM_PRM_PERIODE">
+          <End Role="PRM_PERIODE" Type="INHOUSEAPPModel.PRM_PERIODE" Multiplicity="1" />
+          <End Role="PRM_PROGRAM" Type="INHOUSEAPPModel.PRM_PROGRAM" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PRM_PERIODE">
+              <PropertyRef Name="IDAUTO" />
+            </Principal>
+            <Dependent Role="PRM_PROGRAM">
+              <PropertyRef Name="IDPERIODE" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="EmplWeekStat_Result">
+          <Property Type="Int32" Name="T120" Nullable="true" />
+          <Property Type="Int32" Name="T130" Nullable="true" />
+          <Property Type="Int32" Name="T140" Nullable="true" />
+          <Property Type="Int32" Name="T150" Nullable="true" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="INHOUSEAPPModelStoreContainer" CdmEntityContainer="INHOUSEAPPEntities1">
+          <EntitySetMapping Name="POINTAGES">
+            <EntityTypeMapping TypeName="INHOUSEAPPModel.POINTAGES">
+              <MappingFragment StoreEntitySet="POINTAGES">
+                <ScalarProperty Name="IDAUTO" ColumnName="IDAUTO" />
+                <ScalarProperty Name="ID_EMPL" ColumnName="ID_EMPL" />
+                <ScalarProperty Name="ID_PERIODE" ColumnName="ID_PERIODE" />
+                <ScalarProperty Name="JOUR" ColumnName="JOUR" />
+                <ScalarProperty Name="MHE" ColumnName="MHE" />
+                <ScalarProperty Name="MHS" ColumnName="MHS" />
+                <ScalarProperty Name="OP" ColumnName="OP" />
+                <ScalarProperty Name="DATE_ENREG" ColumnName="DATE_ENREG" />
+                <ScalarProperty Name="VALID" ColumnName="VALID" />
+                <ScalarProperty Name="VISA" ColumnName="VISA" />
+                <ScalarProperty Name="SHE" ColumnName="SHE" />
+                <ScalarProperty Name="SHS" ColumnName="SHS" />
+                <ScalarProperty Name="DIFF" ColumnName="DIFF" />
+                <ScalarProperty Name="HN" ColumnName="HN" />
+                <ScalarProperty Name="T120" ColumnName="T120" />
+                <ScalarProperty Name="T140" ColumnName="T140" />
+                <ScalarProperty Name="T150" ColumnName="T150" />
+                <ScalarProperty Name="T200" ColumnName="T200" />
+                <ScalarProperty Name="HM" ColumnName="HM" />
+                <ScalarProperty Name="IDCAL" ColumnName="IDCAL" />
+                <ScalarProperty Name="T130" ColumnName="T130" />
+                <ScalarProperty Name="HNE" ColumnName="HNE" />
+                <ScalarProperty Name="SHIFT" ColumnName="SHIFT" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PRM_CALENDRE">
+            <EntityTypeMapping TypeName="INHOUSEAPPModel.PRM_CALENDRE">
+              <MappingFragment StoreEntitySet="PRM_CALENDRE">
+                <ScalarProperty Name="IDAUTO" ColumnName="IDAUTO" />
+                <ScalarProperty Name="DEBUT" ColumnName="DEBUT" />
+                <ScalarProperty Name="FIN" ColumnName="FIN" />
+                <ScalarProperty Name="DATE_ENREG" ColumnName="DATE_ENREG" />
+                <ScalarProperty Name="IDPRD" ColumnName="IDPRD" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PRM_EMPL">
+            <EntityTypeMapping TypeName="INHOUSEAPPModel.PRM_EMPL">
+              <MappingFragment StoreEntitySet="PRM_EMPL">
+                <ScalarProperty Name="IDAUTO" ColumnName="IDAUTO" />
+                <ScalarProperty Name="NOM" ColumnName="NOM" />
+                <ScalarProperty Name="PRENOMS" ColumnName="PRENOMS" />
+                <ScalarProperty Name="MLE" ColumnName="MLE" />
+                <ScalarProperty Name="DATE_ENREG" ColumnName="DATE_ENREG" />
+                <ScalarProperty Name="STATUS" ColumnName="STATUS" />
+                <ScalarProperty Name="IDSERVICE" ColumnName="IDSERVICE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PRM_GROUPE">
+            <EntityTypeMapping TypeName="INHOUSEAPPModel.PRM_GROUPE">
+              <MappingFragment StoreEntitySet="PRM_GROUPE">
+                <ScalarProperty Name="IDAUTO" ColumnName="IDAUTO" />
+                <ScalarProperty Name="LIBELLE" ColumnName="LIBELLE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PRM_PERIODE">
+            <EntityTypeMapping TypeName="INHOUSEAPPModel.PRM_PERIODE">
+              <MappingFragment StoreEntitySet="PRM_PERIODE">
+                <ScalarProperty Name="IDAUTO" ColumnName="IDAUTO" />
+                <ScalarProperty Name="DEBUT" ColumnName="DEBUT" />
+                <ScalarProperty Name="FIN" ColumnName="FIN" />
+                <ScalarProperty Name="ANNEE" ColumnName="ANNEE" />
+                <ScalarProperty Name="STATUT" ColumnName="STATUT" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PRM_PROGRAM">
+            <EntityTypeMapping TypeName="INHOUSEAPPModel.PRM_PROGRAM">
+              <MappingFragment StoreEntitySet="PRM_PROGRAM">
+                <ScalarProperty Name="IDAUTO" ColumnName="IDAUTO" />
+                <ScalarProperty Name="IDPERIODE" ColumnName="IDPERIODE" />
+                <ScalarProperty Name="JOUR" ColumnName="JOUR" />
+                <ScalarProperty Name="FERIE" ColumnName="FERIE" />
+                <ScalarProperty Name="OP" ColumnName="OP" />
+                <ScalarProperty Name="DATE_ENREG" ColumnName="DATE_ENREG" />
+                <ScalarProperty Name="LIBELLE" ColumnName="LIBELLE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PRM_SVC">
+            <EntityTypeMapping TypeName="INHOUSEAPPModel.PRM_SVC">
+              <MappingFragment StoreEntitySet="PRM_SVC">
+                <ScalarProperty Name="IDAUTO" ColumnName="IDAUTO" />
+                <ScalarProperty Name="LIBELLE" ColumnName="LIBELLE" />
+                <ScalarProperty Name="MAX_HOUR" ColumnName="MAX_HOUR" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PRM_SVC_HOUR">
+            <EntityTypeMapping TypeName="INHOUSEAPPModel.PRM_SVC_HOUR">
+              <MappingFragment StoreEntitySet="PRM_SVC_HOUR">
+                <ScalarProperty Name="IDSERVICE" ColumnName="IDSERVICE" />
+                <ScalarProperty Name="OP" ColumnName="OP" />
+                <ScalarProperty Name="ME" ColumnName="ME" />
+                <ScalarProperty Name="MS" ColumnName="MS" />
+                <ScalarProperty Name="SE" ColumnName="SE" />
+                <ScalarProperty Name="SS" ColumnName="SS" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="EmplWeekStat" FunctionName="INHOUSEAPPModel.Store.EmplWeekStat">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="INHOUSEAPPModel.EmplWeekStat_Result">
+                <ScalarProperty Name="T120" ColumnName="T120" />
+                <ScalarProperty Name="T130" ColumnName="T130" />
+                <ScalarProperty Name="T140" ColumnName="T140" />
+                <ScalarProperty Name="T150" ColumnName="T150" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Aucun" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

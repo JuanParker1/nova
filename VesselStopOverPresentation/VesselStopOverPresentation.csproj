@@ -1,0 +1,2398 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5E5E0404-A249-4E46-9997-5AE2417CAC13}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VesselStopOverPresentation</RootNamespace>
+    <AssemblyName>VesselStopOverPresentation</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <PublishUrl>C:\inetpub\wwwroot\vsom2\</PublishUrl>
+    <Install>false</Install>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <InstallUrl>http://192.168.0.28/VSOM/</InstallUrl>
+    <UpdateUrl>http://localhost/VesselStopOverPresentation/</UpdateUrl>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
+    <WebPage>publish.htm</WebPage>
+    <ApplicationRevision>110</ApplicationRevision>
+    <ApplicationVersion>2.2.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>159EA319F579A50C2662AE1A7EC9402A65ED5A63</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>VesselStopOverPresentation_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.ReportViewer.Common, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.WinForms, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>dll\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Printing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Forms.DataVisualization">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PresentationCore">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PresentationFramework">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="WindowsFormsIntegration" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="conteneur\2015UpdateOperationTracking.xaml.cs">
+      <DependentUpon>2015UpdateOperationTracking.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FinanceControlPanel.xaml.cs">
+      <DependentUpon>FinanceControlPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\AnnulerFactureSpot.xaml.cs">
+      <DependentUpon>AnnulerFactureSpot.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\AvoirCustom.xaml.cs">
+      <DependentUpon>AvoirCustom.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\AvoirSpot.xaml.cs">
+      <DependentUpon>AvoirSpot.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\AvoirSpotPanel.xaml.cs">
+      <DependentUpon>AvoirSpotPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\AvoirSpotSelect.xaml.cs">
+      <DependentUpon>AvoirSpotSelect.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\ClientCondForm.xaml.cs">
+      <DependentUpon>ClientCondForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\ClientCondition.xaml.cs">
+      <DependentUpon>ClientCondition.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\FinanceUpdate.xaml.cs">
+      <DependentUpon>FinanceUpdate.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\NovaToSAGE.xaml.cs">
+      <DependentUpon>NovaToSAGE.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="param\ArticleForm.xaml.cs">
+      <DependentUpon>ArticleForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="param\ArticlePanel.xaml.cs">
+      <DependentUpon>ArticlePanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="BookingForm.xaml.cs">
+      <DependentUpon>BookingForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="param\ClientForm.xaml.cs">
+      <DependentUpon>ClientForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="param\ClientPanel.xaml.cs">
+      <DependentUpon>ClientPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="BonEnleverPanel.xaml.cs">
+      <DependentUpon>BonEnleverPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="BonEnleverForm.xaml.cs">
+      <DependentUpon>BonEnleverForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConnexionForm.xaml.cs">
+      <DependentUpon>ConnexionForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConstatSinistreVehiculeForm.xaml.cs">
+      <DependentUpon>ConstatSinistreVehiculeForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CloturerEscaleForm.xaml.cs">
+      <DependentUpon>CloturerEscaleForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CloturerManifesteForm.xaml.cs">
+      <DependentUpon>CloturerManifesteForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CloturerConnaissementForm.xaml.cs">
+      <DependentUpon>CloturerConnaissementForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="BookingPanel.xaml.cs">
+      <DependentUpon>BookingPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\AvoirForm.xaml.cs">
+      <DependentUpon>AvoirForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\AvoirPanel.xaml.cs">
+      <DependentUpon>AvoirPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Remote\QuotationForm.xaml.cs">
+      <DependentUpon>QuotationForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Remote\QuotationsPanel.xaml.cs">
+      <DependentUpon>QuotationsPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\BAEReport.xaml.cs">
+      <DependentUpon>BAEReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\AvoirReport.xaml.cs">
+      <DependentUpon>AvoirReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CalculerSejourConventionnelForm.xaml.cs">
+      <DependentUpon>CalculerSejourConventionnelForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="BonSortieForm.xaml.cs">
+      <DependentUpon>BonSortieForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="BonSortiePanel.xaml.cs">
+      <DependentUpon>BonSortiePanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="param\AcconierForm.xaml.cs">
+      <DependentUpon>AcconierForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="param\AcconierPanel.xaml.cs">
+      <DependentUpon>AcconierPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="param\ArmateurForm.xaml.cs">
+      <DependentUpon>ArmateurForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="param\ArmateurPanel.xaml.cs">
+      <DependentUpon>ArmateurPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sage\Appointement.xaml.cs">
+      <DependentUpon>Appointement.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sage\CentralisationPaie.xaml.cs">
+      <DependentUpon>CentralisationPaie.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sage\DotationCharge.xaml.cs">
+      <DependentUpon>DotationCharge.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Sage\UserSession.xaml.cs">
+      <DependentUpon>UserSession.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="vehicule\AjoutVehiculeCubageForm.xaml.cs">
+      <DependentUpon>AjoutVehiculeCubageForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\CloturerOrdreServiceForm.xaml.cs">
+      <DependentUpon>CloturerOrdreServiceForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="AnnulerBookingForm.xaml.cs">
+      <DependentUpon>AnnulerBookingForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CalculerStationnementMafiForm.xaml.cs">
+      <DependentUpon>CalculerStationnementMafiForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\AnnulerProformaForm.xaml.cs">
+      <DependentUpon>AnnulerProformaForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="vehicule\AttelerVehiculeForm.xaml.cs">
+      <DependentUpon>AttelerVehiculeForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\AnnulerOSForm.xaml.cs">
+      <DependentUpon>AnnulerOSForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="conteneur\ConteneurTCForm.xaml.cs">
+      <DependentUpon>ConteneurTCForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="conteneur\ConteneurTCPanel.xaml.cs">
+      <DependentUpon>ConteneurTCPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Converters.cs" />
+    <Compile Include="Finance\AnnulerPaiementForm.xaml.cs">
+      <DependentUpon>AnnulerPaiementForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\AnnulerReductionForm.xaml.cs">
+      <DependentUpon>AnnulerReductionForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\BADReport.xaml.cs">
+      <DependentUpon>BADReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ClotureSOPForm.xaml.cs">
+      <DependentUpon>ClotureSOPForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChangerClientBookingForm.xaml.cs">
+      <DependentUpon>ChangerClientBookingForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\CommandeSAPReport.xaml.cs">
+      <DependentUpon>CommandeSAPReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConstatContradictoireForm.xaml.cs">
+      <DependentUpon>ConstatContradictoireForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EmplacementForm.xaml.cs">
+      <DependentUpon>EmplacementForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\FactureSpot.xaml.cs">
+      <DependentUpon>FactureSpot.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\FactureSpotPanel.xaml.cs">
+      <DependentUpon>FactureSpotPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LoadingReportExcelForm.xaml.cs">
+      <DependentUpon>LoadingReportExcelForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\DischargingReportExcelForm.xaml.cs">
+      <DependentUpon>DischargingReportExcelForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DailyMovesExcelForm.xaml.cs">
+      <DependentUpon>DailyMovesExcelForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CommandeSAPForm.xaml.cs">
+      <DependentUpon>CommandeSAPForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\PaiementClient.xaml.cs">
+      <DependentUpon>PaiementClient.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="vehicule\ParcAutoBAERepport.xaml.cs">
+      <DependentUpon>ParcAutoBAERepport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecapDetentionForm.xaml.cs">
+      <DependentUpon>RecapDetentionForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecapSurestariesForm.xaml.cs">
+      <DependentUpon>RecapSurestariesForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\RapportDebarquementExcelForm.xaml.cs">
+      <DependentUpon>RapportDebarquementExcelForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\RapportEmbarquementExcelForm.xaml.cs">
+      <DependentUpon>RapportEmbarquementExcelForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\EtatBilanTrackingReport.xaml.cs">
+      <DependentUpon>EtatBilanTrackingReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RestitutionConteneurForm.xaml.cs">
+      <DependentUpon>RestitutionConteneurForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\EtatBilanMiseDispositionReport.xaml.cs">
+      <DependentUpon>EtatBilanMiseDispositionReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\ExtractCNCCForm.xaml.cs">
+      <DependentUpon>ExtractCNCCForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CreerOperationTrackingForm.xaml.cs">
+      <DependentUpon>CreerOperationTrackingForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="conteneur\RetourVideConteneur.xaml.cs">
+      <DependentUpon>RetourVideConteneur.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UpdateOperationTrackingForm.xaml.cs">
+      <DependentUpon>UpdateOperationTrackingForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\RapportEmbarquementForm.xaml.cs">
+      <DependentUpon>RapportEmbarquementForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\RapportDebarquementForm.xaml.cs">
+      <DependentUpon>RapportDebarquementForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DailyMovesForm.xaml.cs">
+      <DependentUpon>DailyMovesForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="conteneur\TransfertEmplacementConteneurForm.xaml.cs">
+      <DependentUpon>TransfertEmplacementConteneurForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\EtatStockConteneurReport.xaml.cs">
+      <DependentUpon>EtatStockConteneurReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MiseDispositionReport.xaml.cs">
+      <DependentUpon>MiseDispositionReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="conteneur\RetourArmateurConteneurForm.xaml.cs">
+      <DependentUpon>RetourArmateurConteneurForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\UpdateEltBookingForm.xaml.cs">
+      <DependentUpon>UpdateEltBookingForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ListDispositionCtrForm.xaml.cs">
+      <DependentUpon>ListDispositionCtrForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MiseDispositionPanel.xaml.cs">
+      <DependentUpon>MiseDispositionPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PositionnerConteneurForm.xaml.cs">
+      <DependentUpon>PositionnerConteneurForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ListConteneurTCPositionnerForm.xaml.cs">
+      <DependentUpon>ListConteneurTCPositionnerForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="conteneur\TransfHabillageConteneurForm.xaml.cs">
+      <DependentUpon>TransfHabillageConteneurForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="conteneur\TransfReparationConteneurForm.xaml.cs">
+      <DependentUpon>TransfReparationConteneurForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ParquerConteneurForm.xaml.cs">
+      <DependentUpon>ParquerConteneurForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\ExtractDiversReversementsForm.xaml.cs">
+      <DependentUpon>ExtractDiversReversementsForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\ExtractPrevExportDITForm.xaml.cs">
+      <DependentUpon>ExtractPrevExportDITForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ListConteneurTCForm.xaml.cs">
+      <DependentUpon>ListConteneurTCForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TrackingControlPanel.xaml.cs">
+      <DependentUpon>TrackingControlPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UpdateVolPoidsConvForm.xaml.cs">
+      <DependentUpon>UpdateVolPoidsConvForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EclaterBLExportForm.xaml.cs">
+      <DependentUpon>EclaterBLExportForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\UpdateEltAvoirPartielForm.xaml.cs">
+      <DependentUpon>UpdateEltAvoirPartielForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\ExtractPrevImportDITForm.xaml.cs">
+      <DependentUpon>ExtractPrevImportDITForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\UpdateEltBLForm.xaml.cs">
+      <DependentUpon>UpdateEltBLForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\UpdateEltVehForm.xaml.cs">
+      <DependentUpon>UpdateEltVehForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="VAEForm.xaml.cs">
+      <DependentUpon>VAEForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\ExtractParcAutoExcelForm.xaml.cs">
+      <DependentUpon>ExtractParcAutoExcelForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="HistOccupReport.xaml.cs">
+      <DependentUpon>HistOccupReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\ExtractDouaneForm.xaml.cs">
+      <DependentUpon>ExtractDouaneForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="InterchangeConteneurForm.xaml.cs">
+      <DependentUpon>InterchangeConteneurForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RecuReport.xaml.cs">
+      <DependentUpon>RecuReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SurestDetReport.xaml.cs">
+      <DependentUpon>SurestDetReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ReceptionExportConteneurForm.xaml.cs">
+      <DependentUpon>ReceptionExportConteneurForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ReceptionExportConventionnelForm.xaml.cs">
+      <DependentUpon>ReceptionExportConventionnelForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DetailsLivraisonGCForm.xaml.cs">
+      <DependentUpon>DetailsLivraisonGCForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DetailsEnlevementGCForm.xaml.cs">
+      <DependentUpon>DetailsEnlevementGCForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DetailsLivraisonMafiForm.xaml.cs">
+      <DependentUpon>DetailsLivraisonMafiForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DetailsEnlevementMafiForm.xaml.cs">
+      <DependentUpon>DetailsEnlevementMafiForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\FactureArmateurReport.xaml.cs">
+      <DependentUpon>FactureArmateurReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="securite\UtilisateurPanel.xaml.cs">
+      <DependentUpon>UtilisateurPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="securite\UtilisateurForm.xaml.cs">
+      <DependentUpon>UtilisateurForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\FactureStevedoringReport.xaml.cs">
+      <DependentUpon>FactureStevedoringReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TransfertBookingCtrForm.xaml.cs">
+      <DependentUpon>TransfertBookingCtrForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TransfertBookingGCForm.xaml.cs">
+      <DependentUpon>TransfertBookingGCForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\FacturerArmateurForm.xaml.cs">
+      <DependentUpon>FacturerArmateurForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\EtatEntreesReport.xaml.cs">
+      <DependentUpon>EtatEntreesReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\SOCARReport.xaml.cs">
+      <DependentUpon>SOCARReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\EtatCADetailReport.xaml.cs">
+      <DependentUpon>EtatCADetailReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\EtatCAReport.xaml.cs">
+      <DependentUpon>EtatCAReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ExonererConnaissementForm.xaml.cs">
+      <DependentUpon>ExonererConnaissementForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TransfertBookingEscaleForm.xaml.cs">
+      <DependentUpon>TransfertBookingEscaleForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\ExtractManutAllForm.xaml.cs">
+      <DependentUpon>ExtractManutAllForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\ExtractSejourAllForm.xaml.cs">
+      <DependentUpon>ExtractSejourAllForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\ExtractSejourForm.xaml.cs">
+      <DependentUpon>ExtractSejourForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\ExtractManutForm.xaml.cs">
+      <DependentUpon>ExtractManutForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\UpdateEltMafiForm.xaml.cs">
+      <DependentUpon>UpdateEltMafiForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ValiderManifesteForm.xaml.cs">
+      <DependentUpon>ValiderManifesteForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\DuplicataSortieReport.xaml.cs">
+      <DependentUpon>DuplicataSortieReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\EtatSortiesReport.xaml.cs">
+      <DependentUpon>EtatSortiesReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\EtatContenuParcReport.xaml.cs">
+      <DependentUpon>EtatContenuParcReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ListMafiForm.xaml.cs">
+      <DependentUpon>ListMafiForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Ressources\SchemaDouane.cs">
+      <DependentUpon>SchemaDouane.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="SortirMafiForm.xaml.cs">
+      <DependentUpon>SortirMafiForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="IdentificationMafiForm.xaml.cs">
+      <DependentUpon>IdentificationMafiForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MafiForm.xaml.cs">
+      <DependentUpon>MafiForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MafiPanel.xaml.cs">
+      <DependentUpon>MafiPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MAJDateDepotForm.xaml.cs">
+      <DependentUpon>MAJDateDepotForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\EtatSyntheseSEPBCReport.xaml.cs">
+      <DependentUpon>EtatSyntheseSEPBCReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Ressources\AWMDS.cs">
+      <DependentUpon>AWMDS.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Ressources\manifeste_guce.cs">
+      <DependentUpon>manifeste_guce.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\ValiderOrdreServiceForm.xaml.cs">
+      <DependentUpon>ValiderOrdreServiceForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ClearanceForm.xaml.cs">
+      <DependentUpon>ClearanceForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="conteneur\ConteneurExportPanel.xaml.cs">
+      <DependentUpon>ConteneurExportPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConventionnelExportPanel.xaml.cs">
+      <DependentUpon>ConventionnelExportPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SummaryOPForm.xaml.cs">
+      <DependentUpon>SummaryOPForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="conteneur\RetourConteneurForm.xaml.cs">
+      <DependentUpon>RetourConteneurForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="conteneur\SortirConteneurForm.xaml.cs">
+      <DependentUpon>SortirConteneurForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ValiderDemandeCautionForm.xaml.cs">
+      <DependentUpon>ValiderDemandeCautionForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DemandeRestitutionCautionForm.xaml.cs">
+      <DependentUpon>DemandeRestitutionCautionForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DemandeRestitutionCautionPanel.xaml.cs">
+      <DependentUpon>DemandeRestitutionCautionPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\EtatSyntheseAutresAcconiersReport.xaml.cs">
+      <DependentUpon>EtatSyntheseAutresAcconiersReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\EtatElementsSEPBCReport.xaml.cs">
+      <DependentUpon>EtatElementsSEPBCReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\EtatElementsDITReport.xaml.cs">
+      <DependentUpon>EtatElementsDITReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\EtatFacturesDITReport.xaml.cs">
+      <DependentUpon>EtatFacturesDITReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ManifestExportForm.xaml.cs">
+      <DependentUpon>ManifestExportForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GenererBLForm.xaml.cs">
+      <DependentUpon>GenererBLForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\EtatPaiementsReport.xaml.cs">
+      <DependentUpon>EtatPaiementsReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ReportingControlPanel.xaml.cs">
+      <DependentUpon>ReportingControlPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EmbarquerConventionnelForm.xaml.cs">
+      <DependentUpon>EmbarquerConventionnelForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EmbarquerConteneurForm.xaml.cs">
+      <DependentUpon>EmbarquerConteneurForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ValiderClearanceForm.xaml.cs">
+      <DependentUpon>ValiderClearanceForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="vehicule\RetirerVehiculeCubageForm.xaml.cs">
+      <DependentUpon>RetirerVehiculeCubageForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EmplacementPanel.xaml.cs">
+      <DependentUpon>EmplacementPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="param\PortForm.xaml.cs">
+      <DependentUpon>PortForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="param\PortPanel.xaml.cs">
+      <DependentUpon>PortPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LoadEmplacementsForm.xaml.cs">
+      <DependentUpon>LoadEmplacementsForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="param\NavireForm.xaml.cs">
+      <DependentUpon>NavireForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="param\NavirePanel.xaml.cs">
+      <DependentUpon>NavirePanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TransfertEmplacementForm.xaml.cs">
+      <DependentUpon>TransfertEmplacementForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ParcAutoControlPanel.xaml.cs">
+      <DependentUpon>ParcAutoControlPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="securite\MotDePasseForm.xaml.cs">
+      <DependentUpon>MotDePasseForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ListFactureDITForm.xaml.cs">
+      <DependentUpon>ListFactureDITForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\FactureDITForm.xaml.cs">
+      <DependentUpon>FactureDITForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\FactureDITPanel.xaml.cs">
+      <DependentUpon>FactureDITPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\SortieReport.xaml.cs">
+      <DependentUpon>SortieReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ListBookingForm.xaml.cs">
+      <DependentUpon>ListBookingForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\OrdreServiceForm.xaml.cs">
+      <DependentUpon>OrdreServiceForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\OrdreServicePanel.xaml.cs">
+      <DependentUpon>OrdreServicePanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\UpdateEltGCForm.xaml.cs">
+      <DependentUpon>UpdateEltGCForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ListConventionnelForm.xaml.cs">
+      <DependentUpon>ListConventionnelForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MAJNumGCForm.xaml.cs">
+      <DependentUpon>MAJNumGCForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SortirConventionnelForm.xaml.cs">
+      <DependentUpon>SortirConventionnelForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ReceptionConventionnelForm.xaml.cs">
+      <DependentUpon>ReceptionConventionnelForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CubageConventionnelForm.xaml.cs">
+      <DependentUpon>CubageConventionnelForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="IdentificationConventionnelForm.xaml.cs">
+      <DependentUpon>IdentificationConventionnelForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SinistreForm.xaml.cs">
+      <DependentUpon>SinistreForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SinistrePanel.xaml.cs">
+      <DependentUpon>SinistrePanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MAJNumEscaleForm.xaml.cs">
+      <DependentUpon>MAJNumEscaleForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\LivraisonReport.xaml.cs">
+      <DependentUpon>LivraisonReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FormLoader.cs" />
+    <Compile Include="HistConnaissementForm.xaml.cs">
+      <DependentUpon>HistConnaissementForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ValiderCubageForm.xaml.cs">
+      <DependentUpon>ValiderCubageForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DashboardPanel.xaml.cs">
+      <DependentUpon>DashboardPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="StatutForm.xaml.cs">
+      <DependentUpon>StatutForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ListPaiementForm.xaml.cs">
+      <DependentUpon>ListPaiementForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ListProformaForm.xaml.cs">
+      <DependentUpon>ListProformaForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ListManifesteForm.xaml.cs">
+      <DependentUpon>ListManifesteForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ValiderExtensionForm.xaml.cs">
+      <DependentUpon>ValiderExtensionForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ExtensionFranchiseForm.xaml.cs">
+      <DependentUpon>ExtensionFranchiseForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ExtensionFranchisePanel.xaml.cs">
+      <DependentUpon>ExtensionFranchisePanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ValiderConnaissementForm.xaml.cs">
+      <DependentUpon>ValiderConnaissementForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NoteForm.xaml.cs">
+      <DependentUpon>NoteForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\FactureReport.xaml.cs">
+      <DependentUpon>FactureReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Report\ProformaReport.xaml.cs">
+      <DependentUpon>ProformaReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ValiderDemandeVisiteForm.xaml.cs">
+      <DependentUpon>ValiderDemandeVisiteForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="vehicule\DemandeVisiteForm.xaml.cs">
+      <DependentUpon>DemandeVisiteForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="vehicule\DemandeVisitePanel.xaml.cs">
+      <DependentUpon>DemandeVisitePanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\ValiderReductionForm.xaml.cs">
+      <DependentUpon>ValiderReductionForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DemandeReductionForm.xaml.cs">
+      <DependentUpon>DemandeReductionForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DemandeReductionPanel.xaml.cs">
+      <DependentUpon>DemandeReductionPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CubageReport.xaml.cs">
+      <DependentUpon>CubageReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ListConteneurForm.xaml.cs">
+      <DependentUpon>ListConteneurForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ListVehiculeForm.xaml.cs">
+      <DependentUpon>ListVehiculeForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ListConnaissementForm.xaml.cs">
+      <DependentUpon>ListConnaissementForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ListEscaleForm.xaml.cs">
+      <DependentUpon>ListEscaleForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="IdentificationConteneurForm.xaml.cs">
+      <DependentUpon>IdentificationConteneurForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="vehicule\MAJChassisForm.xaml.cs">
+      <DependentUpon>MAJChassisForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ValiderDemandeLivraisonForm.xaml.cs">
+      <DependentUpon>ValiderDemandeLivraisonForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DetailsLivraisonVehForm.xaml.cs">
+      <DependentUpon>DetailsLivraisonVehForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DetailsLivraisonCtrForm.xaml.cs">
+      <DependentUpon>DetailsLivraisonCtrForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DemandeLivraisonPanel.xaml.cs">
+      <DependentUpon>DemandeLivraisonPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DemandeLivraisonForm.xaml.cs">
+      <DependentUpon>DemandeLivraisonForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="vehicule\TransfertZoneSortieVehiculeForm.xaml.cs">
+      <DependentUpon>TransfertZoneSortieVehiculeForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SortirVehiculeForm.xaml.cs">
+      <DependentUpon>SortirVehiculeForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="vehicule\ReceptionVehiculeForm.xaml.cs">
+      <DependentUpon>ReceptionVehiculeForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ValiderBonEnleverForm.xaml.cs">
+      <DependentUpon>ValiderBonEnleverForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="vehicule\CubageVehiculeForm.xaml.cs">
+      <DependentUpon>CubageVehiculeForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="IdentificationVehiculeForm.xaml.cs">
+      <DependentUpon>IdentificationVehiculeForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\ValiderProformaForm.xaml.cs">
+      <DependentUpon>ValiderProformaForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ProgDoubleRelevageCtrForm.xaml.cs">
+      <DependentUpon>ProgDoubleRelevageCtrForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ProgVisiteDouaneCtrForm.xaml.cs">
+      <DependentUpon>ProgVisiteDouaneCtrForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CalculerStationnementCtrForm.xaml.cs">
+      <DependentUpon>CalculerStationnementCtrForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="vehicule\CalculerSejourVehiculeForm.xaml.cs">
+      <DependentUpon>CalculerSejourVehiculeForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DetailsEnlevementCtrForm.xaml.cs">
+      <DependentUpon>DetailsEnlevementCtrForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DetailsEnlevementVehForm.xaml.cs">
+      <DependentUpon>DetailsEnlevementVehForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\FacturationControlPanel.xaml.cs">
+      <DependentUpon>FacturationControlPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\PaiementForm.xaml.cs">
+      <DependentUpon>PaiementForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\PaiementPanel.xaml.cs">
+      <DependentUpon>PaiementPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\FactureForm.xaml.cs">
+      <DependentUpon>FactureForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\FacturePanel.xaml.cs">
+      <DependentUpon>FacturePanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="vehicule\CubageForm.xaml.cs">
+      <DependentUpon>CubageForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="vehicule\CubagePanel.xaml.cs">
+      <DependentUpon>CubagePanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DITForm.xaml.cs">
+      <DependentUpon>DITForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ImportControlPanel.xaml.cs">
+      <DependentUpon>ImportControlPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ExploitationControlPanel.xaml.cs">
+      <DependentUpon>ExploitationControlPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="AdministrationControlPanel.xaml.cs">
+      <DependentUpon>AdministrationControlPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConnaissementForm.xaml.cs">
+      <DependentUpon>ConnaissementForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConnaissementPanel.xaml.cs">
+      <DependentUpon>ConnaissementPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="conteneur\ConteneurForm.xaml.cs">
+      <DependentUpon>ConteneurForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="conteneur\ConteneurPanel.xaml.cs">
+      <DependentUpon>ConteneurPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConventionnelForm.xaml.cs">
+      <DependentUpon>ConventionnelForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConventionnelPanel.xaml.cs">
+      <DependentUpon>ConventionnelPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ExportControlPanel.xaml.cs">
+      <DependentUpon>ExportControlPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="AccomplissementForm.xaml.cs">
+      <DependentUpon>AccomplissementForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ManifesteForm.xaml.cs">
+      <DependentUpon>ManifesteForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ManifestePanel.xaml.cs">
+      <DependentUpon>ManifestePanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="HistoriqueOperationsForm.xaml.cs">
+      <DependentUpon>HistoriqueOperationsForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\ProformaForm.xaml.cs">
+      <DependentUpon>ProformaForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Finance\ProformaPanel.xaml.cs">
+      <DependentUpon>ProformaPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="vehicule\VehiculeForm.xaml.cs">
+      <DependentUpon>VehiculeForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="VehiculePanel.xaml.cs">
+      <DependentUpon>VehiculePanel.xaml</DependentUpon>
+    </Compile>
+    <Page Include="conteneur\2015UpdateOperationTracking.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FinanceControlPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Finance\AnnulerFactureSpot.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Finance\AvoirCustom.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Finance\AvoirSpot.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Finance\AvoirSpotPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Finance\AvoirSpotSelect.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Finance\ClientCondForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Finance\ClientCondition.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Finance\FinanceUpdate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Finance\NovaToSAGE.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="param\ArticleForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="param\ArticlePanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="BookingForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="param\ClientForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="param\ClientPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="BonEnleverPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="BonEnleverForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ConnexionForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ConstatSinistreVehiculeForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="CloturerEscaleForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="CloturerManifesteForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="CloturerConnaissementForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="BookingPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Finance\AvoirForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Finance\AvoirPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Remote\QuotationForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Remote\QuotationsPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Report\BAEReport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\AvoirReport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="CalculerSejourConventionnelForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="BonSortieForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="BonSortiePanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="param\AcconierForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="param\AcconierPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="param\ArmateurForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="param\ArmateurPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Sage\Appointement.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sage\CentralisationPaie.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sage\DotationCharge.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Sage\UserSession.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="vehicule\AjoutVehiculeCubageForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Finance\CloturerOrdreServiceForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="AnnulerBookingForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="CalculerStationnementMafiForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Finance\AnnulerProformaForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="vehicule\AttelerVehiculeForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Finance\AnnulerOSForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Finance\AnnulerPaiementForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Finance\AnnulerReductionForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\BADReport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ClotureSOPForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChangerClientBookingForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="conteneur\ConteneurTCForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="conteneur\ConteneurTCPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\CommandeSAPReport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ConstatContradictoireForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="EmplacementForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Finance\FactureSpot.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Finance\FactureSpotPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LoadingReportExcelForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\DischargingReportExcelForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DailyMovesExcelForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="CommandeSAPForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Finance\PaiementClient.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="vehicule\ParcAutoBAERepport.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="RecapDetentionForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecapSurestariesForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\RapportDebarquementExcelForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\RapportEmbarquementExcelForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\EtatBilanTrackingReport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RestitutionConteneurForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\EtatBilanMiseDispositionReport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\ExtractCNCCForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="CreerOperationTrackingForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="conteneur\RetourVideConteneur.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UpdateOperationTrackingForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\RapportEmbarquementForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\RapportDebarquementForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DailyMovesForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="conteneur\TransfertEmplacementConteneurForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\EtatStockConteneurReport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MiseDispositionReport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="conteneur\RetourArmateurConteneurForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Finance\UpdateEltBookingForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ListDispositionCtrForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MiseDispositionPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PositionnerConteneurForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ListConteneurTCPositionnerForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="conteneur\TransfHabillageConteneurForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="conteneur\TransfReparationConteneurForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ParquerConteneurForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\ExtractDiversReversementsForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\ExtractPrevExportDITForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ListConteneurTCForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="TrackingControlPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UpdateVolPoidsConvForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="EclaterBLExportForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Finance\UpdateEltAvoirPartielForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\ExtractPrevImportDITForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Finance\UpdateEltBLForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Finance\UpdateEltVehForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="VAEForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\ExtractParcAutoExcelForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="HistOccupReport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\ExtractDouaneForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="InterchangeConteneurForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="RecuReport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="SurestDetReport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ReceptionExportConteneurForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ReceptionExportConventionnelForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DetailsLivraisonGCForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DetailsEnlevementGCForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DetailsLivraisonMafiForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DetailsEnlevementMafiForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\FactureArmateurReport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="securite\UtilisateurPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="securite\UtilisateurForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\FactureStevedoringReport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="TransfertBookingCtrForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="TransfertBookingGCForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Finance\FacturerArmateurForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\EtatEntreesReport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\SOCARReport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\EtatCADetailReport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\EtatCAReport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ExonererConnaissementForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="TransfertBookingEscaleForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\ExtractManutAllForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\ExtractSejourAllForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\ExtractSejourForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\ExtractManutForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Finance\UpdateEltMafiForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ValiderManifesteForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\DuplicataSortieReport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\EtatSortiesReport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\EtatContenuParcReport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ListMafiForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="SortirMafiForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="IdentificationMafiForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MafiForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MafiPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MAJDateDepotForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\EtatSyntheseSEPBCReport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Finance\ValiderOrdreServiceForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ClearanceForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="conteneur\ConteneurExportPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ConventionnelExportPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="SummaryOPForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="conteneur\RetourConteneurForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="conteneur\SortirConteneurForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ValiderDemandeCautionForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DemandeRestitutionCautionForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DemandeRestitutionCautionPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\EtatSyntheseAutresAcconiersReport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\EtatElementsSEPBCReport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\EtatElementsDITReport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\EtatFacturesDITReport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ManifestExportForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="GenererBLForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\EtatPaiementsReport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ReportingControlPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="EmbarquerConventionnelForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="EmbarquerConteneurForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ValiderClearanceForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="vehicule\RetirerVehiculeCubageForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="EmplacementPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="param\PortForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="param\PortPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="LoadEmplacementsForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="param\NavireForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="param\NavirePanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TransfertEmplacementForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ParcAutoControlPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="securite\MotDePasseForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ListFactureDITForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Finance\FactureDITForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Finance\FactureDITPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\SortieReport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ListBookingForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Finance\OrdreServiceForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Finance\OrdreServicePanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Finance\UpdateEltGCForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ListConventionnelForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MAJNumGCForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="SortirConventionnelForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ReceptionConventionnelForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="CubageConventionnelForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="IdentificationConventionnelForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="SinistreForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="SinistrePanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MAJNumEscaleForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\LivraisonReport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="HistConnaissementForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ValiderCubageForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DashboardPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="StatutForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ListPaiementForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ListProformaForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ListManifesteForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ValiderExtensionForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ExtensionFranchiseForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ExtensionFranchisePanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ValiderConnaissementForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="NoteForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\FactureReport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Report\ProformaReport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ValiderDemandeVisiteForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="vehicule\DemandeVisiteForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="vehicule\DemandeVisitePanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Finance\ValiderReductionForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DemandeReductionForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DemandeReductionPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="CubageReport.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ListConteneurForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ListVehiculeForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ListConnaissementForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ListEscaleForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="IdentificationConteneurForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="vehicule\MAJChassisForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ValiderDemandeLivraisonForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DetailsLivraisonVehForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DetailsLivraisonCtrForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DemandeLivraisonPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DemandeLivraisonForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="vehicule\TransfertZoneSortieVehiculeForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="SortirVehiculeForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="vehicule\ReceptionVehiculeForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ValiderBonEnleverForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="vehicule\CubageVehiculeForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="IdentificationVehiculeForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Finance\ValiderProformaForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ProgDoubleRelevageCtrForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ProgVisiteDouaneCtrForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="CalculerStationnementCtrForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="vehicule\CalculerSejourVehiculeForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DetailsEnlevementCtrForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DetailsEnlevementVehForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Finance\FacturationControlPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Finance\PaiementForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Finance\PaiementPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Finance\FactureForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Finance\FacturePanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="vehicule\CubageForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="vehicule\CubagePanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DITForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ImportControlPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ExploitationControlPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="AdministrationControlPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ConnaissementForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ConnaissementPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="conteneur\ConteneurForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="conteneur\ConteneurPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ConventionnelForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ConventionnelPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EscalePanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EscaleForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ExportControlPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="AccomplissementForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ManifesteForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ManifestePanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="HistoriqueOperationsForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Finance\ProformaForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Finance\ProformaPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="vehicule\VehiculeForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="VehiculePanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="conteneur\VendreConteneur.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="VesselStopOverWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="EscalePanel.xaml.cs">
+      <DependentUpon>EscalePanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EscaleForm.xaml.cs">
+      <DependentUpon>EscaleForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="conteneur\VendreConteneur.xaml.cs">
+      <DependentUpon>VendreConteneur.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="VesselStopOverWindow.xaml.cs">
+      <DependentUpon>VesselStopOverWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="NavigationWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="NavigationWindow.xaml.cs">
+      <DependentUpon>NavigationWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Resource Include="Ressources\XMLFile.xml" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="app.config" />
+    <Resource Include="Icons\XML.ico" />
+    <None Include="Ressources\AWMDS.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+    <Resource Include="Icons\coupon-icon.png" />
+    <Resource Include="Icons\Microsoft-Office-Excel-icon.png" />
+    <Resource Include="Icons\industrial-and-heavy-duty-trailers-tr-1.ico" />
+    <Resource Include="Icons\Auction.png" />
+    <Resource Include="Icons\Industry-Feed-Out-icon.png" />
+    <Resource Include="Icons\User-Clients-icon.png" />
+    <Resource Include="Icons\Industry-Return-icon.png" />
+    <Content Include="dll\System.Net.Http.Formatting.dll" />
+    <Content Include="Ressources\Booking.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Ressources\Export.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Ressources\Modeles.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Ressources\FactArm.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Ressources\Extract Parc Auto.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Ressources\Extract Prev Import DIT.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Ressources\BLExport.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Ressources\Extract Prev Export DIT.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Ressources\Divers Reversements.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Ressources\BLExportPreview.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Ressources\Extract CNCC.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Ressources\RapportDebarquement.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Ressources\DailyMovesNDS.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Ressources\HistoriqueConteneur.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Ressources\DischargingNDS.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Ressources\LoadingNDS.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Ressources\manifeste_guce.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="Ressources\Manutention Parc autos.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Ressources\ProformaStevedoring.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Ressources\Recap.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Ressources\Recap2.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Ressources\RapportEmbarquement.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Ressources\RecapDetention.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Ressources\RecapSurestaries.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Ressources\Recap3.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Ressources\SchemaDouane.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="Ressources\Sejour Parc Autos.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Ressources\Tw Cen MT.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Ressources\WAF Report.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="VesselStopOverPresentation_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\acceuil.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\administration.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\home_icon-full.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\Card-file-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\Zoom-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\Printer-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\ajouter.PNG" />
+    <Resource Include="Icons\nouveau.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\cross.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\enregistrer.PNG" />
+    <Resource Include="Icons\report.PNG" />
+    <Resource Include="Icons\workflow.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VesselStopOverData\VesselStopOverData.csproj">
+      <Project>{C3BD2354-BE2F-4897-9EAE-C978D931D9EA}</Project>
+      <Name>VesselStopOverData</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\LogoApp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\Cash-icon.png" />
+    <Resource Include="Icons\Cash-register-icon.png" />
+    <Resource Include="Icons\import.png" />
+    <Resource Include="Icons\invoice-icon.png" />
+    <Resource Include="Icons\logo_bateau_r30.gif" />
+    <Resource Include="Icons\Paste-icon.png" />
+    <Resource Include="Icons\Save-icon.png" />
+    <Resource Include="Icons\Settings-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\conn-Icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\Container-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\car-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\reports-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\File-new-icon.png" />
+    <Resource Include="Icons\Files-New-File-icon.png" />
+    <Resource Include="Icons\new-file-icon.png" />
+    <Resource Include="Icons\report-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\report-icon 2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\process-accept-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\home-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\performance-tools-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\Actions-view-filter-icon.png" />
+    <Resource Include="Icons\data.png" />
+    <Resource Include="Icons\Categories-preferences-other-icon.png" />
+    <Resource Include="Icons\Filter-List-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\Notepad-Bloc-notes-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\Accept-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\box-1-icon.png" />
+    <Resource Include="Icons\Box-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <SplashScreen Include="SplashScreen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\export-icon.png" />
+    <Resource Include="Icons\import-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\User-Files-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\Drawing-icon.png" />
+    <Resource Include="Icons\Jumbo-Crane-with-Movement-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\army-officer-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\Document-Delete-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\bar-code-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\Actions-mail-mark-task-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\Transfer-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\fire-damage-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 et x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <PublishFile Include="Microsoft.ReportViewer.Common">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>Assembly</FileType>
+    </PublishFile>
+    <PublishFile Include="Microsoft.ReportViewer.DataVisualization">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>Assembly</FileType>
+    </PublishFile>
+    <PublishFile Include="Microsoft.ReportViewer.ProcessingObjectModel">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>Assembly</FileType>
+    </PublishFile>
+    <PublishFile Include="Microsoft.ReportViewer.WinForms">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>Assembly</FileType>
+    </PublishFile>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="Microsoft.Office.Core">
+      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>5</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="Microsoft.Office.Interop.Excel">
+      <Guid>{00020813-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>7</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="Microsoft.Office.Interop.Outlook">
+      <Guid>{00062FFF-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>9</VersionMajor>
+      <VersionMinor>4</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="stdole">
+      <Guid>{00020430-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="VBIDE">
+      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>5</VersionMajor>
+      <VersionMinor>3</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="common\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

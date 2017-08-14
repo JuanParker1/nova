@@ -1,0 +1,125 @@
+﻿<Window x:Class="VesselStopOverPresentation.EclaterBLExportForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        Title="Eclater BL" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Height="475" Width="550" WindowStartupLocation="CenterScreen" FontFamily="Segoe UI" FontSize="11" Icon="/VesselStopOverPresentation;component/Icons/LogoApp.png" ResizeMode="NoResize">
+    <DockPanel>
+        <StackPanel Name="stackPanelCommands" DockPanel.Dock="Top" Orientation="Horizontal" Background="#3F51B5">
+            <GridSplitter Width="1.5" Background="Transparent"/>
+            <Border BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                <DockPanel Margin="1">
+                    <TextBlock DockPanel.Dock="Bottom" Text="Eclater BL" TextAlignment="Center" Height="18" Width="Auto" TextWrapping="Wrap" Foreground="White" Background="#FF50509D"/>
+                    <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnEclaterBL" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnEclaterBL_Click">
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                            <Image Source="/VesselStopOverPresentation;component/Icons/Industry-Feed-Out-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                            <TextBlock Text="Eclater BL" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                        </StackPanel>
+                    </Button>
+                </DockPanel>
+            </Border>
+        </StackPanel>
+        <StatusBar DockPanel.Dock="Bottom" Height="30" FlowDirection="RightToLeft">
+            <Label Name="lblStatut" FlowDirection="LeftToRight" FontWeight="SemiBold" FontFamily="Segoe UI" FontSize="11" />
+        </StatusBar>
+        <DockPanel>
+            <GroupBox Header="Conventionnels" DockPanel.Dock="Top" BorderThickness="2">
+                <DataGrid Name="dataGridGC" IsReadOnly="True" Height="125" ItemsSource="{Binding eltsBookingGC}" AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader">
+                    <DataGrid.RowHeaderTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <CheckBox IsChecked="{Binding Path=IsSelected, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGridRow}}}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGrid.RowHeaderTemplate>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header=" "></DataGridTextColumn>
+                        <DataGridTextColumn Header="Num GC" Width="Auto" Binding="{Binding NumGC}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Description" Width="140" Binding="{Binding Description}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Longueur" Width="Auto" Binding="{Binding Longueur, ConverterCulture=fr-FR, StringFormat={}{0:N2} m}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextAlignment" Value="Right"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Largeur" Width="Auto" Binding="{Binding Largeur, ConverterCulture=fr-FR, StringFormat={}{0:N2} m}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextAlignment" Value="Right"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Hauteur" Width="Auto" Binding="{Binding Hauteur, ConverterCulture=fr-FR, StringFormat={}{0:N2} m}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextAlignment" Value="Right"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Quantité" Width="Auto" Binding="{Binding Quantite, ConverterCulture=fr-FR, StringFormat={}{0:N3}}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextAlignment" Value="Right"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Volume" Width="Auto" Binding="{Binding Volume, ConverterCulture=fr-FR, StringFormat={}{0:N3} m³}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextAlignment" Value="Right"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Poids" Width="Auto" Binding="{Binding Poids, ConverterCulture=fr-FR, StringFormat={}{0:N3} t}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextAlignment" Value="Right"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Type de marchandise" Width="Auto" Binding="{Binding TypeMses}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Statut" Width="Auto" Binding="{Binding StatGC}"></DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+            <GroupBox Header="Conteneurs" BorderThickness="2">
+                <DataGrid Name="dataGridConteneurs" IsReadOnly="True" ItemsSource="{Binding conteneurs}" AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader">
+                    <DataGrid.RowHeaderTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <CheckBox IsChecked="{Binding Path=IsSelected, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGridRow}}}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGrid.RowHeaderTemplate>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header=" "></DataGridTextColumn>
+                        <DataGridTextColumn Header="N° conteneur" Width="Auto" Binding="{Binding NumCtr}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Description" Width="140" Binding="{Binding Description}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="UN Code" Width="Auto" Binding="{Binding UNCode}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Description des marchandises" Width="Auto" Binding="{Binding DescMses}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Cat. M'ses" Width="Auto" Binding="{Binding TypeMsesCtr}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Etat" Width="Auto" Binding="{Binding StatutCtr}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Type Ctr" Width="Auto" Binding="{Binding TypeCtr}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Volume" Width="Auto" Binding="{Binding Volume, ConverterCulture=fr-FR, StringFormat={}{0:N0} m³}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextAlignment" Value="Right"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Poids" Width="Auto" Binding="{Binding Poids, ConverterCulture=fr-FR, StringFormat={}{0:N0} Kg}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextAlignment" Value="Right"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Seal1" Width="Auto" Binding="{Binding Seal1}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Seal2" Width="Auto" Binding="{Binding Seal2}"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Statut" Width="Auto" Binding="{Binding StatCtr}"></DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+        </DockPanel>
+    </DockPanel>
+</Window>

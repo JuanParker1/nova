@@ -1,0 +1,1624 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="VSOMModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="VSOMModelStoreContainer">
+          <EntitySet Name="ARTICLE" EntityType="VSOMModel.Store.ARTICLE" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="AVOIR" EntityType="VSOMModel.Store.AVOIR" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CLIENT" EntityType="VSOMModel.Store.CLIENT" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CONNAISSEMENT" EntityType="VSOMModel.Store.CONNAISSEMENT" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ELEMENT_FACTURATION" EntityType="VSOMModel.Store.ELEMENT_FACTURATION" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ESCALE" EntityType="VSOMModel.Store.ESCALE" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="FACTURE" EntityType="VSOMModel.Store.FACTURE" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="LIGNE_AVOIR" EntityType="VSOMModel.Store.LIGNE_AVOIR" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="LIGNE_PAYEMENT" EntityType="VSOMModel.Store.LIGNE_PAYEMENT" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="LIGNE_PRIX" EntityType="VSOMModel.Store.LIGNE_PRIX" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="LIGNE_PROFORMA" EntityType="VSOMModel.Store.LIGNE_PROFORMA" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PAYEMENT" EntityType="VSOMModel.Store.PAYEMENT" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PROFORMA" EntityType="VSOMModel.Store.PROFORMA" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="VEHICULE" EntityType="VSOMModel.Store.VEHICULE" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="ELEMENT_FACTURATION_FK00" Association="VSOMModel.Store.ELEMENT_FACTURATION_FK00">
+            <End Role="CONNAISSEMENT" EntitySet="CONNAISSEMENT" />
+            <End Role="ELEMENT_FACTURATION" EntitySet="ELEMENT_FACTURATION" />
+          </AssociationSet>
+          <AssociationSet Name="ELEMENT_FACTURATION_FK01" Association="VSOMModel.Store.ELEMENT_FACTURATION_FK01">
+            <End Role="LIGNE_PRIX" EntitySet="LIGNE_PRIX" />
+            <End Role="ELEMENT_FACTURATION" EntitySet="ELEMENT_FACTURATION" />
+          </AssociationSet>
+          <AssociationSet Name="FACTURE_FK00" Association="VSOMModel.Store.FACTURE_FK00">
+            <End Role="PROFORMA" EntitySet="PROFORMA" />
+            <End Role="FACTURE" EntitySet="FACTURE" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LIGNE_AVOIR_AVOIR" Association="VSOMModel.Store.FK_LIGNE_AVOIR_AVOIR">
+            <End Role="AVOIR" EntitySet="AVOIR" />
+            <End Role="LIGNE_AVOIR" EntitySet="LIGNE_AVOIR" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LIGNE_AVOIR_ELEMENT_FACTURATION" Association="VSOMModel.Store.FK_LIGNE_AVOIR_ELEMENT_FACTURATION">
+            <End Role="ELEMENT_FACTURATION" EntitySet="ELEMENT_FACTURATION" />
+            <End Role="LIGNE_AVOIR" EntitySet="LIGNE_AVOIR" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LIGNE_PAYEMENT_FACTURE" Association="VSOMModel.Store.FK_LIGNE_PAYEMENT_FACTURE">
+            <End Role="FACTURE" EntitySet="FACTURE" />
+            <End Role="LIGNE_PAYEMENT" EntitySet="LIGNE_PAYEMENT" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LIGNE_PAYEMENT_PAYEMENT" Association="VSOMModel.Store.FK_LIGNE_PAYEMENT_PAYEMENT">
+            <End Role="PAYEMENT" EntitySet="PAYEMENT" />
+            <End Role="LIGNE_PAYEMENT" EntitySet="LIGNE_PAYEMENT" />
+          </AssociationSet>
+          <AssociationSet Name="LIGNE_PRIX_FK00" Association="VSOMModel.Store.LIGNE_PRIX_FK00">
+            <End Role="ARTICLE" EntitySet="ARTICLE" />
+            <End Role="LIGNE_PRIX" EntitySet="LIGNE_PRIX" />
+          </AssociationSet>
+          <AssociationSet Name="LIGNE_PROFORMA_FK00" Association="VSOMModel.Store.LIGNE_PROFORMA_FK00">
+            <End Role="ELEMENT_FACTURATION" EntitySet="ELEMENT_FACTURATION" />
+            <End Role="LIGNE_PROFORMA" EntitySet="LIGNE_PROFORMA" />
+          </AssociationSet>
+          <AssociationSet Name="LIGNE_PROFORMA_FK01" Association="VSOMModel.Store.LIGNE_PROFORMA_FK01">
+            <End Role="PROFORMA" EntitySet="PROFORMA" />
+            <End Role="LIGNE_PROFORMA" EntitySet="LIGNE_PROFORMA" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="ARTICLE">
+          <Key>
+            <PropertyRef Name="CodeArticle" />
+          </Key>
+          <Property Name="CodeArticle" Type="smallint" Nullable="false" />
+          <Property Name="LibArticle" Type="nvarchar" MaxLength="100" />
+          <Property Name="CCArticle" Type="nvarchar" MaxLength="20" />
+          <Property Name="CCArticleEx" Type="nvarchar" MaxLength="20" />
+          <Property Name="CodeFamArt" Type="smallint" />
+          <Property Name="CodeTVA" Type="nvarchar" MaxLength="10" />
+          <Property Name="CCarticle1" Type="nvarchar" MaxLength="10" />
+          <Property Name="CCarticleEX1" Type="nvarchar" MaxLength="10" />
+          <Property Name="Statut" Type="nvarchar" MaxLength="5" />
+        </EntityType>
+        <EntityType Name="AVOIR">
+          <Key>
+            <PropertyRef Name="IdFA" />
+          </Key>
+          <Property Name="IdFA" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="DCFA" Type="datetime" />
+          <Property Name="DVFA" Type="datetime" />
+          <Property Name="AIFA" Type="nvarchar" MaxLength="255" />
+          <Property Name="AIVFA" Type="nvarchar" MaxLength="255" />
+          <Property Name="StatutFA" Type="nvarchar" MaxLength="1" />
+          <Property Name="MHT" Type="int" />
+          <Property Name="MTVA" Type="int" />
+          <Property Name="MTTC" Type="int" />
+          <Property Name="IdBL" Type="int" />
+          <Property Name="IdArm" Type="int" />
+          <Property Name="IdU" Type="int" />
+          <Property Name="IdUV" Type="int" />
+          <Property Name="IdClient" Type="int" />
+          <Property Name="IdFD" Type="int" />
+          <Property Name="IdDocSAP" Type="int" />
+          <Property Name="ClientAvoir" Type="nvarchar" MaxLength="50" />
+          <Property Name="TypeAvoir" Type="nvarchar" MaxLength="50" />
+          <Property Name="TypeFacture" Type="varchar" MaxLength="10" />
+          <Property Name="IdPay" Type="int" />
+        </EntityType>
+        <EntityType Name="CLIENT">
+          <Key>
+            <PropertyRef Name="IdClient" />
+          </Key>
+          <Property Name="IdClient" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="CodeClient" Type="nvarchar" MaxLength="20" />
+          <Property Name="NomClient" Type="nvarchar" MaxLength="50" />
+          <Property Name="AdrClient" Type="nvarchar" MaxLength="255" />
+          <Property Name="EmailClient" Type="nvarchar" MaxLength="50" />
+          <Property Name="TelClient" Type="nvarchar" MaxLength="50" />
+          <Property Name="CCClient" Type="nvarchar" MaxLength="20" />
+          <Property Name="CodeTVA" Type="nvarchar" MaxLength="10" />
+          <Property Name="TypeClient" Type="nvarchar" MaxLength="1" />
+          <Property Name="StatutClient" Type="nvarchar" MaxLength="1" />
+          <Property Name="NumContrib" Type="nvarchar" MaxLength="20" />
+          <Property Name="NumRegCommerce" Type="nvarchar" MaxLength="20" />
+          <Property Name="RetenueIS" Type="nvarchar" MaxLength="1" />
+          <Property Name="PourcentIS" Type="float" />
+        </EntityType>
+        <EntityType Name="CONNAISSEMENT">
+          <Key>
+            <PropertyRef Name="IdBL" />
+          </Key>
+          <Property Name="IdBL" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="NumBL" Type="nvarchar" MaxLength="50" />
+          <Property Name="NumBooking" Type="nvarchar" MaxLength="50" />
+          <Property Name="DCBL" Type="datetime" />
+          <Property Name="EtatBL" Type="nvarchar" MaxLength="1" />
+          <Property Name="LPBL" Type="nvarchar" MaxLength="20" />
+          <Property Name="DPBL" Type="nvarchar" MaxLength="20" />
+          <Property Name="LDBL" Type="nvarchar" MaxLength="20" />
+          <Property Name="BLGN" Type="nvarchar" MaxLength="1" />
+          <Property Name="BLIL" Type="nvarchar" MaxLength="1" />
+          <Property Name="BLSocar" Type="nvarchar" MaxLength="1" />
+          <Property Name="NumSocar" Type="nvarchar" MaxLength="10" />
+          <Property Name="BLFO" Type="nvarchar" MaxLength="1" />
+          <Property Name="BLLT" Type="nvarchar" MaxLength="1" />
+          <Property Name="CCBL" Type="nvarchar" MaxLength="1" />
+          <Property Name="CCBLMontant" Type="int" />
+          <Property Name="LPFret" Type="nvarchar" MaxLength="50" />
+          <Property Name="BlBloque" Type="nvarchar" MaxLength="1" />
+          <Property Name="BLER" Type="nvarchar" MaxLength="1" />
+          <Property Name="BLERNote" Type="nvarchar" MaxLength="255" />
+          <Property Name="TypeBL" Type="nvarchar" MaxLength="2" />
+          <Property Name="DescBL" Type="nvarchar" MaxLength="255" />
+          <Property Name="ConsigneeBL" Type="nvarchar" MaxLength="255" />
+          <Property Name="AdresseBL" Type="nvarchar" MaxLength="255" />
+          <Property Name="ConsigneeBooking" Type="nvarchar" MaxLength="255" />
+          <Property Name="AdresseConsignee" Type="nvarchar" MaxLength="255" />
+          <Property Name="AdresseNotify" Type="nvarchar" MaxLength="255" />
+          <Property Name="EmailNotify" Type="nvarchar" MaxLength="255" />
+          <Property Name="TelNotify" Type="nvarchar" MaxLength="255" />
+          <Property Name="NotifyBL" Type="nvarchar" MaxLength="255" />
+          <Property Name="NotifyBL2" Type="nvarchar" MaxLength="255" />
+          <Property Name="AdresseNotify2" Type="nvarchar" MaxLength="255" />
+          <Property Name="EmailNotify2" Type="nvarchar" MaxLength="255" />
+          <Property Name="TelNotify2" Type="nvarchar" MaxLength="255" />
+          <Property Name="NomCharger" Type="nvarchar" MaxLength="35" />
+          <Property Name="AdresseCharger" Type="nvarchar" MaxLength="175" />
+          <Property Name="StatutBL" Type="nvarchar" MaxLength="15" />
+          <Property Name="IdClient" Type="int" />
+          <Property Name="IdMan" Type="int" />
+          <Property Name="IdEsc" Type="int" />
+          <Property Name="IdAcc" Type="int" />
+          <Property Name="CodeTVA" Type="nvarchar" MaxLength="10" />
+          <Property Name="NomManBL" Type="nvarchar" MaxLength="50" />
+          <Property Name="CNIManBL" Type="nvarchar" MaxLength="20" />
+          <Property Name="DDCNIManBL" Type="datetime" />
+          <Property Name="LDCNIManBL" Type="nvarchar" MaxLength="20" />
+          <Property Name="PhoneManBL" Type="nvarchar" MaxLength="255" />
+          <Property Name="EmailBL" Type="nvarchar" MaxLength="255" />
+          <Property Name="NContribBL" Type="nvarchar" MaxLength="20" />
+          <Property Name="DateAccBL" Type="datetime" />
+          <Property Name="AIBL" Type="nvarchar" MaxLength="255" />
+          <Property Name="SensBL" Type="nvarchar" MaxLength="1" />
+          <Property Name="PoidsBL" Type="float" />
+          <Property Name="VolBL" Type="float" />
+          <Property Name="NumCtrBL" Type="nvarchar" MaxLength="50" />
+          <Property Name="NumDEBL" Type="nvarchar" MaxLength="50" />
+          <Property Name="NumBESCBL" Type="nvarchar" MaxLength="50" />
+          <Property Name="NumHSCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="DCBLI" Type="datetime" />
+          <Property Name="DVCBLI" Type="datetime" />
+          <Property Name="AIVCBLI" Type="nvarchar" MaxLength="255" />
+          <Property Name="DCLBL" Type="datetime" />
+          <Property Name="AIDCLBL" Type="nvarchar" MaxLength="255" />
+          <Property Name="BLDette" Type="nvarchar" MaxLength="1" />
+          <Property Name="DetteMontant" Type="int" />
+          <Property Name="BLBloqueNote" Type="nvarchar" MaxLength="255" />
+          <Property Name="DVBL" Type="datetime" />
+          <Property Name="AIBLVal" Type="nvarchar" MaxLength="255" />
+          <Property Name="DestBL" Type="nvarchar" MaxLength="30" />
+          <Property Name="LastModif" Type="datetime" />
+          <Property Name="IdU" Type="int" />
+          <Property Name="Payor" Type="nvarchar" MaxLength="255" />
+          <Property Name="ClearAgent" Type="nvarchar" MaxLength="255" />
+          <Property Name="NoSEPBC" Type="nvarchar" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="ELEMENT_FACTURATION">
+          <Key>
+            <PropertyRef Name="IdJEF" />
+          </Key>
+          <Property Name="IdJEF" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="DateJEF" Type="datetime" />
+          <Property Name="EltFacture" Type="nvarchar" MaxLength="5" />
+          <Property Name="LibEF" Type="nvarchar" MaxLength="150" />
+          <Property Name="IdLP" Type="int" />
+          <Property Name="PUEF" Type="float" />
+          <Property Name="PUEFBase" Type="float" />
+          <Property Name="QTEEF" Type="float" />
+          <Property Name="UnitEF" Type="nvarchar" MaxLength="20" />
+          <Property Name="PTDIT" Type="float" />
+          <Property Name="IdEsc" Type="int" />
+          <Property Name="IdMan" Type="int" />
+          <Property Name="IdBL" Type="int" />
+          <Property Name="IdVeh" Type="int" />
+          <Property Name="IdCtr" Type="int" />
+          <Property Name="IdMafi" Type="int" />
+          <Property Name="IdGC" Type="int" />
+          <Property Name="IdOS" Type="int" />
+          <Property Name="IdLS" Type="int" />
+          <Property Name="CodeTVA" Type="nvarchar" MaxLength="10" />
+          <Property Name="TauxTVA" Type="real" />
+          <Property Name="CCArticle" Type="nvarchar" MaxLength="20" />
+          <Property Name="CCCP" Type="nvarchar" MaxLength="20" />
+          <Property Name="IdFD" Type="int" />
+          <Property Name="IdDDR" Type="int" />
+          <Property Name="DestEF" Type="nvarchar" MaxLength="1" />
+          <Property Name="DelaiEF" Type="datetime" />
+          <Property Name="StatutEF" Type="nvarchar" MaxLength="20" />
+          <Property Name="IdFactDIT" Type="int" />
+          <Property Name="IdFA" Type="int" />
+          <Property Name="CodeArticle" Type="varchar" MaxLength="10" />
+          <Property Name="IdFSoc" Type="int" />
+          <Property Name="CCARTICLE1" Type="nvarchar" MaxLength="10" />
+          <Property Name="REF_IDJEF" Type="int" />
+        </EntityType>
+        <EntityType Name="ESCALE">
+          <Key>
+            <PropertyRef Name="IdEsc" />
+          </Key>
+          <Property Name="IdEsc" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="NumEsc" Type="int" />
+          <Property Name="NumVoySCR" Type="nvarchar" MaxLength="20" />
+          <Property Name="NumVoyDIT" Type="nvarchar" MaxLength="20" />
+          <Property Name="NomCpt" Type="nvarchar" MaxLength="70" />
+          <Property Name="DCEsc" Type="datetime" />
+          <Property Name="DDEsc" Type="datetime" />
+          <Property Name="DPAEsc" Type="datetime" />
+          <Property Name="DRAEsc" Type="datetime" />
+          <Property Name="DDechEsc" Type="datetime" />
+          <Property Name="NbrePManEsc" Type="smallint" />
+          <Property Name="RGPEsc" Type="nvarchar" MaxLength="1" />
+          <Property Name="RREsc" Type="nvarchar" MaxLength="1" />
+          <Property Name="RAEsc" Type="nvarchar" MaxLength="1" />
+          <Property Name="RCEsc" Type="nvarchar" MaxLength="1" />
+          <Property Name="AIEsc" Type="nvarchar" MaxLength="255" />
+          <Property Name="SOP" Type="nvarchar" MaxLength="1" />
+          <Property Name="IdNav" Type="int" />
+          <Property Name="IdArm" Type="int" />
+          <Property Name="IdAcc" Type="int" />
+          <Property Name="IdFArm" Type="int" />
+          <Property Name="DateFArm" Type="datetime" />
+          <Property Name="StatEsc" Type="nvarchar" MaxLength="25" />
+          <Property Name="SailingDate" Type="datetime" />
+          <Property Name="NumManifestSydonia" Type="nvarchar" MaxLength="50" />
+          <Property Name="IdUserFIntern" Type="int" />
+          <Property Name="FIntern" Type="char" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="FACTURE">
+          <Key>
+            <PropertyRef Name="IdFD" />
+          </Key>
+          <Property Name="IdFD" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="RefAS400" Type="nvarchar" MaxLength="20" />
+          <Property Name="DCFD" Type="datetime" />
+          <Property Name="DEFD" Type="datetime" />
+          <Property Name="StatutFD" Type="nvarchar" MaxLength="1" />
+          <Property Name="MHT" Type="int" />
+          <Property Name="MTVA" Type="int" />
+          <Property Name="MTTC" Type="int" />
+          <Property Name="IdFP" Type="int" />
+          <Property Name="IdU" Type="int" />
+          <Property Name="IdClient" Type="int" />
+          <Property Name="AIFD" Type="nvarchar" MaxLength="255" />
+          <Property Name="IdPay" Type="int" />
+          <Property Name="DateComptable" Type="datetime" />
+          <Property Name="IdDocSAP" Type="int" />
+        </EntityType>
+        <EntityType Name="LIGNE_AVOIR">
+          <Key>
+            <PropertyRef Name="IdFA" />
+            <PropertyRef Name="IdJEF" />
+          </Key>
+          <Property Name="IdFA" Type="int" Nullable="false" />
+          <Property Name="IdJEF" Type="int" Nullable="false" />
+          <Property Name="StatutLP" Type="nvarchar" MaxLength="1" />
+          <Property Name="PUEF" Type="float" />
+          <Property Name="QTEEF" Type="float" />
+          <Property Name="TauxTVA" Type="real" />
+        </EntityType>
+        <EntityType Name="LIGNE_PAYEMENT">
+          <Key>
+            <PropertyRef Name="IdPay" />
+            <PropertyRef Name="IdFD" />
+          </Key>
+          <Property Name="IdPay" Type="int" Nullable="false" />
+          <Property Name="IdFD" Type="int" Nullable="false" />
+          <Property Name="type" Type="nvarchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="LIGNE_PRIX">
+          <Key>
+            <PropertyRef Name="IdLP" />
+          </Key>
+          <Property Name="IdLP" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="CodeLP" Type="nvarchar" MaxLength="10" />
+          <Property Name="CodeArticle" Type="smallint" />
+          <Property Name="DescLP" Type="nvarchar" MaxLength="255" />
+          <Property Name="PU1LP" Type="int" />
+          <Property Name="PU2LP" Type="int" />
+          <Property Name="PU3LP" Type="int" />
+          <Property Name="PU4LP" Type="int" />
+          <Property Name="PU5LP" Type="int" />
+          <Property Name="DDLP" Type="datetime" />
+          <Property Name="DFLP" Type="datetime" />
+          <Property Name="UniteLP" Type="nvarchar" MaxLength="20" />
+          <Property Name="LP" Type="nvarchar" MaxLength="20" />
+          <Property Name="LP2" Type="nvarchar" MaxLength="50" />
+          <Property Name="Regle" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="LIGNE_PROFORMA">
+          <Key>
+            <PropertyRef Name="IdFP" />
+            <PropertyRef Name="IdJEF" />
+          </Key>
+          <Property Name="IdFP" Type="int" Nullable="false" />
+          <Property Name="IdJEF" Type="int" Nullable="false" />
+          <Property Name="StatutLP" Type="nvarchar" MaxLength="1" />
+          <Property Name="PUEF" Type="float" />
+          <Property Name="QTEEF" Type="float" />
+          <Property Name="TauxTVA" Type="real" />
+        </EntityType>
+        <EntityType Name="PAYEMENT">
+          <Key>
+            <PropertyRef Name="IdPay" />
+          </Key>
+          <Property Name="IdPay" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="DatePay" Type="datetime" />
+          <Property Name="ModePay" Type="smallint" />
+          <Property Name="CCPay" Type="nvarchar" MaxLength="20" />
+          <Property Name="MAPay" Type="int" />
+          <Property Name="MRPay" Type="int" />
+          <Property Name="AIPay" Type="nvarchar" MaxLength="255" />
+          <Property Name="ObjetPay" Type="smallint" />
+          <Property Name="IdBL" Type="int" />
+          <Property Name="IdU" Type="int" />
+          <Property Name="IdPayDRC" Type="int" />
+          <Property Name="IdClient" Type="int" />
+          <Property Name="IdPaySAP" Type="int" />
+          <Property Name="Caisse" Type="nvarchar" MaxLength="10" />
+          <Property Name="NumCheque" Type="nvarchar" MaxLength="50" />
+          <Property Name="RefVirement" Type="nvarchar" MaxLength="50" />
+          <Property Name="Banque" Type="nvarchar" MaxLength="50" />
+          <Property Name="Agence" Type="nvarchar" MaxLength="50" />
+          <Property Name="NumCompte" Type="nvarchar" MaxLength="50" />
+          <Property Name="IdBanque" Type="int" />
+          <Property Name="StatutPay" Type="nvarchar" MaxLength="1" />
+          <Property Name="RetIS" Type="nvarchar" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="PROFORMA">
+          <Key>
+            <PropertyRef Name="IdFP" />
+          </Key>
+          <Property Name="IdFP" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="RefAS400" Type="nvarchar" MaxLength="20" />
+          <Property Name="DCFP" Type="datetime" />
+          <Property Name="DVFP" Type="datetime" />
+          <Property Name="AIFP" Type="nvarchar" MaxLength="255" />
+          <Property Name="AIVFP" Type="nvarchar" MaxLength="255" />
+          <Property Name="StatutFP" Type="nvarchar" MaxLength="1" />
+          <Property Name="MHT" Type="int" />
+          <Property Name="MTVA" Type="int" />
+          <Property Name="MTTC" Type="int" />
+          <Property Name="IdBL" Type="int" />
+          <Property Name="IdArm" Type="int" />
+          <Property Name="IdU" Type="int" />
+          <Property Name="IdUV" Type="int" />
+          <Property Name="IdClient" Type="int" />
+          <Property Name="ClientFacture" Type="nvarchar" MaxLength="50" />
+          <Property Name="MHT_EF" Type="int" />
+          <Property Name="MTVA_EF" Type="int" />
+          <Property Name="MTTC_EF" Type="int" />
+          <Property Name="PROMO" Type="int" />
+        </EntityType>
+        <EntityType Name="VEHICULE">
+          <Key>
+            <PropertyRef Name="IdVeh" />
+          </Key>
+          <Property Name="IdVeh" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="NumChassis" Type="nvarchar" MaxLength="25" />
+          <Property Name="NumChassisSGS" Type="nvarchar" MaxLength="20" />
+          <Property Name="BarCode" Type="nvarchar" MaxLength="30" />
+          <Property Name="DCVeh" Type="datetime" />
+          <Property Name="DescVeh" Type="nvarchar" MaxLength="255" />
+          <Property Name="CouleurVeh" Type="nvarchar" MaxLength="20" />
+          <Property Name="TypeMVeh" Type="nvarchar" MaxLength="1" />
+          <Property Name="StatutVeh" Type="nvarchar" MaxLength="1" />
+          <Property Name="PoidsMVeh" Type="int" />
+          <Property Name="VolMVeh" Type="float" />
+          <Property Name="LongMVeh" Type="real" />
+          <Property Name="LargMVeh" Type="real" />
+          <Property Name="HautMVeh" Type="real" />
+          <Property Name="NumItem" Type="smallint" />
+          <Property Name="InfoMan" Type="ntext" />
+          <Property Name="TypeCVeh" Type="nvarchar" MaxLength="1" />
+          <Property Name="PoidsCVeh" Type="int" />
+          <Property Name="VolCVeh" Type="float" />
+          <Property Name="LongCVeh" Type="real" />
+          <Property Name="LargCVeh" Type="real" />
+          <Property Name="HautCVeh" Type="real" />
+          <Property Name="StatutCVeh" Type="nvarchar" MaxLength="1" />
+          <Property Name="VehPorte" Type="nvarchar" MaxLength="1" />
+          <Property Name="VehAttelle" Type="nvarchar" MaxLength="1" />
+          <Property Name="VehCle" Type="nvarchar" MaxLength="1" />
+          <Property Name="VehStart" Type="nvarchar" MaxLength="1" />
+          <Property Name="VehChargé" Type="nvarchar" MaxLength="1" />
+          <Property Name="IdVehAP" Type="int" />
+          <Property Name="StatVeh" Type="nvarchar" MaxLength="25" />
+          <Property Name="FFVeh" Type="datetime" />
+          <Property Name="FSVeh" Type="datetime" />
+          <Property Name="DSPVeh" Type="datetime" />
+          <Property Name="DSRVeh" Type="datetime" />
+          <Property Name="DateVAE" Type="datetime" />
+          <Property Name="IdBL" Type="int" />
+          <Property Name="IdMan" Type="int" />
+          <Property Name="IdEsc" Type="int" />
+          <Property Name="IdAcc" Type="int" />
+          <Property Name="IdBAE" Type="int" />
+          <Property Name="IdDBL" Type="int" />
+          <Property Name="IdBS" Type="int" />
+          <Property Name="NomEnVeh" Type="nvarchar" MaxLength="50" />
+          <Property Name="CNIEnVeh" Type="nvarchar" MaxLength="20" />
+          <Property Name="TelenVeh" Type="nvarchar" MaxLength="20" />
+          <Property Name="NumADDVeh" Type="nvarchar" MaxLength="20" />
+          <Property Name="NumCIVIOveh" Type="nvarchar" MaxLength="20" />
+          <Property Name="NumDDVeh" Type="nvarchar" MaxLength="20" />
+          <Property Name="NumQDVeh" Type="nvarchar" MaxLength="20" />
+          <Property Name="NumFPADVeh" Type="nvarchar" MaxLength="20" />
+          <Property Name="NumQPADVeh" Type="nvarchar" MaxLength="20" />
+          <Property Name="NumAEPADVeh" Type="nvarchar" MaxLength="20" />
+          <Property Name="NumBESCVeh" Type="nvarchar" MaxLength="20" />
+          <Property Name="NumSydoniaVeh" Type="nvarchar" MaxLength="20" />
+          <Property Name="SensVeh" Type="nvarchar" MaxLength="1" />
+          <Property Name="AIVeh" Type="nchar" MaxLength="100" />
+        </EntityType>
+        <Association Name="ELEMENT_FACTURATION_FK00">
+          <End Role="CONNAISSEMENT" Type="VSOMModel.Store.CONNAISSEMENT" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ELEMENT_FACTURATION" Type="VSOMModel.Store.ELEMENT_FACTURATION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CONNAISSEMENT">
+              <PropertyRef Name="IdBL" />
+            </Principal>
+            <Dependent Role="ELEMENT_FACTURATION">
+              <PropertyRef Name="IdBL" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ELEMENT_FACTURATION_FK01">
+          <End Role="LIGNE_PRIX" Type="VSOMModel.Store.LIGNE_PRIX" Multiplicity="0..1" />
+          <End Role="ELEMENT_FACTURATION" Type="VSOMModel.Store.ELEMENT_FACTURATION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LIGNE_PRIX">
+              <PropertyRef Name="IdLP" />
+            </Principal>
+            <Dependent Role="ELEMENT_FACTURATION">
+              <PropertyRef Name="IdLP" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FACTURE_FK00">
+          <End Role="PROFORMA" Type="VSOMModel.Store.PROFORMA" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="FACTURE" Type="VSOMModel.Store.FACTURE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PROFORMA">
+              <PropertyRef Name="IdFP" />
+            </Principal>
+            <Dependent Role="FACTURE">
+              <PropertyRef Name="IdFP" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LIGNE_AVOIR_AVOIR">
+          <End Role="AVOIR" Type="VSOMModel.Store.AVOIR" Multiplicity="1" />
+          <End Role="LIGNE_AVOIR" Type="VSOMModel.Store.LIGNE_AVOIR" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AVOIR">
+              <PropertyRef Name="IdFA" />
+            </Principal>
+            <Dependent Role="LIGNE_AVOIR">
+              <PropertyRef Name="IdFA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LIGNE_AVOIR_ELEMENT_FACTURATION">
+          <End Role="ELEMENT_FACTURATION" Type="VSOMModel.Store.ELEMENT_FACTURATION" Multiplicity="1" />
+          <End Role="LIGNE_AVOIR" Type="VSOMModel.Store.LIGNE_AVOIR" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ELEMENT_FACTURATION">
+              <PropertyRef Name="IdJEF" />
+            </Principal>
+            <Dependent Role="LIGNE_AVOIR">
+              <PropertyRef Name="IdJEF" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LIGNE_PAYEMENT_FACTURE">
+          <End Role="FACTURE" Type="VSOMModel.Store.FACTURE" Multiplicity="1" />
+          <End Role="LIGNE_PAYEMENT" Type="VSOMModel.Store.LIGNE_PAYEMENT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FACTURE">
+              <PropertyRef Name="IdFD" />
+            </Principal>
+            <Dependent Role="LIGNE_PAYEMENT">
+              <PropertyRef Name="IdFD" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LIGNE_PAYEMENT_PAYEMENT">
+          <End Role="PAYEMENT" Type="VSOMModel.Store.PAYEMENT" Multiplicity="1" />
+          <End Role="LIGNE_PAYEMENT" Type="VSOMModel.Store.LIGNE_PAYEMENT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PAYEMENT">
+              <PropertyRef Name="IdPay" />
+            </Principal>
+            <Dependent Role="LIGNE_PAYEMENT">
+              <PropertyRef Name="IdPay" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="LIGNE_PRIX_FK00">
+          <End Role="ARTICLE" Type="VSOMModel.Store.ARTICLE" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="LIGNE_PRIX" Type="VSOMModel.Store.LIGNE_PRIX" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ARTICLE">
+              <PropertyRef Name="CodeArticle" />
+            </Principal>
+            <Dependent Role="LIGNE_PRIX">
+              <PropertyRef Name="CodeArticle" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="LIGNE_PROFORMA_FK00">
+          <End Role="ELEMENT_FACTURATION" Type="VSOMModel.Store.ELEMENT_FACTURATION" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="LIGNE_PROFORMA" Type="VSOMModel.Store.LIGNE_PROFORMA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ELEMENT_FACTURATION">
+              <PropertyRef Name="IdJEF" />
+            </Principal>
+            <Dependent Role="LIGNE_PROFORMA">
+              <PropertyRef Name="IdJEF" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="LIGNE_PROFORMA_FK01">
+          <End Role="PROFORMA" Type="VSOMModel.Store.PROFORMA" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="LIGNE_PROFORMA" Type="VSOMModel.Store.LIGNE_PROFORMA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PROFORMA">
+              <PropertyRef Name="IdFP" />
+            </Principal>
+            <Dependent Role="LIGNE_PROFORMA">
+              <PropertyRef Name="IdFP" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="VSOMModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="VSOMEntities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="ARTICLEs" EntityType="VSOMModel.ARTICLE" />
+          <EntitySet Name="AVOIRs" EntityType="VSOMModel.AVOIR" />
+          <EntitySet Name="CLIENTs" EntityType="VSOMModel.CLIENT" />
+          <EntitySet Name="CONNAISSEMENTs" EntityType="VSOMModel.CONNAISSEMENT" />
+          <EntitySet Name="ELEMENT_FACTURATION" EntityType="VSOMModel.ELEMENT_FACTURATION" />
+          <EntitySet Name="ESCALEs" EntityType="VSOMModel.ESCALE" />
+          <EntitySet Name="FACTUREs" EntityType="VSOMModel.FACTURE" />
+          <EntitySet Name="LIGNE_AVOIR" EntityType="VSOMModel.LIGNE_AVOIR" />
+          <EntitySet Name="LIGNE_PRIX" EntityType="VSOMModel.LIGNE_PRIX" />
+          <EntitySet Name="LIGNE_PROFORMA" EntityType="VSOMModel.LIGNE_PROFORMA" />
+          <EntitySet Name="PAYEMENTs" EntityType="VSOMModel.PAYEMENT" />
+          <EntitySet Name="PROFORMAs" EntityType="VSOMModel.PROFORMA" />
+          <EntitySet Name="VEHICULEs" EntityType="VSOMModel.VEHICULE" />
+          <AssociationSet Name="LIGNE_PRIX_FK00" Association="VSOMModel.LIGNE_PRIX_FK00">
+            <End Role="ARTICLE" EntitySet="ARTICLEs" />
+            <End Role="LIGNE_PRIX" EntitySet="LIGNE_PRIX" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LIGNE_AVOIR_AVOIR" Association="VSOMModel.FK_LIGNE_AVOIR_AVOIR">
+            <End Role="AVOIR" EntitySet="AVOIRs" />
+            <End Role="LIGNE_AVOIR" EntitySet="LIGNE_AVOIR" />
+          </AssociationSet>
+          <AssociationSet Name="ELEMENT_FACTURATION_FK00" Association="VSOMModel.ELEMENT_FACTURATION_FK00">
+            <End Role="CONNAISSEMENT" EntitySet="CONNAISSEMENTs" />
+            <End Role="ELEMENT_FACTURATION" EntitySet="ELEMENT_FACTURATION" />
+          </AssociationSet>
+          <AssociationSet Name="ELEMENT_FACTURATION_FK01" Association="VSOMModel.ELEMENT_FACTURATION_FK01">
+            <End Role="LIGNE_PRIX" EntitySet="LIGNE_PRIX" />
+            <End Role="ELEMENT_FACTURATION" EntitySet="ELEMENT_FACTURATION" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LIGNE_AVOIR_ELEMENT_FACTURATION" Association="VSOMModel.FK_LIGNE_AVOIR_ELEMENT_FACTURATION">
+            <End Role="ELEMENT_FACTURATION" EntitySet="ELEMENT_FACTURATION" />
+            <End Role="LIGNE_AVOIR" EntitySet="LIGNE_AVOIR" />
+          </AssociationSet>
+          <AssociationSet Name="LIGNE_PROFORMA_FK00" Association="VSOMModel.LIGNE_PROFORMA_FK00">
+            <End Role="ELEMENT_FACTURATION" EntitySet="ELEMENT_FACTURATION" />
+            <End Role="LIGNE_PROFORMA" EntitySet="LIGNE_PROFORMA" />
+          </AssociationSet>
+          <AssociationSet Name="FACTURE_FK00" Association="VSOMModel.FACTURE_FK00">
+            <End Role="PROFORMA" EntitySet="PROFORMAs" />
+            <End Role="FACTURE" EntitySet="FACTUREs" />
+          </AssociationSet>
+          <AssociationSet Name="LIGNE_PROFORMA_FK01" Association="VSOMModel.LIGNE_PROFORMA_FK01">
+            <End Role="PROFORMA" EntitySet="PROFORMAs" />
+            <End Role="LIGNE_PROFORMA" EntitySet="LIGNE_PROFORMA" />
+          </AssociationSet>
+          <AssociationSet Name="LIGNE_PAYEMENT" Association="VSOMModel.LIGNE_PAYEMENT">
+            <End Role="FACTURE" EntitySet="FACTUREs" />
+            <End Role="PAYEMENT" EntitySet="PAYEMENTs" />
+          </AssociationSet>
+          <AssociationSet Name="CONNAISSEMENTVEHICULE" Association="VSOMModel.CONNAISSEMENTVEHICULE">
+            <End Role="CONNAISSEMENT" EntitySet="CONNAISSEMENTs" />
+            <End Role="VEHICULE" EntitySet="VEHICULEs" />
+          </AssociationSet>
+          <AssociationSet Name="CONNAISSEMENTCLIENT" Association="VSOMModel.CONNAISSEMENTCLIENT">
+            <End Role="CONNAISSEMENT" EntitySet="CONNAISSEMENTs" />
+            <End Role="CLIENT" EntitySet="CLIENTs" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="ARTICLE">
+          <Key>
+            <PropertyRef Name="CodeArticle" />
+          </Key>
+          <Property Name="CodeArticle" Type="Int16" Nullable="false" />
+          <Property Name="LibArticle" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="CCArticle" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="CCArticleEx" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="CodeFamArt" Type="Int16" />
+          <Property Name="CodeTVA" Type="String" MaxLength="10" Unicode="true" FixedLength="false" />
+          <Property Name="CCarticle1" Type="String" MaxLength="10" Unicode="true" FixedLength="false" />
+          <Property Name="CCarticleEX1" Type="String" MaxLength="10" Unicode="true" FixedLength="false" />
+          <Property Name="Statut" Type="String" MaxLength="5" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="LIGNE_PRIX" Relationship="VSOMModel.LIGNE_PRIX_FK00" FromRole="ARTICLE" ToRole="LIGNE_PRIX" />
+        </EntityType>
+        <EntityType Name="AVOIR">
+          <Key>
+            <PropertyRef Name="IdFA" />
+          </Key>
+          <Property Name="IdFA" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="DCFA" Type="DateTime" Precision="3" />
+          <Property Name="DVFA" Type="DateTime" Precision="3" />
+          <Property Name="AIFA" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="AIVFA" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="StatutFA" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="MHT" Type="Int32" />
+          <Property Name="MTVA" Type="Int32" />
+          <Property Name="MTTC" Type="Int32" />
+          <Property Name="IdBL" Type="Int32" />
+          <Property Name="IdArm" Type="Int32" />
+          <Property Name="IdU" Type="Int32" />
+          <Property Name="IdUV" Type="Int32" />
+          <Property Name="IdClient" Type="Int32" />
+          <Property Name="IdFD" Type="Int32" />
+          <Property Name="IdDocSAP" Type="Int32" />
+          <Property Name="ClientAvoir" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="TypeAvoir" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="TypeFacture" Type="String" MaxLength="10" Unicode="false" FixedLength="false" />
+          <NavigationProperty Name="LIGNE_AVOIR" Relationship="VSOMModel.FK_LIGNE_AVOIR_AVOIR" FromRole="AVOIR" ToRole="LIGNE_AVOIR" />
+          <Property Type="Int32" Name="IdPay" />
+        </EntityType>
+        <EntityType Name="CLIENT">
+          <Key>
+            <PropertyRef Name="IdClient" />
+          </Key>
+          <Property Name="IdClient" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="CodeClient" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="NomClient" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="AdrClient" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="EmailClient" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="TelClient" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="CCClient" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="CodeTVA" Type="String" MaxLength="10" Unicode="true" FixedLength="false" />
+          <Property Name="TypeClient" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="StatutClient" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="NumContrib" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="NumRegCommerce" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="RetenueIS" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="PourcentIS" Type="Double" />
+          <NavigationProperty Name="CONNAISSEMENTs" Relationship="VSOMModel.CONNAISSEMENTCLIENT" FromRole="CLIENT" ToRole="CONNAISSEMENT" />
+        </EntityType>
+        <EntityType Name="CONNAISSEMENT">
+          <Key>
+            <PropertyRef Name="IdBL" />
+          </Key>
+          <Property Name="IdBL" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="NumBL" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="NumBooking" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="DCBL" Type="DateTime" Precision="3" />
+          <Property Name="EtatBL" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="LPBL" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="DPBL" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="LDBL" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="BLGN" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="BLIL" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="BLSocar" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="NumSocar" Type="String" MaxLength="10" Unicode="true" FixedLength="false" />
+          <Property Name="BLFO" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="BLLT" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="CCBL" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="CCBLMontant" Type="Int32" />
+          <Property Name="LPFret" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="BlBloque" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="BLER" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="BLERNote" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="TypeBL" Type="String" MaxLength="2" Unicode="true" FixedLength="false" />
+          <Property Name="DescBL" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="ConsigneeBL" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="AdresseBL" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="ConsigneeBooking" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="AdresseConsignee" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="AdresseNotify" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="EmailNotify" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="TelNotify" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="NotifyBL" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="NotifyBL2" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="AdresseNotify2" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="EmailNotify2" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="TelNotify2" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="NomCharger" Type="String" MaxLength="35" Unicode="true" FixedLength="false" />
+          <Property Name="AdresseCharger" Type="String" MaxLength="175" Unicode="true" FixedLength="false" />
+          <Property Name="StatutBL" Type="String" MaxLength="15" Unicode="true" FixedLength="false" />
+          <Property Name="IdClient" Type="Int32" />
+          <Property Name="IdMan" Type="Int32" />
+          <Property Name="IdEsc" Type="Int32" />
+          <Property Name="IdAcc" Type="Int32" />
+          <Property Name="CodeTVA" Type="String" MaxLength="10" Unicode="true" FixedLength="false" />
+          <Property Name="NomManBL" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="CNIManBL" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="DDCNIManBL" Type="DateTime" Precision="3" />
+          <Property Name="LDCNIManBL" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="PhoneManBL" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="EmailBL" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="NContribBL" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="DateAccBL" Type="DateTime" Precision="3" />
+          <Property Name="AIBL" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="SensBL" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="PoidsBL" Type="Double" />
+          <Property Name="VolBL" Type="Double" />
+          <Property Name="NumCtrBL" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="NumDEBL" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="NumBESCBL" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="NumHSCode" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="DCBLI" Type="DateTime" Precision="3" />
+          <Property Name="DVCBLI" Type="DateTime" Precision="3" />
+          <Property Name="AIVCBLI" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="DCLBL" Type="DateTime" Precision="3" />
+          <Property Name="AIDCLBL" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="BLDette" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="DetteMontant" Type="Int32" />
+          <Property Name="BLBloqueNote" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="DVBL" Type="DateTime" Precision="3" />
+          <Property Name="AIBLVal" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="DestBL" Type="String" MaxLength="30" Unicode="true" FixedLength="false" />
+          <Property Name="LastModif" Type="DateTime" Precision="3" />
+          <Property Name="IdU" Type="Int32" />
+          <Property Name="Payor" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="ClearAgent" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="NoSEPBC" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="ELEMENT_FACTURATION" Relationship="VSOMModel.ELEMENT_FACTURATION_FK00" FromRole="CONNAISSEMENT" ToRole="ELEMENT_FACTURATION" />
+          <NavigationProperty Name="VEHICULEs" Relationship="VSOMModel.CONNAISSEMENTVEHICULE" FromRole="CONNAISSEMENT" ToRole="VEHICULE" />
+          <NavigationProperty Name="CLIENT" Relationship="VSOMModel.CONNAISSEMENTCLIENT" FromRole="CONNAISSEMENT" ToRole="CLIENT" />
+        </EntityType>
+        <EntityType Name="ELEMENT_FACTURATION">
+          <Key>
+            <PropertyRef Name="IdJEF" />
+          </Key>
+          <Property Name="IdJEF" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="DateJEF" Type="DateTime" Precision="3" />
+          <Property Name="EltFacture" Type="String" MaxLength="5" Unicode="true" FixedLength="false" />
+          <Property Name="LibEF" Type="String" MaxLength="150" Unicode="true" FixedLength="false" />
+          <Property Name="IdLP" Type="Int32" />
+          <Property Name="PUEF" Type="Double" />
+          <Property Name="PUEFBase" Type="Double" />
+          <Property Name="QTEEF" Type="Double" />
+          <Property Name="UnitEF" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="PTDIT" Type="Double" />
+          <Property Name="IdEsc" Type="Int32" />
+          <Property Name="IdMan" Type="Int32" />
+          <Property Name="IdBL" Type="Int32" />
+          <Property Name="IdVeh" Type="Int32" />
+          <Property Name="IdCtr" Type="Int32" />
+          <Property Name="IdMafi" Type="Int32" />
+          <Property Name="IdGC" Type="Int32" />
+          <Property Name="IdOS" Type="Int32" />
+          <Property Name="IdLS" Type="Int32" />
+          <Property Name="CodeTVA" Type="String" MaxLength="10" Unicode="true" FixedLength="false" />
+          <Property Name="TauxTVA" Type="Single" />
+          <Property Name="CCArticle" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="CCCP" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="IdFD" Type="Int32" />
+          <Property Name="IdDDR" Type="Int32" />
+          <Property Name="DestEF" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="DelaiEF" Type="DateTime" Precision="3" />
+          <Property Name="StatutEF" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="IdFactDIT" Type="Int32" />
+          <Property Name="IdFA" Type="Int32" />
+          <Property Name="CodeArticle" Type="String" MaxLength="10" Unicode="false" FixedLength="false" />
+          <Property Name="IdFSoc" Type="Int32" />
+          <NavigationProperty Name="CONNAISSEMENT" Relationship="VSOMModel.ELEMENT_FACTURATION_FK00" FromRole="ELEMENT_FACTURATION" ToRole="CONNAISSEMENT" />
+          <NavigationProperty Name="LIGNE_PRIX" Relationship="VSOMModel.ELEMENT_FACTURATION_FK01" FromRole="ELEMENT_FACTURATION" ToRole="LIGNE_PRIX" />
+          <NavigationProperty Name="LIGNE_AVOIR" Relationship="VSOMModel.FK_LIGNE_AVOIR_ELEMENT_FACTURATION" FromRole="ELEMENT_FACTURATION" ToRole="LIGNE_AVOIR" />
+          <NavigationProperty Name="LIGNE_PROFORMA" Relationship="VSOMModel.LIGNE_PROFORMA_FK00" FromRole="ELEMENT_FACTURATION" ToRole="LIGNE_PROFORMA" />
+          <Property Type="String" Name="CCARTICLE1" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="REF_IDJEF" />
+        </EntityType>
+        <EntityType Name="ESCALE">
+          <Key>
+            <PropertyRef Name="IdEsc" />
+          </Key>
+          <Property Name="IdEsc" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="NumEsc" Type="Int32" />
+          <Property Name="NumVoySCR" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="NumVoyDIT" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="NomCpt" Type="String" MaxLength="70" Unicode="true" FixedLength="false" />
+          <Property Name="DCEsc" Type="DateTime" Precision="3" />
+          <Property Name="DDEsc" Type="DateTime" Precision="3" />
+          <Property Name="DPAEsc" Type="DateTime" Precision="3" />
+          <Property Name="DRAEsc" Type="DateTime" Precision="3" />
+          <Property Name="DDechEsc" Type="DateTime" Precision="3" />
+          <Property Name="NbrePManEsc" Type="Int16" />
+          <Property Name="RGPEsc" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="RREsc" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="RAEsc" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="RCEsc" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="AIEsc" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="SOP" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="IdNav" Type="Int32" />
+          <Property Name="IdArm" Type="Int32" />
+          <Property Name="IdAcc" Type="Int32" />
+          <Property Name="IdFArm" Type="Int32" />
+          <Property Name="DateFArm" Type="DateTime" Precision="3" />
+          <Property Name="StatEsc" Type="String" MaxLength="25" Unicode="true" FixedLength="false" />
+          <Property Name="SailingDate" Type="DateTime" Precision="3" />
+          <Property Name="NumManifestSydonia" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="IdUserFIntern" Type="Int32" />
+          <Property Name="FIntern" Type="String" MaxLength="1" Unicode="false" FixedLength="true" />
+        </EntityType>
+        <EntityType Name="FACTURE">
+          <Key>
+            <PropertyRef Name="IdFD" />
+          </Key>
+          <Property Name="IdFD" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="RefAS400" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="DCFD" Type="DateTime" Precision="3" />
+          <Property Name="DEFD" Type="DateTime" Precision="3" />
+          <Property Name="StatutFD" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="MHT" Type="Int32" />
+          <Property Name="MTVA" Type="Int32" />
+          <Property Name="MTTC" Type="Int32" />
+          <Property Name="IdFP" Type="Int32" />
+          <Property Name="IdU" Type="Int32" />
+          <Property Name="IdClient" Type="Int32" />
+          <Property Name="AIFD" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="IdPay" Type="Int32" />
+          <Property Name="DateComptable" Type="DateTime" Precision="3" />
+          <Property Name="IdDocSAP" Type="Int32" />
+          <NavigationProperty Name="PROFORMA" Relationship="VSOMModel.FACTURE_FK00" FromRole="FACTURE" ToRole="PROFORMA" />
+          <NavigationProperty Name="PAYEMENTs" Relationship="VSOMModel.LIGNE_PAYEMENT" FromRole="FACTURE" ToRole="PAYEMENT" />
+        </EntityType>
+        <EntityType Name="LIGNE_AVOIR">
+          <Key>
+            <PropertyRef Name="IdFA" />
+            <PropertyRef Name="IdJEF" />
+          </Key>
+          <Property Name="IdFA" Type="Int32" Nullable="false" />
+          <Property Name="IdJEF" Type="Int32" Nullable="false" />
+          <Property Name="StatutLP" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="PUEF" Type="Double" />
+          <Property Name="QTEEF" Type="Double" />
+          <Property Name="TauxTVA" Type="Single" />
+          <NavigationProperty Name="AVOIR" Relationship="VSOMModel.FK_LIGNE_AVOIR_AVOIR" FromRole="LIGNE_AVOIR" ToRole="AVOIR" />
+          <NavigationProperty Name="ELEMENT_FACTURATION" Relationship="VSOMModel.FK_LIGNE_AVOIR_ELEMENT_FACTURATION" FromRole="LIGNE_AVOIR" ToRole="ELEMENT_FACTURATION" />
+        </EntityType>
+        <EntityType Name="LIGNE_PRIX">
+          <Key>
+            <PropertyRef Name="IdLP" />
+          </Key>
+          <Property Name="IdLP" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="CodeLP" Type="String" MaxLength="10" Unicode="true" FixedLength="false" />
+          <Property Name="CodeArticle" Type="Int16" />
+          <Property Name="DescLP" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="PU1LP" Type="Int32" />
+          <Property Name="PU2LP" Type="Int32" />
+          <Property Name="PU3LP" Type="Int32" />
+          <Property Name="PU4LP" Type="Int32" />
+          <Property Name="PU5LP" Type="Int32" />
+          <Property Name="DDLP" Type="DateTime" Precision="3" />
+          <Property Name="DFLP" Type="DateTime" Precision="3" />
+          <Property Name="UniteLP" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="LP" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="LP2" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="Regle" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="ARTICLE" Relationship="VSOMModel.LIGNE_PRIX_FK00" FromRole="LIGNE_PRIX" ToRole="ARTICLE" />
+          <NavigationProperty Name="ELEMENT_FACTURATION" Relationship="VSOMModel.ELEMENT_FACTURATION_FK01" FromRole="LIGNE_PRIX" ToRole="ELEMENT_FACTURATION" />
+        </EntityType>
+        <EntityType Name="LIGNE_PROFORMA">
+          <Key>
+            <PropertyRef Name="IdFP" />
+            <PropertyRef Name="IdJEF" />
+          </Key>
+          <Property Name="IdFP" Type="Int32" Nullable="false" />
+          <Property Name="IdJEF" Type="Int32" Nullable="false" />
+          <Property Name="StatutLP" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="PUEF" Type="Double" />
+          <Property Name="QTEEF" Type="Double" />
+          <Property Name="TauxTVA" Type="Single" />
+          <NavigationProperty Name="ELEMENT_FACTURATION" Relationship="VSOMModel.LIGNE_PROFORMA_FK00" FromRole="LIGNE_PROFORMA" ToRole="ELEMENT_FACTURATION" />
+          <NavigationProperty Name="PROFORMA" Relationship="VSOMModel.LIGNE_PROFORMA_FK01" FromRole="LIGNE_PROFORMA" ToRole="PROFORMA" />
+        </EntityType>
+        <EntityType Name="PAYEMENT">
+          <Key>
+            <PropertyRef Name="IdPay" />
+          </Key>
+          <Property Name="IdPay" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="DatePay" Type="DateTime" Precision="3" />
+          <Property Name="ModePay" Type="Int16" />
+          <Property Name="CCPay" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="MAPay" Type="Int32" />
+          <Property Name="MRPay" Type="Int32" />
+          <Property Name="AIPay" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="ObjetPay" Type="Int16" />
+          <Property Name="IdBL" Type="Int32" />
+          <Property Name="IdU" Type="Int32" />
+          <Property Name="IdPayDRC" Type="Int32" />
+          <Property Name="IdClient" Type="Int32" />
+          <Property Name="IdPaySAP" Type="Int32" />
+          <Property Name="Caisse" Type="String" MaxLength="10" Unicode="true" FixedLength="false" />
+          <Property Name="NumCheque" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="RefVirement" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="Banque" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="Agence" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="NumCompte" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="IdBanque" Type="Int32" />
+          <Property Name="StatutPay" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="RetIS" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="FACTUREs" Relationship="VSOMModel.LIGNE_PAYEMENT" FromRole="PAYEMENT" ToRole="FACTURE" />
+        </EntityType>
+        <EntityType Name="PROFORMA">
+          <Key>
+            <PropertyRef Name="IdFP" />
+          </Key>
+          <Property Name="IdFP" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="RefAS400" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="DCFP" Type="DateTime" Precision="3" />
+          <Property Name="DVFP" Type="DateTime" Precision="3" />
+          <Property Name="AIFP" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="AIVFP" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="StatutFP" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="MHT" Type="Int32" />
+          <Property Name="MTVA" Type="Int32" />
+          <Property Name="MTTC" Type="Int32" />
+          <Property Name="IdBL" Type="Int32" />
+          <Property Name="IdArm" Type="Int32" />
+          <Property Name="IdU" Type="Int32" />
+          <Property Name="IdUV" Type="Int32" />
+          <Property Name="IdClient" Type="Int32" />
+          <Property Name="ClientFacture" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="FACTUREs" Relationship="VSOMModel.FACTURE_FK00" FromRole="PROFORMA" ToRole="FACTURE" />
+          <NavigationProperty Name="LIGNE_PROFORMA" Relationship="VSOMModel.LIGNE_PROFORMA_FK01" FromRole="PROFORMA" ToRole="LIGNE_PROFORMA" />
+          <Property Type="Int32" Name="MHT_EF" />
+          <Property Type="Int32" Name="MTVA_EF" />
+          <Property Type="Int32" Name="MTTC_EF" />
+          <Property Type="Int32" Name="PROMO" />
+        </EntityType>
+        <EntityType Name="VEHICULE">
+          <Key>
+            <PropertyRef Name="IdVeh" />
+          </Key>
+          <Property Name="IdVeh" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="NumChassis" Type="String" MaxLength="25" Unicode="true" FixedLength="false" />
+          <Property Name="NumChassisSGS" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="BarCode" Type="String" MaxLength="30" Unicode="true" FixedLength="false" />
+          <Property Name="DCVeh" Type="DateTime" Precision="3" />
+          <Property Name="DescVeh" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="CouleurVeh" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="TypeMVeh" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="StatutVeh" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="PoidsMVeh" Type="Int32" />
+          <Property Name="VolMVeh" Type="Double" />
+          <Property Name="LongMVeh" Type="Single" />
+          <Property Name="LargMVeh" Type="Single" />
+          <Property Name="HautMVeh" Type="Single" />
+          <Property Name="NumItem" Type="Int16" />
+          <Property Name="InfoMan" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="TypeCVeh" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="PoidsCVeh" Type="Int32" />
+          <Property Name="VolCVeh" Type="Double" />
+          <Property Name="LongCVeh" Type="Single" />
+          <Property Name="LargCVeh" Type="Single" />
+          <Property Name="HautCVeh" Type="Single" />
+          <Property Name="StatutCVeh" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="VehPorte" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="VehAttelle" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="VehCle" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="VehStart" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="VehChargé" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="IdVehAP" Type="Int32" />
+          <Property Name="StatVeh" Type="String" MaxLength="25" Unicode="true" FixedLength="false" />
+          <Property Name="FFVeh" Type="DateTime" Precision="3" />
+          <Property Name="FSVeh" Type="DateTime" Precision="3" />
+          <Property Name="DSPVeh" Type="DateTime" Precision="3" />
+          <Property Name="DSRVeh" Type="DateTime" Precision="3" />
+          <Property Name="DateVAE" Type="DateTime" Precision="3" />
+          <Property Name="IdBL" Type="Int32" />
+          <Property Name="IdMan" Type="Int32" />
+          <Property Name="IdEsc" Type="Int32" />
+          <Property Name="IdAcc" Type="Int32" />
+          <Property Name="IdBAE" Type="Int32" />
+          <Property Name="IdDBL" Type="Int32" />
+          <Property Name="IdBS" Type="Int32" />
+          <Property Name="NomEnVeh" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="CNIEnVeh" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="TelenVeh" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="NumADDVeh" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="NumCIVIOveh" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="NumDDVeh" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="NumQDVeh" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="NumFPADVeh" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="NumQPADVeh" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="NumAEPADVeh" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="NumBESCVeh" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="NumSydoniaVeh" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="SensVeh" Type="String" MaxLength="1" Unicode="true" FixedLength="false" />
+          <Property Name="AIVeh" Type="String" MaxLength="100" Unicode="true" FixedLength="true" />
+          <NavigationProperty Name="CONNAISSEMENT" Relationship="VSOMModel.CONNAISSEMENTVEHICULE" FromRole="VEHICULE" ToRole="CONNAISSEMENT" />
+        </EntityType>
+        <Association Name="LIGNE_PRIX_FK00">
+          <End Role="ARTICLE" Type="VSOMModel.ARTICLE" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="LIGNE_PRIX" Type="VSOMModel.LIGNE_PRIX" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ARTICLE">
+              <PropertyRef Name="CodeArticle" />
+            </Principal>
+            <Dependent Role="LIGNE_PRIX">
+              <PropertyRef Name="CodeArticle" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LIGNE_AVOIR_AVOIR">
+          <End Role="AVOIR" Type="VSOMModel.AVOIR" Multiplicity="1" />
+          <End Role="LIGNE_AVOIR" Type="VSOMModel.LIGNE_AVOIR" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AVOIR">
+              <PropertyRef Name="IdFA" />
+            </Principal>
+            <Dependent Role="LIGNE_AVOIR">
+              <PropertyRef Name="IdFA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ELEMENT_FACTURATION_FK00">
+          <End Role="CONNAISSEMENT" Type="VSOMModel.CONNAISSEMENT" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ELEMENT_FACTURATION" Type="VSOMModel.ELEMENT_FACTURATION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CONNAISSEMENT">
+              <PropertyRef Name="IdBL" />
+            </Principal>
+            <Dependent Role="ELEMENT_FACTURATION">
+              <PropertyRef Name="IdBL" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ELEMENT_FACTURATION_FK01">
+          <End Role="LIGNE_PRIX" Type="VSOMModel.LIGNE_PRIX" Multiplicity="0..1" />
+          <End Role="ELEMENT_FACTURATION" Type="VSOMModel.ELEMENT_FACTURATION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LIGNE_PRIX">
+              <PropertyRef Name="IdLP" />
+            </Principal>
+            <Dependent Role="ELEMENT_FACTURATION">
+              <PropertyRef Name="IdLP" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LIGNE_AVOIR_ELEMENT_FACTURATION">
+          <End Role="ELEMENT_FACTURATION" Type="VSOMModel.ELEMENT_FACTURATION" Multiplicity="1" />
+          <End Role="LIGNE_AVOIR" Type="VSOMModel.LIGNE_AVOIR" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ELEMENT_FACTURATION">
+              <PropertyRef Name="IdJEF" />
+            </Principal>
+            <Dependent Role="LIGNE_AVOIR">
+              <PropertyRef Name="IdJEF" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="LIGNE_PROFORMA_FK00">
+          <End Role="ELEMENT_FACTURATION" Type="VSOMModel.ELEMENT_FACTURATION" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="LIGNE_PROFORMA" Type="VSOMModel.LIGNE_PROFORMA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ELEMENT_FACTURATION">
+              <PropertyRef Name="IdJEF" />
+            </Principal>
+            <Dependent Role="LIGNE_PROFORMA">
+              <PropertyRef Name="IdJEF" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FACTURE_FK00">
+          <End Role="PROFORMA" Type="VSOMModel.PROFORMA" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="FACTURE" Type="VSOMModel.FACTURE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PROFORMA">
+              <PropertyRef Name="IdFP" />
+            </Principal>
+            <Dependent Role="FACTURE">
+              <PropertyRef Name="IdFP" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="LIGNE_PROFORMA_FK01">
+          <End Role="PROFORMA" Type="VSOMModel.PROFORMA" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="LIGNE_PROFORMA" Type="VSOMModel.LIGNE_PROFORMA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PROFORMA">
+              <PropertyRef Name="IdFP" />
+            </Principal>
+            <Dependent Role="LIGNE_PROFORMA">
+              <PropertyRef Name="IdFP" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="LIGNE_PAYEMENT">
+          <End Role="FACTURE" Type="VSOMModel.FACTURE" Multiplicity="*" />
+          <End Role="PAYEMENT" Type="VSOMModel.PAYEMENT" Multiplicity="*" />
+        </Association>
+        <Association Name="CONNAISSEMENTVEHICULE">
+          <End Type="VSOMModel.CONNAISSEMENT" Role="CONNAISSEMENT" Multiplicity="0..1" />
+          <End Type="VSOMModel.VEHICULE" Role="VEHICULE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CONNAISSEMENT">
+              <PropertyRef Name="IdBL" />
+            </Principal>
+            <Dependent Role="VEHICULE">
+              <PropertyRef Name="IdBL" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CONNAISSEMENTCLIENT">
+          <End Type="VSOMModel.CONNAISSEMENT" Role="CONNAISSEMENT" Multiplicity="*" />
+          <End Type="VSOMModel.CLIENT" Role="CLIENT" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="CLIENT">
+              <PropertyRef Name="IdClient" />
+            </Principal>
+            <Dependent Role="CONNAISSEMENT">
+              <PropertyRef Name="IdClient" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="VSOMModelStoreContainer" CdmEntityContainer="VSOMEntities">
+          <EntitySetMapping Name="ARTICLEs">
+            <EntityTypeMapping TypeName="VSOMModel.ARTICLE">
+              <MappingFragment StoreEntitySet="ARTICLE">
+                <ScalarProperty Name="CodeArticle" ColumnName="CodeArticle" />
+                <ScalarProperty Name="LibArticle" ColumnName="LibArticle" />
+                <ScalarProperty Name="CCArticle" ColumnName="CCArticle" />
+                <ScalarProperty Name="CCArticleEx" ColumnName="CCArticleEx" />
+                <ScalarProperty Name="CodeFamArt" ColumnName="CodeFamArt" />
+                <ScalarProperty Name="CodeTVA" ColumnName="CodeTVA" />
+                <ScalarProperty Name="CCarticle1" ColumnName="CCarticle1" />
+                <ScalarProperty Name="CCarticleEX1" ColumnName="CCarticleEX1" />
+                <ScalarProperty Name="Statut" ColumnName="Statut" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AVOIRs">
+            <EntityTypeMapping TypeName="VSOMModel.AVOIR">
+              <MappingFragment StoreEntitySet="AVOIR">
+                <ScalarProperty Name="IdPay" ColumnName="IdPay" />
+                <ScalarProperty Name="IdFA" ColumnName="IdFA" />
+                <ScalarProperty Name="DCFA" ColumnName="DCFA" />
+                <ScalarProperty Name="DVFA" ColumnName="DVFA" />
+                <ScalarProperty Name="AIFA" ColumnName="AIFA" />
+                <ScalarProperty Name="AIVFA" ColumnName="AIVFA" />
+                <ScalarProperty Name="StatutFA" ColumnName="StatutFA" />
+                <ScalarProperty Name="MHT" ColumnName="MHT" />
+                <ScalarProperty Name="MTVA" ColumnName="MTVA" />
+                <ScalarProperty Name="MTTC" ColumnName="MTTC" />
+                <ScalarProperty Name="IdBL" ColumnName="IdBL" />
+                <ScalarProperty Name="IdArm" ColumnName="IdArm" />
+                <ScalarProperty Name="IdU" ColumnName="IdU" />
+                <ScalarProperty Name="IdUV" ColumnName="IdUV" />
+                <ScalarProperty Name="IdClient" ColumnName="IdClient" />
+                <ScalarProperty Name="IdFD" ColumnName="IdFD" />
+                <ScalarProperty Name="IdDocSAP" ColumnName="IdDocSAP" />
+                <ScalarProperty Name="ClientAvoir" ColumnName="ClientAvoir" />
+                <ScalarProperty Name="TypeAvoir" ColumnName="TypeAvoir" />
+                <ScalarProperty Name="TypeFacture" ColumnName="TypeFacture" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CLIENTs">
+            <EntityTypeMapping TypeName="VSOMModel.CLIENT">
+              <MappingFragment StoreEntitySet="CLIENT">
+                <ScalarProperty Name="IdClient" ColumnName="IdClient" />
+                <ScalarProperty Name="CodeClient" ColumnName="CodeClient" />
+                <ScalarProperty Name="NomClient" ColumnName="NomClient" />
+                <ScalarProperty Name="AdrClient" ColumnName="AdrClient" />
+                <ScalarProperty Name="EmailClient" ColumnName="EmailClient" />
+                <ScalarProperty Name="TelClient" ColumnName="TelClient" />
+                <ScalarProperty Name="CCClient" ColumnName="CCClient" />
+                <ScalarProperty Name="CodeTVA" ColumnName="CodeTVA" />
+                <ScalarProperty Name="TypeClient" ColumnName="TypeClient" />
+                <ScalarProperty Name="StatutClient" ColumnName="StatutClient" />
+                <ScalarProperty Name="NumContrib" ColumnName="NumContrib" />
+                <ScalarProperty Name="NumRegCommerce" ColumnName="NumRegCommerce" />
+                <ScalarProperty Name="RetenueIS" ColumnName="RetenueIS" />
+                <ScalarProperty Name="PourcentIS" ColumnName="PourcentIS" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CONNAISSEMENTs">
+            <EntityTypeMapping TypeName="VSOMModel.CONNAISSEMENT">
+              <MappingFragment StoreEntitySet="CONNAISSEMENT">
+                <ScalarProperty Name="IdBL" ColumnName="IdBL" />
+                <ScalarProperty Name="NumBL" ColumnName="NumBL" />
+                <ScalarProperty Name="NumBooking" ColumnName="NumBooking" />
+                <ScalarProperty Name="DCBL" ColumnName="DCBL" />
+                <ScalarProperty Name="EtatBL" ColumnName="EtatBL" />
+                <ScalarProperty Name="LPBL" ColumnName="LPBL" />
+                <ScalarProperty Name="DPBL" ColumnName="DPBL" />
+                <ScalarProperty Name="LDBL" ColumnName="LDBL" />
+                <ScalarProperty Name="BLGN" ColumnName="BLGN" />
+                <ScalarProperty Name="BLIL" ColumnName="BLIL" />
+                <ScalarProperty Name="BLSocar" ColumnName="BLSocar" />
+                <ScalarProperty Name="NumSocar" ColumnName="NumSocar" />
+                <ScalarProperty Name="BLFO" ColumnName="BLFO" />
+                <ScalarProperty Name="BLLT" ColumnName="BLLT" />
+                <ScalarProperty Name="CCBL" ColumnName="CCBL" />
+                <ScalarProperty Name="CCBLMontant" ColumnName="CCBLMontant" />
+                <ScalarProperty Name="LPFret" ColumnName="LPFret" />
+                <ScalarProperty Name="BlBloque" ColumnName="BlBloque" />
+                <ScalarProperty Name="BLER" ColumnName="BLER" />
+                <ScalarProperty Name="BLERNote" ColumnName="BLERNote" />
+                <ScalarProperty Name="TypeBL" ColumnName="TypeBL" />
+                <ScalarProperty Name="DescBL" ColumnName="DescBL" />
+                <ScalarProperty Name="ConsigneeBL" ColumnName="ConsigneeBL" />
+                <ScalarProperty Name="AdresseBL" ColumnName="AdresseBL" />
+                <ScalarProperty Name="ConsigneeBooking" ColumnName="ConsigneeBooking" />
+                <ScalarProperty Name="AdresseConsignee" ColumnName="AdresseConsignee" />
+                <ScalarProperty Name="AdresseNotify" ColumnName="AdresseNotify" />
+                <ScalarProperty Name="EmailNotify" ColumnName="EmailNotify" />
+                <ScalarProperty Name="TelNotify" ColumnName="TelNotify" />
+                <ScalarProperty Name="NotifyBL" ColumnName="NotifyBL" />
+                <ScalarProperty Name="NotifyBL2" ColumnName="NotifyBL2" />
+                <ScalarProperty Name="AdresseNotify2" ColumnName="AdresseNotify2" />
+                <ScalarProperty Name="EmailNotify2" ColumnName="EmailNotify2" />
+                <ScalarProperty Name="TelNotify2" ColumnName="TelNotify2" />
+                <ScalarProperty Name="NomCharger" ColumnName="NomCharger" />
+                <ScalarProperty Name="AdresseCharger" ColumnName="AdresseCharger" />
+                <ScalarProperty Name="StatutBL" ColumnName="StatutBL" />
+                <ScalarProperty Name="IdClient" ColumnName="IdClient" />
+                <ScalarProperty Name="IdMan" ColumnName="IdMan" />
+                <ScalarProperty Name="IdEsc" ColumnName="IdEsc" />
+                <ScalarProperty Name="IdAcc" ColumnName="IdAcc" />
+                <ScalarProperty Name="CodeTVA" ColumnName="CodeTVA" />
+                <ScalarProperty Name="NomManBL" ColumnName="NomManBL" />
+                <ScalarProperty Name="CNIManBL" ColumnName="CNIManBL" />
+                <ScalarProperty Name="DDCNIManBL" ColumnName="DDCNIManBL" />
+                <ScalarProperty Name="LDCNIManBL" ColumnName="LDCNIManBL" />
+                <ScalarProperty Name="PhoneManBL" ColumnName="PhoneManBL" />
+                <ScalarProperty Name="EmailBL" ColumnName="EmailBL" />
+                <ScalarProperty Name="NContribBL" ColumnName="NContribBL" />
+                <ScalarProperty Name="DateAccBL" ColumnName="DateAccBL" />
+                <ScalarProperty Name="AIBL" ColumnName="AIBL" />
+                <ScalarProperty Name="SensBL" ColumnName="SensBL" />
+                <ScalarProperty Name="PoidsBL" ColumnName="PoidsBL" />
+                <ScalarProperty Name="VolBL" ColumnName="VolBL" />
+                <ScalarProperty Name="NumCtrBL" ColumnName="NumCtrBL" />
+                <ScalarProperty Name="NumDEBL" ColumnName="NumDEBL" />
+                <ScalarProperty Name="NumBESCBL" ColumnName="NumBESCBL" />
+                <ScalarProperty Name="NumHSCode" ColumnName="NumHSCode" />
+                <ScalarProperty Name="DCBLI" ColumnName="DCBLI" />
+                <ScalarProperty Name="DVCBLI" ColumnName="DVCBLI" />
+                <ScalarProperty Name="AIVCBLI" ColumnName="AIVCBLI" />
+                <ScalarProperty Name="DCLBL" ColumnName="DCLBL" />
+                <ScalarProperty Name="AIDCLBL" ColumnName="AIDCLBL" />
+                <ScalarProperty Name="BLDette" ColumnName="BLDette" />
+                <ScalarProperty Name="DetteMontant" ColumnName="DetteMontant" />
+                <ScalarProperty Name="BLBloqueNote" ColumnName="BLBloqueNote" />
+                <ScalarProperty Name="DVBL" ColumnName="DVBL" />
+                <ScalarProperty Name="AIBLVal" ColumnName="AIBLVal" />
+                <ScalarProperty Name="DestBL" ColumnName="DestBL" />
+                <ScalarProperty Name="LastModif" ColumnName="LastModif" />
+                <ScalarProperty Name="IdU" ColumnName="IdU" />
+                <ScalarProperty Name="Payor" ColumnName="Payor" />
+                <ScalarProperty Name="ClearAgent" ColumnName="ClearAgent" />
+                <ScalarProperty Name="NoSEPBC" ColumnName="NoSEPBC" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ELEMENT_FACTURATION">
+            <EntityTypeMapping TypeName="VSOMModel.ELEMENT_FACTURATION">
+              <MappingFragment StoreEntitySet="ELEMENT_FACTURATION">
+                <ScalarProperty Name="REF_IDJEF" ColumnName="REF_IDJEF" />
+                <ScalarProperty Name="CCARTICLE1" ColumnName="CCARTICLE1" />
+                <ScalarProperty Name="IdJEF" ColumnName="IdJEF" />
+                <ScalarProperty Name="DateJEF" ColumnName="DateJEF" />
+                <ScalarProperty Name="EltFacture" ColumnName="EltFacture" />
+                <ScalarProperty Name="LibEF" ColumnName="LibEF" />
+                <ScalarProperty Name="IdLP" ColumnName="IdLP" />
+                <ScalarProperty Name="PUEF" ColumnName="PUEF" />
+                <ScalarProperty Name="PUEFBase" ColumnName="PUEFBase" />
+                <ScalarProperty Name="QTEEF" ColumnName="QTEEF" />
+                <ScalarProperty Name="UnitEF" ColumnName="UnitEF" />
+                <ScalarProperty Name="PTDIT" ColumnName="PTDIT" />
+                <ScalarProperty Name="IdEsc" ColumnName="IdEsc" />
+                <ScalarProperty Name="IdMan" ColumnName="IdMan" />
+                <ScalarProperty Name="IdBL" ColumnName="IdBL" />
+                <ScalarProperty Name="IdVeh" ColumnName="IdVeh" />
+                <ScalarProperty Name="IdCtr" ColumnName="IdCtr" />
+                <ScalarProperty Name="IdMafi" ColumnName="IdMafi" />
+                <ScalarProperty Name="IdGC" ColumnName="IdGC" />
+                <ScalarProperty Name="IdOS" ColumnName="IdOS" />
+                <ScalarProperty Name="IdLS" ColumnName="IdLS" />
+                <ScalarProperty Name="CodeTVA" ColumnName="CodeTVA" />
+                <ScalarProperty Name="TauxTVA" ColumnName="TauxTVA" />
+                <ScalarProperty Name="CCArticle" ColumnName="CCArticle" />
+                <ScalarProperty Name="CCCP" ColumnName="CCCP" />
+                <ScalarProperty Name="IdFD" ColumnName="IdFD" />
+                <ScalarProperty Name="IdDDR" ColumnName="IdDDR" />
+                <ScalarProperty Name="DestEF" ColumnName="DestEF" />
+                <ScalarProperty Name="DelaiEF" ColumnName="DelaiEF" />
+                <ScalarProperty Name="StatutEF" ColumnName="StatutEF" />
+                <ScalarProperty Name="IdFactDIT" ColumnName="IdFactDIT" />
+                <ScalarProperty Name="IdFA" ColumnName="IdFA" />
+                <ScalarProperty Name="CodeArticle" ColumnName="CodeArticle" />
+                <ScalarProperty Name="IdFSoc" ColumnName="IdFSoc" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ESCALEs">
+            <EntityTypeMapping TypeName="VSOMModel.ESCALE">
+              <MappingFragment StoreEntitySet="ESCALE">
+                <ScalarProperty Name="IdEsc" ColumnName="IdEsc" />
+                <ScalarProperty Name="NumEsc" ColumnName="NumEsc" />
+                <ScalarProperty Name="NumVoySCR" ColumnName="NumVoySCR" />
+                <ScalarProperty Name="NumVoyDIT" ColumnName="NumVoyDIT" />
+                <ScalarProperty Name="NomCpt" ColumnName="NomCpt" />
+                <ScalarProperty Name="DCEsc" ColumnName="DCEsc" />
+                <ScalarProperty Name="DDEsc" ColumnName="DDEsc" />
+                <ScalarProperty Name="DPAEsc" ColumnName="DPAEsc" />
+                <ScalarProperty Name="DRAEsc" ColumnName="DRAEsc" />
+                <ScalarProperty Name="DDechEsc" ColumnName="DDechEsc" />
+                <ScalarProperty Name="NbrePManEsc" ColumnName="NbrePManEsc" />
+                <ScalarProperty Name="RGPEsc" ColumnName="RGPEsc" />
+                <ScalarProperty Name="RREsc" ColumnName="RREsc" />
+                <ScalarProperty Name="RAEsc" ColumnName="RAEsc" />
+                <ScalarProperty Name="RCEsc" ColumnName="RCEsc" />
+                <ScalarProperty Name="AIEsc" ColumnName="AIEsc" />
+                <ScalarProperty Name="SOP" ColumnName="SOP" />
+                <ScalarProperty Name="IdNav" ColumnName="IdNav" />
+                <ScalarProperty Name="IdArm" ColumnName="IdArm" />
+                <ScalarProperty Name="IdAcc" ColumnName="IdAcc" />
+                <ScalarProperty Name="IdFArm" ColumnName="IdFArm" />
+                <ScalarProperty Name="DateFArm" ColumnName="DateFArm" />
+                <ScalarProperty Name="StatEsc" ColumnName="StatEsc" />
+                <ScalarProperty Name="SailingDate" ColumnName="SailingDate" />
+                <ScalarProperty Name="NumManifestSydonia" ColumnName="NumManifestSydonia" />
+                <ScalarProperty Name="IdUserFIntern" ColumnName="IdUserFIntern" />
+                <ScalarProperty Name="FIntern" ColumnName="FIntern" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FACTUREs">
+            <EntityTypeMapping TypeName="VSOMModel.FACTURE">
+              <MappingFragment StoreEntitySet="FACTURE">
+                <ScalarProperty Name="IdFD" ColumnName="IdFD" />
+                <ScalarProperty Name="RefAS400" ColumnName="RefAS400" />
+                <ScalarProperty Name="DCFD" ColumnName="DCFD" />
+                <ScalarProperty Name="DEFD" ColumnName="DEFD" />
+                <ScalarProperty Name="StatutFD" ColumnName="StatutFD" />
+                <ScalarProperty Name="MHT" ColumnName="MHT" />
+                <ScalarProperty Name="MTVA" ColumnName="MTVA" />
+                <ScalarProperty Name="MTTC" ColumnName="MTTC" />
+                <ScalarProperty Name="IdFP" ColumnName="IdFP" />
+                <ScalarProperty Name="IdU" ColumnName="IdU" />
+                <ScalarProperty Name="IdClient" ColumnName="IdClient" />
+                <ScalarProperty Name="AIFD" ColumnName="AIFD" />
+                <ScalarProperty Name="IdPay" ColumnName="IdPay" />
+                <ScalarProperty Name="DateComptable" ColumnName="DateComptable" />
+                <ScalarProperty Name="IdDocSAP" ColumnName="IdDocSAP" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LIGNE_AVOIR">
+            <EntityTypeMapping TypeName="VSOMModel.LIGNE_AVOIR">
+              <MappingFragment StoreEntitySet="LIGNE_AVOIR">
+                <ScalarProperty Name="IdFA" ColumnName="IdFA" />
+                <ScalarProperty Name="IdJEF" ColumnName="IdJEF" />
+                <ScalarProperty Name="StatutLP" ColumnName="StatutLP" />
+                <ScalarProperty Name="PUEF" ColumnName="PUEF" />
+                <ScalarProperty Name="QTEEF" ColumnName="QTEEF" />
+                <ScalarProperty Name="TauxTVA" ColumnName="TauxTVA" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LIGNE_PRIX">
+            <EntityTypeMapping TypeName="VSOMModel.LIGNE_PRIX">
+              <MappingFragment StoreEntitySet="LIGNE_PRIX">
+                <ScalarProperty Name="IdLP" ColumnName="IdLP" />
+                <ScalarProperty Name="CodeLP" ColumnName="CodeLP" />
+                <ScalarProperty Name="CodeArticle" ColumnName="CodeArticle" />
+                <ScalarProperty Name="DescLP" ColumnName="DescLP" />
+                <ScalarProperty Name="PU1LP" ColumnName="PU1LP" />
+                <ScalarProperty Name="PU2LP" ColumnName="PU2LP" />
+                <ScalarProperty Name="PU3LP" ColumnName="PU3LP" />
+                <ScalarProperty Name="PU4LP" ColumnName="PU4LP" />
+                <ScalarProperty Name="PU5LP" ColumnName="PU5LP" />
+                <ScalarProperty Name="DDLP" ColumnName="DDLP" />
+                <ScalarProperty Name="DFLP" ColumnName="DFLP" />
+                <ScalarProperty Name="UniteLP" ColumnName="UniteLP" />
+                <ScalarProperty Name="LP" ColumnName="LP" />
+                <ScalarProperty Name="LP2" ColumnName="LP2" />
+                <ScalarProperty Name="Regle" ColumnName="Regle" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LIGNE_PROFORMA">
+            <EntityTypeMapping TypeName="VSOMModel.LIGNE_PROFORMA">
+              <MappingFragment StoreEntitySet="LIGNE_PROFORMA">
+                <ScalarProperty Name="IdFP" ColumnName="IdFP" />
+                <ScalarProperty Name="IdJEF" ColumnName="IdJEF" />
+                <ScalarProperty Name="StatutLP" ColumnName="StatutLP" />
+                <ScalarProperty Name="PUEF" ColumnName="PUEF" />
+                <ScalarProperty Name="QTEEF" ColumnName="QTEEF" />
+                <ScalarProperty Name="TauxTVA" ColumnName="TauxTVA" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PAYEMENTs">
+            <EntityTypeMapping TypeName="VSOMModel.PAYEMENT">
+              <MappingFragment StoreEntitySet="PAYEMENT">
+                <ScalarProperty Name="IdPay" ColumnName="IdPay" />
+                <ScalarProperty Name="DatePay" ColumnName="DatePay" />
+                <ScalarProperty Name="ModePay" ColumnName="ModePay" />
+                <ScalarProperty Name="CCPay" ColumnName="CCPay" />
+                <ScalarProperty Name="MAPay" ColumnName="MAPay" />
+                <ScalarProperty Name="MRPay" ColumnName="MRPay" />
+                <ScalarProperty Name="AIPay" ColumnName="AIPay" />
+                <ScalarProperty Name="ObjetPay" ColumnName="ObjetPay" />
+                <ScalarProperty Name="IdBL" ColumnName="IdBL" />
+                <ScalarProperty Name="IdU" ColumnName="IdU" />
+                <ScalarProperty Name="IdPayDRC" ColumnName="IdPayDRC" />
+                <ScalarProperty Name="IdClient" ColumnName="IdClient" />
+                <ScalarProperty Name="IdPaySAP" ColumnName="IdPaySAP" />
+                <ScalarProperty Name="Caisse" ColumnName="Caisse" />
+                <ScalarProperty Name="NumCheque" ColumnName="NumCheque" />
+                <ScalarProperty Name="RefVirement" ColumnName="RefVirement" />
+                <ScalarProperty Name="Banque" ColumnName="Banque" />
+                <ScalarProperty Name="Agence" ColumnName="Agence" />
+                <ScalarProperty Name="NumCompte" ColumnName="NumCompte" />
+                <ScalarProperty Name="IdBanque" ColumnName="IdBanque" />
+                <ScalarProperty Name="StatutPay" ColumnName="StatutPay" />
+                <ScalarProperty Name="RetIS" ColumnName="RetIS" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PROFORMAs">
+            <EntityTypeMapping TypeName="VSOMModel.PROFORMA">
+              <MappingFragment StoreEntitySet="PROFORMA">
+                <ScalarProperty Name="PROMO" ColumnName="PROMO" />
+                <ScalarProperty Name="MTTC_EF" ColumnName="MTTC_EF" />
+                <ScalarProperty Name="MTVA_EF" ColumnName="MTVA_EF" />
+                <ScalarProperty Name="MHT_EF" ColumnName="MHT_EF" />
+                <ScalarProperty Name="IdFP" ColumnName="IdFP" />
+                <ScalarProperty Name="RefAS400" ColumnName="RefAS400" />
+                <ScalarProperty Name="DCFP" ColumnName="DCFP" />
+                <ScalarProperty Name="DVFP" ColumnName="DVFP" />
+                <ScalarProperty Name="AIFP" ColumnName="AIFP" />
+                <ScalarProperty Name="AIVFP" ColumnName="AIVFP" />
+                <ScalarProperty Name="StatutFP" ColumnName="StatutFP" />
+                <ScalarProperty Name="MHT" ColumnName="MHT" />
+                <ScalarProperty Name="MTVA" ColumnName="MTVA" />
+                <ScalarProperty Name="MTTC" ColumnName="MTTC" />
+                <ScalarProperty Name="IdBL" ColumnName="IdBL" />
+                <ScalarProperty Name="IdArm" ColumnName="IdArm" />
+                <ScalarProperty Name="IdU" ColumnName="IdU" />
+                <ScalarProperty Name="IdUV" ColumnName="IdUV" />
+                <ScalarProperty Name="IdClient" ColumnName="IdClient" />
+                <ScalarProperty Name="ClientFacture" ColumnName="ClientFacture" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VEHICULEs">
+            <EntityTypeMapping TypeName="VSOMModel.VEHICULE">
+              <MappingFragment StoreEntitySet="VEHICULE">
+                <ScalarProperty Name="IdVeh" ColumnName="IdVeh" />
+                <ScalarProperty Name="NumChassis" ColumnName="NumChassis" />
+                <ScalarProperty Name="NumChassisSGS" ColumnName="NumChassisSGS" />
+                <ScalarProperty Name="BarCode" ColumnName="BarCode" />
+                <ScalarProperty Name="DCVeh" ColumnName="DCVeh" />
+                <ScalarProperty Name="DescVeh" ColumnName="DescVeh" />
+                <ScalarProperty Name="CouleurVeh" ColumnName="CouleurVeh" />
+                <ScalarProperty Name="TypeMVeh" ColumnName="TypeMVeh" />
+                <ScalarProperty Name="StatutVeh" ColumnName="StatutVeh" />
+                <ScalarProperty Name="PoidsMVeh" ColumnName="PoidsMVeh" />
+                <ScalarProperty Name="VolMVeh" ColumnName="VolMVeh" />
+                <ScalarProperty Name="LongMVeh" ColumnName="LongMVeh" />
+                <ScalarProperty Name="LargMVeh" ColumnName="LargMVeh" />
+                <ScalarProperty Name="HautMVeh" ColumnName="HautMVeh" />
+                <ScalarProperty Name="NumItem" ColumnName="NumItem" />
+                <ScalarProperty Name="InfoMan" ColumnName="InfoMan" />
+                <ScalarProperty Name="TypeCVeh" ColumnName="TypeCVeh" />
+                <ScalarProperty Name="PoidsCVeh" ColumnName="PoidsCVeh" />
+                <ScalarProperty Name="VolCVeh" ColumnName="VolCVeh" />
+                <ScalarProperty Name="LongCVeh" ColumnName="LongCVeh" />
+                <ScalarProperty Name="LargCVeh" ColumnName="LargCVeh" />
+                <ScalarProperty Name="HautCVeh" ColumnName="HautCVeh" />
+                <ScalarProperty Name="StatutCVeh" ColumnName="StatutCVeh" />
+                <ScalarProperty Name="VehPorte" ColumnName="VehPorte" />
+                <ScalarProperty Name="VehAttelle" ColumnName="VehAttelle" />
+                <ScalarProperty Name="VehCle" ColumnName="VehCle" />
+                <ScalarProperty Name="VehStart" ColumnName="VehStart" />
+                <ScalarProperty Name="VehChargé" ColumnName="VehChargé" />
+                <ScalarProperty Name="IdVehAP" ColumnName="IdVehAP" />
+                <ScalarProperty Name="StatVeh" ColumnName="StatVeh" />
+                <ScalarProperty Name="FFVeh" ColumnName="FFVeh" />
+                <ScalarProperty Name="FSVeh" ColumnName="FSVeh" />
+                <ScalarProperty Name="DSPVeh" ColumnName="DSPVeh" />
+                <ScalarProperty Name="DSRVeh" ColumnName="DSRVeh" />
+                <ScalarProperty Name="DateVAE" ColumnName="DateVAE" />
+                <ScalarProperty Name="IdBL" ColumnName="IdBL" />
+                <ScalarProperty Name="IdMan" ColumnName="IdMan" />
+                <ScalarProperty Name="IdEsc" ColumnName="IdEsc" />
+                <ScalarProperty Name="IdAcc" ColumnName="IdAcc" />
+                <ScalarProperty Name="IdBAE" ColumnName="IdBAE" />
+                <ScalarProperty Name="IdDBL" ColumnName="IdDBL" />
+                <ScalarProperty Name="IdBS" ColumnName="IdBS" />
+                <ScalarProperty Name="NomEnVeh" ColumnName="NomEnVeh" />
+                <ScalarProperty Name="CNIEnVeh" ColumnName="CNIEnVeh" />
+                <ScalarProperty Name="TelenVeh" ColumnName="TelenVeh" />
+                <ScalarProperty Name="NumADDVeh" ColumnName="NumADDVeh" />
+                <ScalarProperty Name="NumCIVIOveh" ColumnName="NumCIVIOveh" />
+                <ScalarProperty Name="NumDDVeh" ColumnName="NumDDVeh" />
+                <ScalarProperty Name="NumQDVeh" ColumnName="NumQDVeh" />
+                <ScalarProperty Name="NumFPADVeh" ColumnName="NumFPADVeh" />
+                <ScalarProperty Name="NumQPADVeh" ColumnName="NumQPADVeh" />
+                <ScalarProperty Name="NumAEPADVeh" ColumnName="NumAEPADVeh" />
+                <ScalarProperty Name="NumBESCVeh" ColumnName="NumBESCVeh" />
+                <ScalarProperty Name="NumSydoniaVeh" ColumnName="NumSydoniaVeh" />
+                <ScalarProperty Name="SensVeh" ColumnName="SensVeh" />
+                <ScalarProperty Name="AIVeh" ColumnName="AIVeh" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="LIGNE_PAYEMENT" TypeName="VSOMModel.LIGNE_PAYEMENT" StoreEntitySet="LIGNE_PAYEMENT">
+            <EndProperty Name="FACTURE">
+              <ScalarProperty Name="IdFD" ColumnName="IdFD" />
+            </EndProperty>
+            <EndProperty Name="PAYEMENT">
+              <ScalarProperty Name="IdPay" ColumnName="IdPay" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Aucun" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

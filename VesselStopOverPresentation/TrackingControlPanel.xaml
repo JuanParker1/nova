@@ -1,0 +1,98 @@
+﻿<StackPanel x:Class="VesselStopOverPresentation.TrackingControlPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Button Name="btnConteneur" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnConteneur_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Conteneur" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnMiseDisposition" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnMiseDisposition_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Mise à disposition" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnBilanMiseDisposition" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnBilanMiseDisposition_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Bilan mise à disposition" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnRapportDeb" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnRapportDeb_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Rapport débarquement" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnRapportDebExcel" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnRapportDebExcel_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Rapport débarquement (Excel)" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnDischargingReportNDS" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnDischargingReportNDS_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Discharging Report (NDS)" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnRapportEmb" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnRapportEmb_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Rapport Embarquement" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnRapportEmbExcel" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnRapportEmbExcel_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Rapport Embarquement (Excel)" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnLoadingReportNDS" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnLoadingReportNDS_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Loading Report (NDS)" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnDailyMoves" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnDailyMoves_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Daily Moves" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnDailyMovesExcel" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnDailyMovesExcel_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Daily Moves (Excel)" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnStockConteneur" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnStockConteneur_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Stock conteneurs" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnBilanTracking" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnBilanTracking_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Bilan Tracking" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnWAFReport" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnWAFReport_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" WAF Report" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnImportDIT" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnImportDIT_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Import DIT" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+</StackPanel>

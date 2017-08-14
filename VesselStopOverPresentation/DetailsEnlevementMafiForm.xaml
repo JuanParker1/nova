@@ -1,0 +1,83 @@
+﻿<Window x:Class="VesselStopOverPresentation.DetailsEnlevementMafiForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        Title="Détails sur l'enlèvement des mafis" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Height="350" Width="550" WindowStartupLocation="CenterScreen" FontFamily="Segoe UI" FontSize="11" Icon="/VesselStopOverPresentation;component/Icons/LogoApp.png" ResizeMode="NoResize">
+    <DockPanel>
+        <StackPanel Name="stackPanelCommands" DockPanel.Dock="Top" Orientation="Horizontal" Background="#3F51B5">
+            <GridSplitter Width="1.5" Background="Transparent"/>
+            <Border BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                <DockPanel Margin="1">
+                    <TextBlock DockPanel.Dock="Bottom" Text="Enregistrer" TextAlignment="Center" Height="18" Width="Auto" TextWrapping="Wrap" Foreground="White" Background="#FF50509D"/>
+                    <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnEnregistrer" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnEnregistrer_Click">
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                            <Image Source="/VesselStopOverPresentation;component/Icons/Save-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                            <TextBlock Text="Enregistrer" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                        </StackPanel>
+                    </Button>
+                </DockPanel>
+            </Border>
+        </StackPanel>
+        <StatusBar DockPanel.Dock="Bottom" Height="30" FlowDirection="RightToLeft">
+            <Label Name="lblStatut" FlowDirection="LeftToRight" FontWeight="SemiBold" FontFamily="Segoe UI" FontSize="11" />
+        </StatusBar>
+        <DockPanel>
+            <GroupBox DockPanel.Dock="Left" Header="Détails sur l'enlèvement des mafis" Background="#FAFAFA" BorderThickness="2" Height="Auto">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="27"/>
+                        <RowDefinition Height="27"/>
+                        <RowDefinition Height="27"/>
+                        <RowDefinition Height="27"/>
+                        <RowDefinition Height="27"/>
+                        <RowDefinition Height="27"/>
+                        <RowDefinition Height="27"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="210"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="0" Content="N° Mafi/Sys. ID: " Margin="0,2,0,2" />
+                    <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
+                        <ComboBox Name="cbNumMafi" Width="202" Margin="0,2,0,2" ItemsSource="{Binding mfs}" SelectionChanged="cbNumMafi_SelectionChanged" />
+                        <TextBox Name="txtIdMafi" Width="100" Margin="2,2,0,2" Background="AntiqueWhite" IsReadOnly="True" TextAlignment="Right"/>
+                        
+                    </StackPanel>
+
+                    <Label Grid.Row="1" Grid.Column="0" Content="Description/Type : " Margin="0,2,0,2" />
+                    <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
+                        <TextBox Name="txtDescription" Width="202" Margin="0,2,0,2" HorizontalAlignment="Left" Background="AntiqueWhite" IsReadOnly="True"/>
+                        <TextBox Name="txtTypeMafi" Width="100" Margin="2,2,0,2" Background="AntiqueWhite" IsReadOnly="True"/>
+                    </StackPanel>
+
+                    <Label Grid.Row="2" Grid.Column="0" Content="Marchandise / Poids : " Margin="0,2,0,2"/>
+                    <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1">
+                        <TextBox Name="txtMarchandise" Width="202" Margin="0,2,0,2" Background="AntiqueWhite" IsReadOnly="True" TextAlignment="Right"/>
+                        <TextBox Name="txtPoids" Width="100" Margin="2,2,0,2" TextAlignment="Right" Background="AntiqueWhite" IsReadOnly="True"/>
+                    </StackPanel>
+
+                    <Label Grid.Row="3" Grid.Column="0" Content="Franch. séj./Fin séjour. : " Margin="0,2,0,2"/>
+                    <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1">
+                        <DatePicker Name="txtFranSej" Width="100" Margin="0,2,0,2" IsEnabled="False"/>
+                        <DatePicker Name="txtFinSejour" Width="100" Margin="2,2,0,2" IsEnabled="False"/>
+                    </StackPanel>
+
+                    <Label Grid.Row="4" Grid.Column="0" Content="Franch. surest./Sortie prév./N° BESC : " Margin="0,2,0,2"/>
+                    <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="1">
+                        <DatePicker Name="txtSurestaries" Width="100" Margin="0,2,0,2" IsEnabled="False"/>
+                        <DatePicker Name="txtSortiePrev" Width="100" Margin="2,2,0,2"/>
+                        <TextBox Width="100" Name="txtNumBESC" Margin="2,2,0,2" HorizontalAlignment="Left"/>
+                    </StackPanel>
+                    
+                    <Label Grid.Row="5" Grid.Column="0" Content="Enleveur/CNI/Tél :" Margin="0,2,0,2"/>
+                    <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.Column="1">
+                        <TextBox Width="100" Name="txtEnleveur" Margin="0,2,0,2" HorizontalAlignment="Left" />
+                        <TextBox Width="100" Name="txtCNI" Margin="2,2,0,2" HorizontalAlignment="Left" />
+                        <TextBox Width="100" Name="txtTel" Margin="2,2,0,2" HorizontalAlignment="Left" />
+                    </StackPanel>
+                </Grid>
+            </GroupBox>
+        </DockPanel>
+    </DockPanel>
+</Window>

@@ -1,0 +1,36 @@
+PWD : strong to ascii, 
+une facture spot 'est une facture qui na pas de proforma, pas ratache a un bl
+
+promo 2016
+remise 50% sur les article manu et prestation gestion parc pour les vehicule moins de 18metre.
+lors du paiement on verifi les proforma qui on ces article. pour chacun de ses proforma, 
+on genère des ligne_element de facturation correspondant au montant reduit avec le idjef de reference
+on reclacule le montant de la proforma et  on copie dans les colonne MTTC_EF, MHT_EF TVA_EF  les valeur avant recalcul 
+on marque le connaissement comme ayant subi la promo.
+la facture genere sera au montant de la proforma recalculé
+===control de sortie
+on control sil existe des element de facturation qui sont issu de la promo on laisse passe le bl
+apres la periode de promo, ces element de facturation devienne obligatoire. une nouvelle proforma sera fait sur ces elements
+
+*** ajout de la colonne promo dans proforma pour determiner les proforma ayant fait l'objet de rabais. cela permer egalement d'eviter le recal sur la proforma
+
+Janvier 2017
+
+*** integration des lecteur de code bare pour le contrle des sorties. 
+le clic sur le bouton "imprimer bon de sortie de la vue vehiculeform imprime trois copie de BS portant les code bare.
+au scannage des code bares, on verifie lauthenticite des données... un check visuel est fait par lagent de securité.
+l'interface du psion dispose d'un bouton d'envoie des données scanées. a la reception de ces données on enregistre dans la table psion_sortie.
+apres scannage lorsque l'agent confirm la validité des données , la sortie est marquée dans le système.  
+
+Fevrier 2017
+application de facturaturation en ligne.
+ lorsquon effectue une action qui cree une ligne de facturation sur un connaissementon ajout ce connaissement dans la liste des connaissement.
+ une moule de facon periodique envoie pour chaque connaissement les elements de facturation actuelle. si un bl a deja une facture payé, ses elements 
+ ne seront plus envoye.
+
+** creation au sun du module en ligne de la ressource pour integre les donné encoye par le service filewatcher. cette ressource 
+- si le bl n'existait pas le cree et cree les element de facturation
+- si le bl existait, la modifie; si un element de facturation existe, la mofidie, sinon la cree...
+
+
+** creation du statut Del pour marque les element a supprimer. il faudra etablir dans le systeme la non prise en charge de ses elements pour traitement

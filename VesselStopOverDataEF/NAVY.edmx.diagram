@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="3c62129cbd034f96be156fef0a555b81" Name="Diagramme1">
+        <EntityTypeShape EntityType="NAVYModel.ACCONIER" Width="1.5" PointX="3.5" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.ARMATEUR" Width="1.5" PointX="3.5" PointY="6.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.ARTICLE" Width="1.5" PointX="5.75" PointY="28.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.BON_ENLEVEMENT" Width="1.5" PointX="3" PointY="14.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.BON_SORTIE" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.CLIENT" Width="1.5" PointX="5.75" PointY="23.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.CODE_TVA" Width="1.5" PointX="3.5" PointY="28" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.CONNAISSEMENT" Width="1.5" PointX="0.75" PointY="10.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.CUBAGE" Width="1.5" PointX="3" PointY="23.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.CUBAGE_VEHICULE" Width="1.5" PointX="5.25" PointY="42.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.DEMANDE_LIVRAISON" Width="1.5" PointX="3" PointY="19" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.DEMANDE_REDUCTION" Width="1.5" PointX="8" PointY="16.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.ELEMENT_FACTURATION" Width="1.5" PointX="11" PointY="14.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.EMPLACEMENT" Width="1.5" PointX="3" PointY="65.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.ESCALE" Width="1.5" PointX="5.75" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.FACTURE" Width="1.5" PointX="3" PointY="35" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.FAMILLE_ARTICLE" Width="1.5" PointX="3.5" PointY="31" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.HIST_CONNAISSEMENT" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.LIGNE_PRIX" Width="1.5" PointX="8.75" PointY="22.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.LIGNE_PROFORMA" Width="1.5" PointX="13.25" PointY="17.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.MANIFESTE" Width="1.5" PointX="3" PointY="40.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.NAVIRE" Width="1.5" PointX="3.5" PointY="10.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.NOTE" Width="1.5" PointX="5.25" PointY="14.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.OCCUPATION" Width="1.5" PointX="5.25" PointY="56.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.OPERATION" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.OPERATION_CONNAISSEMENT" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.OPERATION_MANIFESTE" Width="1.5" PointX="0.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.OPERATION_VEHICULE" Width="1.5" PointX="8.25" PointY="56.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.ORDRE_SERVICE" Width="1.5" PointX="8" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.PARAMETRE" Width="1.5" PointX="9.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.PARC" Width="1.5" PointX="0.75" PointY="66.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.PAYEMENT" Width="1.5" PointX="3" PointY="45.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.PROFORMA" Width="1.5" PointX="0.75" PointY="34.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.TYPE_OPERATION" Width="1.5" PointX="3" PointY="69.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.TYPE_VEHICULE" Width="1.5" PointX="9.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.UTILISATEUR" Width="1.5" PointX="10.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="NAVYModel.VEHICULE" Width="1.5" PointX="3" PointY="51.75" IsExpanded="true" />
+        <AssociationConnector Association="NAVYModel.ESCALE_FK00" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.ESCALE_FK01" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.ARTICLE_FK00" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.ARTICLE_FK01" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.DEMANDE_REDUCTION_FK00" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.LIGNE_PRIX_FK00" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.BON_ENLEVEMENT_FK00" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.FK_NOTE_BON_ENLEVEMENT" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.CLIENT_FK00" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.DEMANDE_LIVRAISON_FK00" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.DEMANDE_REDUCTION_FK01" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.ELEMENT_FACTURATION_FK00" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.FK_NOTE_CONNAISSEMENT" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.ORDRE_SERVICE_FK00" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.CUBAGE_FK00" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.CUBAGE_VEHICULE_FK00" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.FK_NOTE_CUBAGE" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.CUBAGE_VEHICULE_FK01" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.FK_NOTE_DEMANDE_LIVRAISON" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.FK_NOTE_DEMANDE_REDUCTION" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.ELEMENT_FACTURATION_FK01" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.LIGNE_PROFORMA_FK00" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.EMPLACEMENT_FK00" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.OCCUPATION_FK00" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.ESCALE_FK02" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.FK_MANIFESTE_ESCALE" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.FK_NOTE_ESCALE" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.ORDRE_SERVICE_FK01" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.FACTURE_FK00" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.FK_NOTE_FACTURE" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.LIGNE_PROFORMA_FK01" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.FK_NOTE_MANIFESTE" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.FK_NOTE_ORDRE_SERVICE" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.FK_NOTE_PAYEMENT" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.FK_NOTE_PROFORMA" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.FK_NOTE_VEHICULE" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.OCCUPATION_FK01" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.OCCUPATION_FK02" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.OPERATION_VEHICULE_FK01" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.OPERATION_VEHICULE_FK02" ManuallyRouted="false" />
+        <AssociationConnector Association="NAVYModel.ESCALECONNAISSEMENT" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

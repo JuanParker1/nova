@@ -1,0 +1,283 @@
+﻿<DockPanel x:Class="VesselStopOverPresentation.DashboardPanel"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+    <StatusBar DockPanel.Dock="Bottom" Height="30" FlowDirection="RightToLeft">
+        <Label Name="lblStatut" FlowDirection="LeftToRight" FontWeight="SemiBold" FontFamily="Segoe UI" FontSize="11" />
+    </StatusBar>
+    <Expander DockPanel.Dock="Bottom" Height="200" HorizontalAlignment="Left" IsExpanded="True">
+        <Expander.Header>
+            <Border Background="#FFF0F0F0" BorderThickness="1.5" Width="600" CornerRadius="3">
+                <TextBlock Text="Activités Facturation / Livraison" FontWeight="SemiBold"/>
+            </Border>
+        </Expander.Header>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Width="600" HorizontalAlignment="Left" Background="AliceBlue">
+            <GridSplitter Width="1.5" Background="Transparent"/>
+            <Border BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                <DockPanel Margin="1">
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                        <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnTraidfdfterVeh" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False">
+                            <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                <Image Source="/VesselStopOverPresentation;component/Icons/Card-file-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                <TextBlock Name="txtTraidffdfdfterVeh" Text="A traiter" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black" />
+                            </StackPanel>
+                        </Button>
+                        <GridSplitter Width="20" Background="Transparent" Cursor="Arrow" />
+                        <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnDedfchadfrgerVeh" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False">
+                            <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                <Image Source="/VesselStopOverPresentation;component/Icons/Card-file-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                <TextBlock Name="txtDechadfrgerdVeh" Text="A valider" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black" />
+                            </StackPanel>
+                        </Button>
+                        <GridSplitter Width="20" Background="Transparent" Cursor="Arrow" />
+                        <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnEndfdfSortie" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False">
+                            <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                <Image Source="/VesselStopOverPresentation;component/Icons/Card-file-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                <TextBlock Name="txtEnSordftdfie" Text="A accomplir" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black" />
+                            </StackPanel>
+                        </Button>
+                        <GridSplitter Width="20" Background="Transparent" Cursor="Arrow" />
+                        <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnASofddfrtir" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False">
+                            <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                <Image Source="/VesselStopOverPresentation;component/Icons/Card-file-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                <TextBlock Name="txtASodfrdtir" Text="A facturer" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black" />
+                            </StackPanel>
+                        </Button>
+                        <GridSplitter Width="20" Background="Transparent" Cursor="Arrow" />
+                        <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnConfidfrmSodfrtie" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False">
+                            <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                <Image Source="/VesselStopOverPresentation;component/Icons/Card-file-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                <TextBlock Name="txtCondffidfrmSortie" Text="A enlever" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+        </StackPanel>
+    </Expander>
+    <StackPanel DockPanel.Dock="Left" Orientation="Vertical">
+        <Expander Width="300" HorizontalAlignment="Left" IsExpanded="True">
+            <Expander.Header>
+                <Border Background="#FFF0F0F0" Width="265" BorderThickness="1.5" CornerRadius="3">
+                    <TextBlock Text="Activités connaissements" FontWeight="SemiBold"/>
+                </Border>
+            </Expander.Header>
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Width="290" HorizontalAlignment="Left" Background="AliceBlue">
+                <GridSplitter Width="1.5" Background="Transparent"/>
+                <Border BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                    <DockPanel Margin="1">
+                        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                            <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnTraiter" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False">
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Card-file-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                    <TextBlock Name="txtTraiter" Text="A traiter" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black" />
+                                </StackPanel>
+                            </Button>
+                            <GridSplitter Width="20" Background="Transparent" Cursor="Arrow" />
+                            <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnValider" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False">
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Card-file-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                    <TextBlock Name="txtValider" Text="A valider" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black" />
+                                </StackPanel>
+                            </Button>
+                            <GridSplitter Width="20" Background="Transparent" Cursor="Arrow" />
+                            <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnAccomplir" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False">
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Card-file-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                    <TextBlock Name="txtAccomplir" Text="A accomplir" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
+                            <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnFacturer" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False">
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Card-file-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                    <TextBlock Name="txtFacturer" Text="A facturer" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black" />
+                                </StackPanel>
+                            </Button>
+                            <GridSplitter Width="20" Background="Transparent" Cursor="Arrow" />
+                            <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnEnlever" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False">
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Card-file-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                    <TextBlock Name="txtEnlever" Text="A enlever" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black" />
+                                </StackPanel>
+                            </Button>
+                            <GridSplitter Width="20" Background="Transparent" Cursor="Arrow" />
+                            <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnLivrer" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False">
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Card-file-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                    <TextBlock Name="txtLivrer" Text="A livrer" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </DockPanel>
+                </Border>
+            </StackPanel>
+        </Expander>
+        <Expander Width="300" HorizontalAlignment="Left" IsExpanded="True">
+            <Expander.Header>
+                <Border Background="#FFF0F0F0" BorderThickness="1.5" Width="265" CornerRadius="3">
+                    <TextBlock Text="Activités vehicules" FontWeight="SemiBold"/>
+                </Border>
+            </Expander.Header>
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Width="290" HorizontalAlignment="Left" Background="AliceBlue">
+                <GridSplitter Width="1.5" Background="Transparent"/>
+                <Border BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                    <DockPanel Margin="1">
+                        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                            <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnTraiterVeh" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False">
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Card-file-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                    <TextBlock Name="txtTraiterVeh" Text="A traiter" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black" />
+                                </StackPanel>
+                            </Button>
+                            <GridSplitter Width="20" Background="Transparent" Cursor="Arrow" />
+                            <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnDechargerVeh" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False">
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Card-file-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                    <TextBlock Name="txtDechargerVeh" Text="A valider" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black" />
+                                </StackPanel>
+                            </Button>
+                            <GridSplitter Width="20" Background="Transparent" Cursor="Arrow" />
+                            <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnEnSortie" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False">
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Card-file-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                    <TextBlock Name="txtEnSortie" Text="A accomplir" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
+                            <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnASortir" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False">
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Card-file-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                    <TextBlock Name="txtASortir" Text="A facturer" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black" />
+                                </StackPanel>
+                            </Button>
+                            <GridSplitter Width="20" Background="Transparent" Cursor="Arrow" />
+                            <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnConfirmSortie" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False">
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Card-file-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                    <TextBlock Name="txtConfirmSortie" Text="A enlever" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </DockPanel>
+                </Border>
+            </StackPanel>
+        </Expander>
+    </StackPanel>
+    <StackPanel DockPanel.Dock="Right" Orientation="Vertical">
+        <Expander Width="300" HorizontalAlignment="Left" IsExpanded="True">
+            <Expander.Header>
+                <Border Background="#FFF0F0F0" Width="265" BorderThickness="1.5" CornerRadius="3">
+                    <TextBlock Text="Activités Conteneurs" FontWeight="SemiBold"/>
+                </Border>
+            </Expander.Header>
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Width="290" HorizontalAlignment="Left" Background="AliceBlue">
+                <GridSplitter Width="1.5" Background="Transparent"/>
+                <Border BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                    <DockPanel Margin="1">
+                        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                            <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnfd" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False">
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Card-file-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                    <TextBlock Name="txtTradfiter" Text="A traiter" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black" />
+                                </StackPanel>
+                            </Button>
+                            <GridSplitter Width="20" Background="Transparent" Cursor="Arrow" />
+                            <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnVadflider" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False">
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Card-file-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                    <TextBlock Name="txtVdfalider" Text="A valider" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black" />
+                                </StackPanel>
+                            </Button>
+                            <GridSplitter Width="20" Background="Transparent" Cursor="Arrow" />
+                            <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnAccodfmplir" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False">
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Card-file-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                    <TextBlock Name="txtAcdfcomplir" Text="A accomplir" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
+                            <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnFdfacturer" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False">
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Card-file-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                    <TextBlock Name="txtFactdfurer" Text="A facturer" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black" />
+                                </StackPanel>
+                            </Button>
+                            <GridSplitter Width="20" Background="Transparent" Cursor="Arrow" />
+                            <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnEnldfever" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False">
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Card-file-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                    <TextBlock Name="txtEnledfver" Text="A enlever" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black" />
+                                </StackPanel>
+                            </Button>
+                            <GridSplitter Width="20" Background="Transparent" Cursor="Arrow" />
+                            <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnfdfLivrer" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False">
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Card-file-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                    <TextBlock Name="txtLidfdvrer" Text="A livrer" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </DockPanel>
+                </Border>
+            </StackPanel>
+        </Expander>
+        <Expander Width="300" HorizontalAlignment="Left" IsExpanded="True">
+            <Expander.Header>
+                <Border Background="#FFF0F0F0" BorderThickness="1.5" Width="265" CornerRadius="3">
+                    <TextBlock Text="Activités Conventionnel" FontWeight="SemiBold"/>
+                </Border>
+            </Expander.Header>
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Width="290" HorizontalAlignment="Left" Background="AliceBlue">
+                <GridSplitter Width="1.5" Background="Transparent"/>
+                <Border BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                    <DockPanel Margin="1">
+                        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                            <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnTraidfterVeh" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False">
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Card-file-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                    <TextBlock Name="txtTraifdfdfterVeh" Text="A traiter" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black" />
+                                </StackPanel>
+                            </Button>
+                            <GridSplitter Width="20" Background="Transparent" Cursor="Arrow" />
+                            <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnDechadfrgerVeh" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False">
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Card-file-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                    <TextBlock Name="txtDechargerdVeh" Text="A valider" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black" />
+                                </StackPanel>
+                            </Button>
+                            <GridSplitter Width="20" Background="Transparent" Cursor="Arrow" />
+                            <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnEndfSortie" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False">
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Card-file-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                    <TextBlock Name="txtEnSortdfie" Text="A accomplir" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
+                            <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnASodfrtir" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False">
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Card-file-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                    <TextBlock Name="txtASodfrtir" Text="A facturer" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black" />
+                                </StackPanel>
+                            </Button>
+                            <GridSplitter Width="20" Background="Transparent" Cursor="Arrow" />
+                            <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnConfirmSodfrtie" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False">
+                                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Card-file-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                                    <TextBlock Name="txtConfidfrmSortie" Text="A enlever" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </DockPanel>
+                </Border>
+            </StackPanel>
+        </Expander>
+    </StackPanel>
+</DockPanel>

@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C3BD2354-BE2F-4897-9EAE-C978D931D9EA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VesselStopOverData</RootNamespace>
+    <AssemblyName>VesselStopOverData</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net40\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="acces.cs">
+      <DependentUpon>RMVSOM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ClientCondFin.cs" />
+    <Compile Include="comptes.cs">
+      <DependentUpon>RMVSOM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="compte_rule.cs">
+      <DependentUpon>RMVSOM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EcritureJournal.cs" />
+    <Compile Include="ElementBookingCtr.cs" />
+    <Compile Include="ElementBookingGC.cs" />
+    <Compile Include="ElementCompte.cs" />
+    <Compile Include="ElementCompteArmRegroup.cs" />
+    <Compile Include="ElementCompteDIT.cs" />
+    <Compile Include="ElementCompteEscale.cs" />
+    <Compile Include="ElementCompteFactureDIT.cs" />
+    <Compile Include="ElementCompteManifeste.cs" />
+    <Compile Include="ElementComptePAD.cs" />
+    <Compile Include="ElementCompteSEPBC.cs" />
+    <Compile Include="ElementFacturation.cs" />
+    <Compile Include="ElementLigneFactureSpot.cs" />
+    <Compile Include="ElementLigneOpArm.cs" />
+    <Compile Include="ElementLigneOS.cs" />
+    <Compile Include="ElementSituationCompteClient.cs" />
+    <Compile Include="Emplacement.cs" />
+    <Compile Include="entreprises.cs">
+      <DependentUpon>RMVSOM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="FacturePaiementClient.cs" />
+    <Compile Include="GuichetUnique.cs" />
+    <Compile Include="HistoriqueInterchange.cs" />
+    <Compile Include="HistoriqueOperation.cs" />
+    <Compile Include="LigneEcriture.cs" />
+    <Compile Include="log.cs">
+      <DependentUpon>RMVSOM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="OperationDIT.cs" />
+    <Compile Include="Psion.cs" />
+    <Compile Include="PwdHash.cs" />
+    <Compile Include="quotation.cs">
+      <DependentUpon>RMVSOM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="requetes.cs">
+      <DependentUpon>RMVSOM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RMVSOM.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RMVSOM.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RMVSOM.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RMVSOM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RMVSOM.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RMVSOM.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="RMVSOM_Views.cs" />
+    <Compile Include="rules.cs">
+      <DependentUpon>RMVSOM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SAPDataClasses.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SAPDataClasses.dbml</DependentUpon>
+    </Compile>
+    <Compile Include="SGS.cs" />
+    <Compile Include="StatutLoadUnload.cs" />
+    <Compile Include="SuperClass.cs" />
+    <Compile Include="TypeSinistreVehicule.cs" />
+    <Compile Include="VehiculeCubage.cs" />
+    <Compile Include="VSOMAccessors.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="VsomConfig.cs" />
+    <Compile Include="VSOMDataClasses.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>VSOMDataClasses.dbml</DependentUpon>
+    </Compile>
+    <Compile Include="VsomSAGE.cs" />
+    <Compile Include="VsomSAP.cs" />
+    <Compile Include="VsomException.cs" />
+    <Compile Include="VsomMarchal.cs" />
+    <Compile Include="VsomNotes.cs" />
+    <Compile Include="VsomParameters.cs" />
+    <Compile Include="VsomSecurity.cs" />
+    <Compile Include="Web References\SocSAPWS\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <EntityDeploy Include="RMVSOM.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>RMVSOM.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="RMVSOM.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>RMVSOM.edmx</DependentUpon>
+      <LastGenOutput>RMVSOM.Context.cs</LastGenOutput>
+    </None>
+    <None Include="RMVSOM.edmx.diagram">
+      <DependentUpon>RMVSOM.edmx</DependentUpon>
+    </None>
+    <None Include="RMVSOM.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>RMVSOM.edmx</DependentUpon>
+      <LastGenOutput>RMVSOM.cs</LastGenOutput>
+    </None>
+    <None Include="SAPDataClasses.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>SAPDataClasses.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="VSOMDataClasses.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>VSOMDataClasses.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Web References\SocSAPWS\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\SocSAPWS\SocSAPWebService.wsdl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="VSOMDataClasses.dbml.layout">
+      <DependentUpon>VSOMDataClasses.dbml</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferences Include="Web References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferenceUrl Include="http://localhost/SOCWS/SocSAPWebService.asmx">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\SocSAPWS\</RelPath>
+      <UpdateFromURL>http://localhost/SOCWS/SocSAPWebService.asmx</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>VesselStopOverData_SocSAPWS_SocSAPWebService</CachedSettingsPropName>
+    </WebReferenceUrl>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Web References\SocSAPWS\SocSAPWebService.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SAPDataClasses.dbml.layout">
+      <DependentUpon>SAPDataClasses.dbml</DependentUpon>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

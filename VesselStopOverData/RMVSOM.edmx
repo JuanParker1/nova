@@ -1,0 +1,377 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="RM_VSOMModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="RM_VSOMModelStoreContainer">
+          <EntitySet Name="acces" EntityType="RM_VSOMModel.Store.acces" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="compte_rule" EntityType="RM_VSOMModel.Store.compte_rule" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="comptes" EntityType="RM_VSOMModel.Store.comptes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="entreprises" EntityType="RM_VSOMModel.Store.entreprises" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="log" EntityType="RM_VSOMModel.Store.log" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="quotation" EntityType="RM_VSOMModel.Store.quotation" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="requetes" EntityType="RM_VSOMModel.Store.requetes" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="rules" EntityType="RM_VSOMModel.Store.rules" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_requetes_quotation" Association="RM_VSOMModel.Store.FK_requetes_quotation">
+            <End Role="quotation" EntitySet="quotation" />
+            <End Role="requetes" EntitySet="requetes" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="acces">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="CODE" Type="varchar" MaxLength="15" />
+          <Property Name="EXPIRED" Type="datetime2" Precision="0" />
+          <Property Name="ID_COMPTE" Type="int" />
+          <Property Name="REC_TIME" Type="datetime2" Precision="0" />
+          <Property Name="USED" Type="int" />
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="compte_rule">
+          <Key>
+            <PropertyRef Name="COMPTES_ID" />
+            <PropertyRef Name="RULES_ID" />
+          </Key>
+          <Property Name="REC" Type="datetime2" Precision="0" />
+          <Property Name="COMPTES_ID" Type="int" Nullable="false" />
+          <Property Name="RULES_ID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="comptes">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="NAME" Type="varchar" MaxLength="45" />
+          <Property Name="SURNAME" Type="varchar" MaxLength="45" />
+          <Property Name="EMAIL" Type="varchar" MaxLength="105" />
+          <Property Name="PROFILE" Type="varchar" MaxLength="45" />
+          <Property Name="PASS" Type="varchar" MaxLength="45" />
+          <Property Name="ACCES" Type="int" />
+          <Property Name="CLIENTS_ID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="entreprises">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="CODE" Type="varchar" MaxLength="5" />
+          <Property Name="NAME" Type="varchar" MaxLength="45" />
+          <Property Name="EMAIL" Type="varchar" MaxLength="45" />
+          <Property Name="ACCES" Type="int" />
+        </EntityType>
+        <EntityType Name="log">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="CLIENT" Type="varchar" MaxLength="15" />
+          <Property Name="COMPTES" Type="varchar" MaxLength="45" />
+          <Property Name="REC" Type="datetime2" Precision="0" />
+          <Property Name="TYP" Type="varchar" MaxLength="10" />
+          <Property Name="DESCRIPTION" Type="varchar(max)" />
+          <Property Name="SOURCE" Type="varchar" MaxLength="15" />
+        </EntityType>
+        <EntityType Name="quotation">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="STARTDATE" Type="date" />
+          <Property Name="ENDDATE" Type="date" />
+          <Property Name="LEVEL" Type="varchar" MaxLength="8" />
+          <Property Name="BL" Type="varchar" MaxLength="45" />
+          <Property Name="CHASSIS" Type="varchar" MaxLength="45" />
+          <Property Name="REC_DATE" Type="datetime2" Precision="0" />
+          <Property Name="STATUT" Type="varchar" MaxLength="45" />
+          <Property Name="COMPTES_ID" Type="int" Nullable="false" />
+          <Property Name="HT" Type="int" />
+          <Property Name="TVA" Type="int" />
+          <Property Name="TTC" Type="int" />
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="IDFD" Type="int" />
+        </EntityType>
+        <EntityType Name="requetes">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="LIBELLE" Type="varchar" MaxLength="150" />
+          <Property Name="REC_TIME" Type="datetime2" Precision="0" />
+          <Property Name="IDCOMPTES" Type="int" />
+          <Property Name="ETAT" Type="varchar" MaxLength="25" />
+          <Property Name="ID_QUOTATION" Type="int" Nullable="false" />
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="IDFACTURE" Type="int" />
+        </EntityType>
+        <EntityType Name="rules">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="LIBELLE" Type="varchar" MaxLength="45" />
+        </EntityType>
+        <Association Name="FK_requetes_quotation">
+          <End Role="quotation" Type="RM_VSOMModel.Store.quotation" Multiplicity="1" />
+          <End Role="requetes" Type="RM_VSOMModel.Store.requetes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="quotation">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="requetes">
+              <PropertyRef Name="ID_QUOTATION" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="RM_VSOMModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="RM_VSOMEntities" annotation:LazyLoadingEnabled="true" >
+          <EntitySet Name="acces" EntityType="RM_VSOMModel.acces" />
+          <EntitySet Name="compte_rule" EntityType="RM_VSOMModel.compte_rule" />
+          <EntitySet Name="comptes" EntityType="RM_VSOMModel.comptes" />
+          <EntitySet Name="entreprises" EntityType="RM_VSOMModel.entreprises" />
+          <EntitySet Name="log" EntityType="RM_VSOMModel.log" />
+          <EntitySet Name="quotation" EntityType="RM_VSOMModel.quotation" />
+          <EntitySet Name="requetes" EntityType="RM_VSOMModel.requetes" />
+          <EntitySet Name="rules" EntityType="RM_VSOMModel.rules" />
+          <AssociationSet Name="FK_requetes_quotation" Association="RM_VSOMModel.FK_requetes_quotation">
+            <End Role="quotation" EntitySet="quotation" />
+            <End Role="requetes" EntitySet="requetes" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="acces">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="String" Name="CODE" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="EXPIRED" Precision="0" />
+          <Property Type="Int32" Name="ID_COMPTE" />
+          <Property Type="DateTime" Name="REC_TIME" Precision="0" />
+          <Property Type="Int32" Name="USED" />
+          <Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="compte_rule">
+          <Key>
+            <PropertyRef Name="COMPTES_ID" />
+            <PropertyRef Name="RULES_ID" />
+          </Key>
+          <Property Type="DateTime" Name="REC" Precision="0" />
+          <Property Type="Int32" Name="COMPTES_ID" Nullable="false" />
+          <Property Type="Int32" Name="RULES_ID" Nullable="false" />
+        </EntityType>
+        <EntityType Name="comptes">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="NAME" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="SURNAME" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="EMAIL" MaxLength="105" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="PROFILE" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="PASS" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="ACCES" />
+          <Property Type="Int32" Name="CLIENTS_ID" Nullable="false" />
+        </EntityType>
+        <EntityType Name="entreprises">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="CODE" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="NAME" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="EMAIL" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="ACCES" />
+        </EntityType>
+        <EntityType Name="log">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="CLIENT" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="COMPTES" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="REC" Precision="0" />
+          <Property Type="String" Name="TYP" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="DESCRIPTION" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="SOURCE" MaxLength="15" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="quotation">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="DateTime" Name="STARTDATE" Precision="0" />
+          <Property Type="DateTime" Name="ENDDATE" Precision="0" />
+          <Property Type="String" Name="LEVEL" MaxLength="8" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="BL" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="CHASSIS" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="REC_DATE" Precision="0" />
+          <Property Type="String" Name="STATUT" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="COMPTES_ID" Nullable="false" />
+          <Property Type="Int32" Name="HT" />
+          <Property Type="Int32" Name="TVA" />
+          <Property Type="Int32" Name="TTC" />
+          <Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="IDFD" />
+          <NavigationProperty Name="requetes" Relationship="RM_VSOMModel.FK_requetes_quotation" FromRole="quotation" ToRole="requetes" />
+        </EntityType>
+        <EntityType Name="requetes">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="String" Name="LIBELLE" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="REC_TIME" Precision="0" />
+          <Property Type="Int32" Name="IDCOMPTES" />
+          <Property Type="String" Name="ETAT" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="ID_QUOTATION" Nullable="false" />
+          <Property Type="Int32" Name="ID" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="quotation" Relationship="RM_VSOMModel.FK_requetes_quotation" FromRole="requetes" ToRole="quotation" />
+          <Property Type="Int32" Name="IDFACTURE" />
+        </EntityType>
+        <EntityType Name="rules">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="LIBELLE" MaxLength="45" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <Association Name="FK_requetes_quotation">
+          <End Type="RM_VSOMModel.quotation" Role="quotation" Multiplicity="1" />
+          <End Type="RM_VSOMModel.requetes" Role="requetes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="quotation">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="requetes">
+              <PropertyRef Name="ID_QUOTATION" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="RM_VSOMModelStoreContainer" CdmEntityContainer="RM_VSOMEntities" >
+          <EntitySetMapping Name="acces">
+            <EntityTypeMapping TypeName="RM_VSOMModel.acces">
+              <MappingFragment StoreEntitySet="acces">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="USED" ColumnName="USED" />
+                <ScalarProperty Name="REC_TIME" ColumnName="REC_TIME" />
+                <ScalarProperty Name="ID_COMPTE" ColumnName="ID_COMPTE" />
+                <ScalarProperty Name="EXPIRED" ColumnName="EXPIRED" />
+                <ScalarProperty Name="CODE" ColumnName="CODE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="compte_rule">
+            <EntityTypeMapping TypeName="RM_VSOMModel.compte_rule">
+              <MappingFragment StoreEntitySet="compte_rule">
+                <ScalarProperty Name="RULES_ID" ColumnName="RULES_ID" />
+                <ScalarProperty Name="COMPTES_ID" ColumnName="COMPTES_ID" />
+                <ScalarProperty Name="REC" ColumnName="REC" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="comptes">
+            <EntityTypeMapping TypeName="RM_VSOMModel.comptes">
+              <MappingFragment StoreEntitySet="comptes">
+                <ScalarProperty Name="CLIENTS_ID" ColumnName="CLIENTS_ID" />
+                <ScalarProperty Name="ACCES" ColumnName="ACCES" />
+                <ScalarProperty Name="PASS" ColumnName="PASS" />
+                <ScalarProperty Name="PROFILE" ColumnName="PROFILE" />
+                <ScalarProperty Name="EMAIL" ColumnName="EMAIL" />
+                <ScalarProperty Name="SURNAME" ColumnName="SURNAME" />
+                <ScalarProperty Name="NAME" ColumnName="NAME" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="entreprises">
+            <EntityTypeMapping TypeName="RM_VSOMModel.entreprises">
+              <MappingFragment StoreEntitySet="entreprises">
+                <ScalarProperty Name="ACCES" ColumnName="ACCES" />
+                <ScalarProperty Name="EMAIL" ColumnName="EMAIL" />
+                <ScalarProperty Name="NAME" ColumnName="NAME" />
+                <ScalarProperty Name="CODE" ColumnName="CODE" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="log">
+            <EntityTypeMapping TypeName="RM_VSOMModel.log">
+              <MappingFragment StoreEntitySet="log">
+                <ScalarProperty Name="SOURCE" ColumnName="SOURCE" />
+                <ScalarProperty Name="DESCRIPTION" ColumnName="DESCRIPTION" />
+                <ScalarProperty Name="TYP" ColumnName="TYP" />
+                <ScalarProperty Name="REC" ColumnName="REC" />
+                <ScalarProperty Name="COMPTES" ColumnName="COMPTES" />
+                <ScalarProperty Name="CLIENT" ColumnName="CLIENT" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="quotation">
+            <EntityTypeMapping TypeName="RM_VSOMModel.quotation">
+              <MappingFragment StoreEntitySet="quotation">
+                <ScalarProperty Name="IDFD" ColumnName="IDFD" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="TTC" ColumnName="TTC" />
+                <ScalarProperty Name="TVA" ColumnName="TVA" />
+                <ScalarProperty Name="HT" ColumnName="HT" />
+                <ScalarProperty Name="COMPTES_ID" ColumnName="COMPTES_ID" />
+                <ScalarProperty Name="STATUT" ColumnName="STATUT" />
+                <ScalarProperty Name="REC_DATE" ColumnName="REC_DATE" />
+                <ScalarProperty Name="CHASSIS" ColumnName="CHASSIS" />
+                <ScalarProperty Name="BL" ColumnName="BL" />
+                <ScalarProperty Name="LEVEL" ColumnName="LEVEL" />
+                <ScalarProperty Name="ENDDATE" ColumnName="ENDDATE" />
+                <ScalarProperty Name="STARTDATE" ColumnName="STARTDATE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="requetes">
+            <EntityTypeMapping TypeName="RM_VSOMModel.requetes">
+              <MappingFragment StoreEntitySet="requetes">
+                <ScalarProperty Name="IDFACTURE" ColumnName="IDFACTURE" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="ID_QUOTATION" ColumnName="ID_QUOTATION" />
+                <ScalarProperty Name="ETAT" ColumnName="ETAT" />
+                <ScalarProperty Name="IDCOMPTES" ColumnName="IDCOMPTES" />
+                <ScalarProperty Name="REC_TIME" ColumnName="REC_TIME" />
+                <ScalarProperty Name="LIBELLE" ColumnName="LIBELLE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="rules">
+            <EntityTypeMapping TypeName="RM_VSOMModel.rules">
+              <MappingFragment StoreEntitySet="rules">
+                <ScalarProperty Name="LIBELLE" ColumnName="LIBELLE" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Aucun" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

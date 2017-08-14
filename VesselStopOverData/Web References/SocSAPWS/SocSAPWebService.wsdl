@@ -1,0 +1,797 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="Login">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DataBaseServer" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DataBaseName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DataBaseType" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DataBaseUserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DataBasePassword" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CompanyUserName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CompanyPassword" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Language" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="LicenseServer" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LoginResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LoginResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LogOut">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="sSessionID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LogOutResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LogOutResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddInvoice">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SessionID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="cardCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="docDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="taxDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="docDueDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="numAtCard" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="comments" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="lignesFacture" type="tns:ArrayOfLigneFacture" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfLigneFacture">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="LigneFacture" nillable="true" type="tns:LigneFacture" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="LigneFacture">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ItemCode" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="UnitPrice" type="s:double" />
+          <s:element minOccurs="0" maxOccurs="1" name="Quantity" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="VATGroup" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AccountCode" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AddInvoiceResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AddInvoiceResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddPurchaseOrder">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SessionID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="cardCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="docDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="taxDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="docDueDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="numAtCard" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="comments" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="lignesCommande" type="tns:ArrayOfLigneCommandeFournisseur" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfLigneCommandeFournisseur">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="LigneCommandeFournisseur" nillable="true" type="tns:LigneCommandeFournisseur" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="LigneCommandeFournisseur">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ItemCode" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="UnitPrice" type="s:double" />
+          <s:element minOccurs="0" maxOccurs="1" name="Quantity" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="VATGroup" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AccountCode" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AddPurchaseOrderResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AddPurchaseOrderResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddPurchaseDeliveryNote">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SessionID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="cardCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="docDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="taxDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="docDueDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="numAtCard" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="comments" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="idPO" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="lignesCommande" type="tns:ArrayOfLigneCommandeFournisseur" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddPurchaseDeliveryNoteResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AddPurchaseDeliveryNoteResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddPurchaseInvoice">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SessionID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="cardCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="docDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="taxDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="docDueDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="numAtCard" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="comments" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="idPDN" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="lignesCommande" type="tns:ArrayOfLigneCommandeFournisseur" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddPurchaseInvoiceResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AddPurchaseInvoiceResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddPayment">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SessionID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="cardCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="docDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="cashAccount" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="cashSum" type="s:double" />
+            <s:element minOccurs="0" maxOccurs="1" name="taxDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="vatDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="listFactures" type="tns:ArrayOfPayementFacture" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfPayementFacture">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="PayementFacture" nillable="true" type="tns:PayementFacture" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="PayementFacture">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="DocEntry" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="PaidSum" type="s:double" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AddPaymentResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AddPaymentResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddPaymentAccount">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SessionID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="cardCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="docDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="transfAcct" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="transfRef" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="transfDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="transfSum" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="listFactures" type="tns:ArrayOfPayementFacture" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddPaymentAccountResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AddPaymentAccountResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddPaymentCheck">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SessionID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="cardCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="docDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="bankCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="branch" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="accounttNum" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="checkSum" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="checkNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="listFactures" type="tns:ArrayOfPayementFacture" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddPaymentCheckResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AddPaymentCheckResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddCreditNote">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SessionID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="cardCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="docDueDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="taxDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="vatDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="numAtCard" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="comments" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="idFact" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="lignesAvoir" type="tns:ArrayOfLigneAvoir" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfLigneAvoir">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="LigneAvoir" nillable="true" type="tns:LigneAvoir" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="LigneAvoir">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ItemCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Quantity" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="UnitPrice" type="s:double" />
+          <s:element minOccurs="0" maxOccurs="1" name="VATGroup" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AccountCode" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AddCreditNoteResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AddCreditNoteResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddPartialCreditNote">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SessionID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="cardCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="docDueDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="taxDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="vatDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="numAtCard" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="comments" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="lignesAvoir" type="tns:ArrayOfLigneAvoir" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddPartialCreditNoteResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AddPartialCreditNoteResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddJournalEntryAS400">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SessionID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="taxDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="dueDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="memo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="reference1" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="reference2" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="reference3" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="lignesJournal" type="tns:ArrayOfLigneJournal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfLigneJournal">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="LigneJournal" nillable="true" type="tns:LigneJournal" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="LigneJournal">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="AccountCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ShortName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ControlAccount" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Credit" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="Debit" type="s:double" />
+          <s:element minOccurs="0" maxOccurs="1" name="DueDate" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ReferenceDate1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Reference1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Reference2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="LineMemo" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CostingCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CostingCode2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CostingCode3" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CostingCode4" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CostingCode5" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TaxDate" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="VATGroup" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AddJournalEntryAS400Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AddJournalEntryAS400Result" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddJournalEntry">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SessionID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="taxDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="dueDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="memo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="reference1" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="reference2" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="reference3" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="lignesJournal" type="tns:ArrayOfLigneJournal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddJournalEntryResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AddJournalEntryResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddGLAccount">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SessionID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="numCpte" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="libelleCpte" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddGLAccountResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AddGLAccountResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="LoginSoapIn">
+    <wsdl:part name="parameters" element="tns:Login" />
+  </wsdl:message>
+  <wsdl:message name="LoginSoapOut">
+    <wsdl:part name="parameters" element="tns:LoginResponse" />
+  </wsdl:message>
+  <wsdl:message name="LogOutSoapIn">
+    <wsdl:part name="parameters" element="tns:LogOut" />
+  </wsdl:message>
+  <wsdl:message name="LogOutSoapOut">
+    <wsdl:part name="parameters" element="tns:LogOutResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddInvoiceSoapIn">
+    <wsdl:part name="parameters" element="tns:AddInvoice" />
+  </wsdl:message>
+  <wsdl:message name="AddInvoiceSoapOut">
+    <wsdl:part name="parameters" element="tns:AddInvoiceResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddPurchaseOrderSoapIn">
+    <wsdl:part name="parameters" element="tns:AddPurchaseOrder" />
+  </wsdl:message>
+  <wsdl:message name="AddPurchaseOrderSoapOut">
+    <wsdl:part name="parameters" element="tns:AddPurchaseOrderResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddPurchaseDeliveryNoteSoapIn">
+    <wsdl:part name="parameters" element="tns:AddPurchaseDeliveryNote" />
+  </wsdl:message>
+  <wsdl:message name="AddPurchaseDeliveryNoteSoapOut">
+    <wsdl:part name="parameters" element="tns:AddPurchaseDeliveryNoteResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddPurchaseInvoiceSoapIn">
+    <wsdl:part name="parameters" element="tns:AddPurchaseInvoice" />
+  </wsdl:message>
+  <wsdl:message name="AddPurchaseInvoiceSoapOut">
+    <wsdl:part name="parameters" element="tns:AddPurchaseInvoiceResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddPaymentSoapIn">
+    <wsdl:part name="parameters" element="tns:AddPayment" />
+  </wsdl:message>
+  <wsdl:message name="AddPaymentSoapOut">
+    <wsdl:part name="parameters" element="tns:AddPaymentResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddPaymentAccountSoapIn">
+    <wsdl:part name="parameters" element="tns:AddPaymentAccount" />
+  </wsdl:message>
+  <wsdl:message name="AddPaymentAccountSoapOut">
+    <wsdl:part name="parameters" element="tns:AddPaymentAccountResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddPaymentCheckSoapIn">
+    <wsdl:part name="parameters" element="tns:AddPaymentCheck" />
+  </wsdl:message>
+  <wsdl:message name="AddPaymentCheckSoapOut">
+    <wsdl:part name="parameters" element="tns:AddPaymentCheckResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddCreditNoteSoapIn">
+    <wsdl:part name="parameters" element="tns:AddCreditNote" />
+  </wsdl:message>
+  <wsdl:message name="AddCreditNoteSoapOut">
+    <wsdl:part name="parameters" element="tns:AddCreditNoteResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddPartialCreditNoteSoapIn">
+    <wsdl:part name="parameters" element="tns:AddPartialCreditNote" />
+  </wsdl:message>
+  <wsdl:message name="AddPartialCreditNoteSoapOut">
+    <wsdl:part name="parameters" element="tns:AddPartialCreditNoteResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddJournalEntryAS400SoapIn">
+    <wsdl:part name="parameters" element="tns:AddJournalEntryAS400" />
+  </wsdl:message>
+  <wsdl:message name="AddJournalEntryAS400SoapOut">
+    <wsdl:part name="parameters" element="tns:AddJournalEntryAS400Response" />
+  </wsdl:message>
+  <wsdl:message name="AddJournalEntrySoapIn">
+    <wsdl:part name="parameters" element="tns:AddJournalEntry" />
+  </wsdl:message>
+  <wsdl:message name="AddJournalEntrySoapOut">
+    <wsdl:part name="parameters" element="tns:AddJournalEntryResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddGLAccountSoapIn">
+    <wsdl:part name="parameters" element="tns:AddGLAccount" />
+  </wsdl:message>
+  <wsdl:message name="AddGLAccountSoapOut">
+    <wsdl:part name="parameters" element="tns:AddGLAccountResponse" />
+  </wsdl:message>
+  <wsdl:portType name="SocSAPWebServiceSoap">
+    <wsdl:operation name="Login">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Login to company</wsdl:documentation>
+      <wsdl:input message="tns:LoginSoapIn" />
+      <wsdl:output message="tns:LoginSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LogOut">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">LogOut to company</wsdl:documentation>
+      <wsdl:input message="tns:LogOutSoapIn" />
+      <wsdl:output message="tns:LogOutSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddInvoice">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Add Invoice</wsdl:documentation>
+      <wsdl:input message="tns:AddInvoiceSoapIn" />
+      <wsdl:output message="tns:AddInvoiceSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddPurchaseOrder">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Add Purchase Order</wsdl:documentation>
+      <wsdl:input message="tns:AddPurchaseOrderSoapIn" />
+      <wsdl:output message="tns:AddPurchaseOrderSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddPurchaseDeliveryNote">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Add Purchase Delivery Note</wsdl:documentation>
+      <wsdl:input message="tns:AddPurchaseDeliveryNoteSoapIn" />
+      <wsdl:output message="tns:AddPurchaseDeliveryNoteSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddPurchaseInvoice">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Add Purchase Invoice</wsdl:documentation>
+      <wsdl:input message="tns:AddPurchaseInvoiceSoapIn" />
+      <wsdl:output message="tns:AddPurchaseInvoiceSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddPayment">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Add Payment</wsdl:documentation>
+      <wsdl:input message="tns:AddPaymentSoapIn" />
+      <wsdl:output message="tns:AddPaymentSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddPaymentAccount">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Add Payment Account</wsdl:documentation>
+      <wsdl:input message="tns:AddPaymentAccountSoapIn" />
+      <wsdl:output message="tns:AddPaymentAccountSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddPaymentCheck">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Add Payment Check</wsdl:documentation>
+      <wsdl:input message="tns:AddPaymentCheckSoapIn" />
+      <wsdl:output message="tns:AddPaymentCheckSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddCreditNote">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Add Credit Note</wsdl:documentation>
+      <wsdl:input message="tns:AddCreditNoteSoapIn" />
+      <wsdl:output message="tns:AddCreditNoteSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddPartialCreditNote">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Add Partial Credit Note</wsdl:documentation>
+      <wsdl:input message="tns:AddPartialCreditNoteSoapIn" />
+      <wsdl:output message="tns:AddPartialCreditNoteSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddJournalEntryAS400">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Add Journal Entry AS400</wsdl:documentation>
+      <wsdl:input message="tns:AddJournalEntryAS400SoapIn" />
+      <wsdl:output message="tns:AddJournalEntryAS400SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddJournalEntry">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Add Journal Entry</wsdl:documentation>
+      <wsdl:input message="tns:AddJournalEntrySoapIn" />
+      <wsdl:output message="tns:AddJournalEntrySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddGLAccount">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Add GL Account</wsdl:documentation>
+      <wsdl:input message="tns:AddGLAccountSoapIn" />
+      <wsdl:output message="tns:AddGLAccountSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="SocSAPWebServiceSoap" type="tns:SocSAPWebServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Login">
+      <soap:operation soapAction="http://tempuri.org/Login" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LogOut">
+      <soap:operation soapAction="http://tempuri.org/LogOut" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddInvoice">
+      <soap:operation soapAction="http://tempuri.org/AddInvoice" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddPurchaseOrder">
+      <soap:operation soapAction="http://tempuri.org/AddPurchaseOrder" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddPurchaseDeliveryNote">
+      <soap:operation soapAction="http://tempuri.org/AddPurchaseDeliveryNote" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddPurchaseInvoice">
+      <soap:operation soapAction="http://tempuri.org/AddPurchaseInvoice" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddPayment">
+      <soap:operation soapAction="http://tempuri.org/AddPayment" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddPaymentAccount">
+      <soap:operation soapAction="http://tempuri.org/AddPaymentAccount" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddPaymentCheck">
+      <soap:operation soapAction="http://tempuri.org/AddPaymentCheck" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddCreditNote">
+      <soap:operation soapAction="http://tempuri.org/AddCreditNote" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddPartialCreditNote">
+      <soap:operation soapAction="http://tempuri.org/AddPartialCreditNote" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddJournalEntryAS400">
+      <soap:operation soapAction="http://tempuri.org/AddJournalEntryAS400" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddJournalEntry">
+      <soap:operation soapAction="http://tempuri.org/AddJournalEntry" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddGLAccount">
+      <soap:operation soapAction="http://tempuri.org/AddGLAccount" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="SocSAPWebServiceSoap12" type="tns:SocSAPWebServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Login">
+      <soap12:operation soapAction="http://tempuri.org/Login" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LogOut">
+      <soap12:operation soapAction="http://tempuri.org/LogOut" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddInvoice">
+      <soap12:operation soapAction="http://tempuri.org/AddInvoice" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddPurchaseOrder">
+      <soap12:operation soapAction="http://tempuri.org/AddPurchaseOrder" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddPurchaseDeliveryNote">
+      <soap12:operation soapAction="http://tempuri.org/AddPurchaseDeliveryNote" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddPurchaseInvoice">
+      <soap12:operation soapAction="http://tempuri.org/AddPurchaseInvoice" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddPayment">
+      <soap12:operation soapAction="http://tempuri.org/AddPayment" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddPaymentAccount">
+      <soap12:operation soapAction="http://tempuri.org/AddPaymentAccount" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddPaymentCheck">
+      <soap12:operation soapAction="http://tempuri.org/AddPaymentCheck" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddCreditNote">
+      <soap12:operation soapAction="http://tempuri.org/AddCreditNote" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddPartialCreditNote">
+      <soap12:operation soapAction="http://tempuri.org/AddPartialCreditNote" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddJournalEntryAS400">
+      <soap12:operation soapAction="http://tempuri.org/AddJournalEntryAS400" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddJournalEntry">
+      <soap12:operation soapAction="http://tempuri.org/AddJournalEntry" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddGLAccount">
+      <soap12:operation soapAction="http://tempuri.org/AddGLAccount" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SocSAPWebService">
+    <wsdl:port name="SocSAPWebServiceSoap" binding="tns:SocSAPWebServiceSoap">
+      <soap:address location="http://localhost/SOCWS/SocSAPWebService.asmx" />
+    </wsdl:port>
+    <wsdl:port name="SocSAPWebServiceSoap12" binding="tns:SocSAPWebServiceSoap12">
+      <soap12:address location="http://localhost/SOCWS/SocSAPWebService.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

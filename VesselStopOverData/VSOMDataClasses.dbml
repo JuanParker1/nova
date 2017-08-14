@@ -1,0 +1,1826 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="VSOMBD" Class="VSOMClassesDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=192.168.0.28\SVR2012;Initial Catalog=NAVY;User ID=sa" SettingsObjectName="VesselStopOverData.Properties.Settings" SettingsPropertyName="VSOMBDConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.ACCONIER" Member="ACCONIER">
+    <Type Name="ACCONIER">
+      <Column Name="IdAcc" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="CodeAcc" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NomAcc" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="StatutAcc" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="AIAcc" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="CCAcc" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Association Name="ACCONIER_UTILISATEUR" Member="UTILISATEUR" ThisKey="IdAcc" OtherKey="IdAcc" Type="UTILISATEUR" />
+      <Association Name="ACCONIER_ESCALE" Member="ESCALE" ThisKey="IdAcc" OtherKey="IdAcc" Type="ESCALE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ARMATEUR" Member="ARMATEUR">
+    <Type Name="ARMATEUR">
+      <Column Name="IdArm" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="CodeArm" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NomArm" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="StatutArm" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="AIArm" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="CCArm" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="AdresseArm" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Association Name="ARMATEUR_NAVIRE" Member="NAVIRE" ThisKey="IdArm" OtherKey="IdArm" Type="NAVIRE" />
+      <Association Name="ARMATEUR_ESCALE" Member="ESCALE" ThisKey="IdArm" OtherKey="IdArm" Type="ESCALE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ARTICLE" Member="ARTICLE">
+    <Type Name="ARTICLE">
+      <Column Name="CodeArticle" Type="System.Int16" DbType="SmallInt NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="LibArticle" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="CCArticle" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="CCArticleEx" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="CodeFamArt" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Column Name="CodeTVA" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="Statut" Type="System.String" DbType="nvarchar(5)" CanBeNull="true" />
+      <Association Name="ARTICLE_LIGNE_SERVICE" Member="LIGNE_SERVICE" ThisKey="CodeArticle" OtherKey="CodeArticle" Type="LIGNE_SERVICE" />
+      <Association Name="ARTICLE_DEMANDE_REDUCTION" Member="DEMANDE_REDUCTION" ThisKey="CodeArticle" OtherKey="CodeArticle" Type="DEMANDE_REDUCTION" />
+      <Association Name="ARTICLE_LIGNE_PRIX" Member="LIGNE_PRIX" ThisKey="CodeArticle" OtherKey="CodeArticle" Type="LIGNE_PRIX" />
+      <Association Name="CODE_TVA_ARTICLE" Member="CODE_TVA" ThisKey="CodeTVA" OtherKey="CodeTVA" Type="CODE_TVA" IsForeignKey="true" />
+      <Association Name="FAMILLE_ARTICLE_ARTICLE" Member="FAMILLE_ARTICLE" ThisKey="CodeFamArt" OtherKey="CodeFamArt" Type="FAMILLE_ARTICLE" IsForeignKey="true" DeleteRule="CASCADE" />
+      <Association Name="LIGNE_AVOIR_SPOT_ARTICLE" Member="LIGNE_AVOIR_SPOT" ThisKey="CodeArticle" OtherKey="CodeArticle" Type="LIGNE_AVOIR_SPOT" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.BON_ENLEVEMENT" Member="BON_ENLEVEMENT">
+    <Type Name="BON_ENLEVEMENT">
+      <Column Name="IdBAE" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DateBAE" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DVBAE" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ELGBAE" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="DLGBAE" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="DELGBAE" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DFLGBAE" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="AIBAE" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="AIVBAE" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="IdBL" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdU" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdUV" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="BON_ENLEVEMENT_VEHICULE" Member="VEHICULE" ThisKey="IdBAE" OtherKey="IdBAE" Type="VEHICULE" />
+      <Association Name="BON_ENLEVEMENT_CONTENEUR" Member="CONTENEUR" ThisKey="IdBAE" OtherKey="IdBAE" Type="CONTENEUR" />
+      <Association Name="BON_ENLEVEMENT_CONVENTIONNEL" Member="CONVENTIONNEL" ThisKey="IdBAE" OtherKey="IdBAE" Type="CONVENTIONNEL" />
+      <Association Name="BON_ENLEVEMENT_MAFI" Member="MAFI" ThisKey="IdBAE" OtherKey="IdBAE" Type="MAFI" />
+      <Association Name="BON_ENLEVEMENT_NOTE" Member="NOTE" ThisKey="IdBAE" OtherKey="IdBAE" Type="NOTE" />
+      <Association Name="UTILISATEUR_BON_ENLEVEMENT" Member="UTILISATEUR" ThisKey="IdU" OtherKey="IdU" Type="UTILISATEUR" IsForeignKey="true" />
+      <Association Name="CONNAISSEMENT_BON_ENLEVEMENT" Member="CONNAISSEMENT" ThisKey="IdBL" OtherKey="IdBL" Type="CONNAISSEMENT" IsForeignKey="true" DeleteRule="CASCADE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CODE_TVA" Member="CODE_TVA">
+    <Type Name="CODE_TVA">
+      <Column Name="CodeTVA" Type="System.String" DbType="NVarChar(10) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="LibTVA" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="TauxTVA" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Column Name="CCompte" Type="System.String" DbType="nvarchar(10)" CanBeNull="true" />
+      <Association Name="CODE_TVA_ARTICLE" Member="ARTICLE" ThisKey="CodeTVA" OtherKey="CodeTVA" Type="ARTICLE" />
+      <Association Name="CODE_TVA_CLIENT" Member="CLIENT" ThisKey="CodeTVA" OtherKey="CodeTVA" Type="CLIENT" />
+      <Association Name="CODE_TVA_ELEMENT_FACTURATION" Member="ELEMENT_FACTURATION" ThisKey="CodeTVA" OtherKey="CodeTVA" Type="ELEMENT_FACTURATION" />
+      <Association Name="CODE_TVA_CONNAISSEMENT" Member="CONNAISSEMENT" ThisKey="CodeTVA" OtherKey="CodeTVA" Type="CONNAISSEMENT" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CUBAGE" Member="CUBAGE">
+    <Type Name="CUBAGE">
+      <Column Name="IdCubage" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DateCubage" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DateExCubage" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DateCloCubage" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="AICubage" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="IdEsc" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="CUBAGE_CUBAGE_VEHICULE" Member="CUBAGE_VEHICULE" ThisKey="IdCubage" OtherKey="IdCubage" Type="CUBAGE_VEHICULE" />
+      <Association Name="CUBAGE_NOTE" Member="NOTE" ThisKey="IdCubage" OtherKey="IdCubage" Type="NOTE" />
+      <Association Name="ESCALE_CUBAGE" Member="ESCALE" ThisKey="IdEsc" OtherKey="IdEsc" Type="ESCALE" IsForeignKey="true" DeleteRule="CASCADE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.DEMANDE_CAUTION" Member="DEMANDE_CAUTION">
+    <Type Name="DEMANDE_CAUTION">
+      <Column Name="IdDRC" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DateDRC" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DVDRC" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="AIDRC" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="AIVDRC" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="IdBL" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdU" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdUV" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="DEMANDE_CAUTION_CONTENEUR" Member="CONTENEUR" ThisKey="IdDRC" OtherKey="IdDRC" Type="CONTENEUR" />
+      <Association Name="DEMANDE_CAUTION_NOTE" Member="NOTE" ThisKey="IdDRC" OtherKey="IdDRC" Type="NOTE" />
+      <Association Name="CONNAISSEMENT_DEMANDE_CAUTION" Member="CONNAISSEMENT" ThisKey="IdBL" OtherKey="IdBL" Type="CONNAISSEMENT" IsForeignKey="true" DeleteRule="CASCADE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.DEMANDE_LIVRAISON" Member="DEMANDE_LIVRAISON">
+    <Type Name="DEMANDE_LIVRAISON">
+      <Column Name="IdDBL" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DateDBL" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DVDBL" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="AIDBL" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="AIVDBL" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="IdBL" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdU" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdUV" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DateDepotDBL" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="DEMANDE_LIVRAISON_VEHICULE" Member="VEHICULE" ThisKey="IdDBL" OtherKey="IdDBL" Type="VEHICULE" />
+      <Association Name="DEMANDE_LIVRAISON_CONTENEUR" Member="CONTENEUR" ThisKey="IdDBL" OtherKey="IdDBL" Type="CONTENEUR" />
+      <Association Name="DEMANDE_LIVRAISON_CONVENTIONNEL" Member="CONVENTIONNEL" ThisKey="IdDBL" OtherKey="IdDBL" Type="CONVENTIONNEL" />
+      <Association Name="DEMANDE_LIVRAISON_MAFI" Member="MAFI" ThisKey="IdDBL" OtherKey="IdDBL" Type="MAFI" />
+      <Association Name="DEMANDE_LIVRAISON_NOTE" Member="NOTE" ThisKey="IdDBL" OtherKey="IdDBL" Type="NOTE" />
+      <Association Name="UTILISATEUR_DEMANDE_LIVRAISON" Member="UTILISATEUR" ThisKey="IdU" OtherKey="IdU" Type="UTILISATEUR" IsForeignKey="true" />
+      <Association Name="CONNAISSEMENT_DEMANDE_LIVRAISON" Member="CONNAISSEMENT" ThisKey="IdBL" OtherKey="IdBL" Type="CONNAISSEMENT" IsForeignKey="true" DeleteRule="CASCADE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.DROIT" Member="DROIT">
+    <Type Name="DROIT">
+      <Column Name="IdU" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="IdOp" Type="System.Int16" DbType="SmallInt NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Association Name="OPERATION_DROIT" Member="OPERATION" ThisKey="IdOp" OtherKey="IdOp" Type="OPERATION" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+      <Association Name="UTILISATEUR_DROIT" Member="UTILISATEUR" ThisKey="IdU" OtherKey="IdU" Type="UTILISATEUR" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.EMPLACEMENT" Member="EMPLACEMENT">
+    <Type Name="EMPLACEMENT">
+      <Column Name="IdEmpl" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="LigEmpl" Type="System.String" DbType="NVarChar(5)" CanBeNull="true" />
+      <Column Name="ColEmpl" Type="System.String" DbType="NVarChar(5)" CanBeNull="true" />
+      <Column Name="LongMin" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Column Name="LongMax" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Column Name="LargMin" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Column Name="LargMax" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Column Name="StatutEmpl" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="IdParc" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TypeEmpl" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Association Name="EMPLACEMENT_OCCUPATION" Member="OCCUPATION" ThisKey="IdEmpl" OtherKey="IdEmpl" Type="OCCUPATION" />
+      <Association Name="PARC_EMPLACEMENT" Member="PARC" ThisKey="IdParc" OtherKey="IdParc" Type="PARC" IsForeignKey="true" DeleteRule="CASCADE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.FACTURE_DIT" Member="FACTURE_DIT">
+    <Type Name="FACTURE_DIT">
+      <Column Name="IdFactDIT" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="NumFactDIT" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="DateTrans" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DateFact" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="MntFact" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdBL" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="FACTURE_DIT_NOTE" Member="NOTE" ThisKey="IdFactDIT" OtherKey="IdFactDIT" Type="NOTE" />
+      <Association Name="CONNAISSEMENT_FACTURE_DIT" Member="CONNAISSEMENT" ThisKey="IdBL" OtherKey="IdBL" Type="CONNAISSEMENT" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.FAMILLE_ARTICLE" Member="FAMILLE_ARTICLE">
+    <Type Name="FAMILLE_ARTICLE">
+      <Column Name="CodeFamArt" Type="System.Int16" DbType="SmallInt NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="LibFamArt" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Niveau" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Association Name="FAMILLE_ARTICLE_ARTICLE" Member="ARTICLE" ThisKey="CodeFamArt" OtherKey="CodeFamArt" Type="ARTICLE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.JOURNAL" Member="JOURNAL">
+    <Type Name="JOURNAL">
+      <Column Name="IdJ" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DOP" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IDEC" Type="System.String" DbType="Text" CanBeNull="true" />
+      <Column Name="IdU" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdOp" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Association Name="OPERATION_JOURNAL" Member="OPERATION" ThisKey="IdOp" OtherKey="IdOp" Type="OPERATION" IsForeignKey="true" DeleteRule="CASCADE" />
+      <Association Name="UTILISATEUR_JOURNAL" Member="UTILISATEUR" ThisKey="IdU" OtherKey="IdU" Type="UTILISATEUR" IsForeignKey="true" DeleteRule="CASCADE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.LIEU" Member="LIEU">
+    <Type Name="LIEU">
+      <Column Name="IdLieu" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="NomLieu" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Association Name="LIEU_OPERATION_VEHICULE" Member="OPERATION_VEHICULE" ThisKey="IdLieu" OtherKey="IdLieu" Type="OPERATION_VEHICULE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.LIGNE_PROFORMA" Member="LIGNE_PROFORMA">
+    <Type Name="LIGNE_PROFORMA">
+      <Column Name="IdFP" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="IdJEF" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="StatutLP" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="PUEF" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="QTEEF" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="TauxTVA" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Association Name="ELEMENT_FACTURATION_LIGNE_PROFORMA" Member="ELEMENT_FACTURATION" ThisKey="IdJEF" OtherKey="IdJEF" Type="ELEMENT_FACTURATION" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+      <Association Name="PROFORMA_LIGNE_PROFORMA" Member="PROFORMA" ThisKey="IdFP" OtherKey="IdFP" Type="PROFORMA" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.LIGNE_SERVICE" Member="LIGNE_SERVICE">
+    <Type Name="LIGNE_SERVICE">
+      <Column Name="IdLS" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="IdOS" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CodeArticle" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Column Name="QLS" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="ULS" Type="System.String" DbType="NVarChar(5)" CanBeNull="true" />
+      <Column Name="PULS" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CodeTVA" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="AILS" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="CCArticle" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Association Name="LIGNE_SERVICE_ELEMENT_FACTURATION" Member="ELEMENT_FACTURATION" ThisKey="IdLS" OtherKey="IdLS" Type="ELEMENT_FACTURATION" />
+      <Association Name="ARTICLE_LIGNE_SERVICE" Member="ARTICLE" ThisKey="CodeArticle" OtherKey="CodeArticle" Type="ARTICLE" IsForeignKey="true" />
+      <Association Name="ORDRE_SERVICE_LIGNE_SERVICE" Member="ORDRE_SERVICE" ThisKey="IdOS" OtherKey="IdOS" Type="ORDRE_SERVICE" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.NAVIRE" Member="NAVIRE">
+    <Type Name="NAVIRE">
+      <Column Name="IdNav" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="CodeNav" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="NomNav" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="StatutNav" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="AINav" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="IdArm" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CodeRadio" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="CodeTracking" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="CodeNDS" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Association Name="NAVIRE_ESCALE" Member="ESCALE" ThisKey="IdNav" OtherKey="IdNav" Type="ESCALE" />
+      <Association Name="ARMATEUR_NAVIRE" Member="ARMATEUR" ThisKey="IdArm" OtherKey="IdArm" Type="ARMATEUR" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.OCCUPATION" Member="OCCUPATION">
+    <Type Name="OCCUPATION">
+      <Column Name="IdOccup" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DateDebut" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DateFin" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IdVeh" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdEmpl" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdTypeOp" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdCtr" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="EMPLACEMENT_OCCUPATION" Member="EMPLACEMENT" ThisKey="IdEmpl" OtherKey="IdEmpl" Type="EMPLACEMENT" IsForeignKey="true" DeleteRule="CASCADE" />
+      <Association Name="TYPE_OPERATION_OCCUPATION" Member="TYPE_OPERATION" ThisKey="IdTypeOp" OtherKey="IdTypeOp" Type="TYPE_OPERATION" IsForeignKey="true" DeleteRule="CASCADE" />
+      <Association Name="VEHICULE_OCCUPATION" Member="VEHICULE" ThisKey="IdVeh" OtherKey="IdVeh" Type="VEHICULE" IsForeignKey="true" DeleteRule="CASCADE" />
+      <Association Name="CONTENEUR_OCCUPATION" Member="CONTENEUR" ThisKey="IdCtr" OtherKey="IdCtr" Type="CONTENEUR" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.OPERATION" Member="OPERATION">
+    <Type Name="OPERATION">
+      <Column Name="IdOp" Type="System.Int16" DbType="SmallInt NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="NomOp" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Association Name="OPERATION_DROIT" Member="DROIT" ThisKey="IdOp" OtherKey="IdOp" Type="DROIT" />
+      <Association Name="OPERATION_JOURNAL" Member="JOURNAL" ThisKey="IdOp" OtherKey="IdOp" Type="JOURNAL" />
+    </Type>
+  </Table>
+  <Table Name="dbo.OPERATION_ARMATEUR" Member="OPERATION_ARMATEUR">
+    <Type Name="OPERATION_ARMATEUR">
+      <Column Name="IdEsc" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="IdTypeOp" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="QTE" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="Poids" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="Volume" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="Remarques" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Association Name="TYPE_OPERATION_OPERATION_ARMATEUR" Member="TYPE_OPERATION" ThisKey="IdTypeOp" OtherKey="IdTypeOp" Type="TYPE_OPERATION" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.OPERATION_CONTENEUR" Member="OPERATION_CONTENEUR">
+    <Type Name="OPERATION_CONTENEUR">
+      <Column Name="IdOpCtr" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="IdCtr" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdTypeOp" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DateOp" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="AIOp" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="IdU" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="TYPE_OPERATION_OPERATION_CONTENEUR" Member="TYPE_OPERATION" ThisKey="IdTypeOp" OtherKey="IdTypeOp" Type="TYPE_OPERATION" IsForeignKey="true" DeleteRule="CASCADE" />
+      <Association Name="CONTENEUR_OPERATION_CONTENEUR" Member="CONTENEUR" ThisKey="IdCtr" OtherKey="IdCtr" Type="CONTENEUR" IsForeignKey="true" DeleteRule="CASCADE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.OPERATION_CONVENTIONNEL" Member="OPERATION_CONVENTIONNEL">
+    <Type Name="OPERATION_CONVENTIONNEL">
+      <Column Name="IdOpGC" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="IdGC" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdTypeOp" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DateOp" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="AIOp" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="IdU" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="TYPE_OPERATION_OPERATION_CONVENTIONNEL" Member="TYPE_OPERATION" ThisKey="IdTypeOp" OtherKey="IdTypeOp" Type="TYPE_OPERATION" IsForeignKey="true" DeleteRule="CASCADE" />
+      <Association Name="CONVENTIONNEL_OPERATION_CONVENTIONNEL" Member="CONVENTIONNEL" ThisKey="IdGC" OtherKey="IdGC" Type="CONVENTIONNEL" IsForeignKey="true" DeleteRule="CASCADE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.OPERATION_VEHICULE" Member="OPERATION_VEHICULE">
+    <Type Name="OPERATION_VEHICULE">
+      <Column Name="IdOpVeh" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="IdVeh" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdTypeOp" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DateOp" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="AIOp" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="IdU" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdLieu" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="LIEU_OPERATION_VEHICULE" Member="LIEU" ThisKey="IdLieu" OtherKey="IdLieu" Type="LIEU" IsForeignKey="true" />
+      <Association Name="TYPE_OPERATION_OPERATION_VEHICULE" Member="TYPE_OPERATION" ThisKey="IdTypeOp" OtherKey="IdTypeOp" Type="TYPE_OPERATION" IsForeignKey="true" DeleteRule="CASCADE" />
+      <Association Name="VEHICULE_OPERATION_VEHICULE" Member="VEHICULE" ThisKey="IdVeh" OtherKey="IdVeh" Type="VEHICULE" IsForeignKey="true" DeleteRule="CASCADE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ORDRE_SERVICE" Member="ORDRE_SERVICE">
+    <Type Name="ORDRE_SERVICE">
+      <Column Name="IdOS" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DCrOS" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DPExOS" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DRExOS" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DClOS" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="LibOS" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="ObsOS" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="IdEsc" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdBL" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdVeh" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdCtr" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdGC" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdPO" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdPDN" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdPINV" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DVOS" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IdFsseur" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="StatutOS" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="IdMafi" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="ORDRE_SERVICE_LIGNE_SERVICE" Member="LIGNE_SERVICE" ThisKey="IdOS" OtherKey="IdOS" Type="LIGNE_SERVICE" />
+      <Association Name="ORDRE_SERVICE_ELEMENT_FACTURATION" Member="ELEMENT_FACTURATION" ThisKey="IdOS" OtherKey="IdOS" Type="ELEMENT_FACTURATION" />
+      <Association Name="ORDRE_SERVICE_NOTE" Member="NOTE" ThisKey="IdOS" OtherKey="IdOS" Type="NOTE" />
+      <Association Name="ESCALE_ORDRE_SERVICE" Member="ESCALE" ThisKey="IdEsc" OtherKey="IdEsc" Type="ESCALE" IsForeignKey="true" DeleteRule="CASCADE" />
+      <Association Name="CONNAISSEMENT_ORDRE_SERVICE" Member="CONNAISSEMENT" ThisKey="IdBL" OtherKey="IdBL" Type="CONNAISSEMENT" IsForeignKey="true" DeleteRule="CASCADE" />
+      <Association Name="VEHICULE_ORDRE_SERVICE" Member="VEHICULE" ThisKey="IdVeh" OtherKey="IdVeh" Type="VEHICULE" IsForeignKey="true" />
+      <Association Name="CONTENEUR_ORDRE_SERVICE" Member="CONTENEUR" ThisKey="IdCtr" OtherKey="IdCtr" Type="CONTENEUR" IsForeignKey="true" />
+      <Association Name="CONVENTIONNEL_ORDRE_SERVICE" Member="CONVENTIONNEL" ThisKey="IdGC" OtherKey="IdGC" Type="CONVENTIONNEL" IsForeignKey="true" />
+      <Association Name="FOURNISSEUR_ORDRE_SERVICE" Member="FOURNISSEUR" ThisKey="IdFsseur" OtherKey="IdFsseur" Type="FOURNISSEUR" IsForeignKey="true" />
+      <Association Name="MAFI_ORDRE_SERVICE" Member="MAFI" ThisKey="IdMafi" OtherKey="IdMafi" Type="MAFI" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.PARAMETRE" Member="PARAMETRE">
+    <Type Name="PARAMETRE">
+      <Column Name="NomAF" Type="System.String" DbType="NVarChar(100) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="CodeAF" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Column Name="Test" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.PAYEMENT" Member="PAYEMENT">
+    <Type Name="PAYEMENT">
+      <Column Name="IdPay" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DatePay" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ModePay" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Column Name="CCPay" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="MAPay" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="MRPay" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="AIPay" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="ObjetPay" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Column Name="IdBL" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdU" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdPayDRC" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdClient" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdPaySAP" Type="System.Int32" DbType="Int" CanBeNull="false" />
+      <Column Name="Caisse" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="NumCheque" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="RefVirement" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Banque" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Agence" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="NumCompte" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="IdBanque" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="StatutPay" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="RetIS" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Association Name="PAYEMENT_FACTURE" Member="FACTURE" ThisKey="IdPay" OtherKey="IdPay" Type="FACTURE" />
+      <Association Name="PAYEMENT_CONTENEUR" Member="CONTENEUR" ThisKey="IdPay" OtherKey="IdPay" Type="CONTENEUR" />
+      <Association Name="PAYEMENT_NOTE" Member="NOTE" ThisKey="IdPay" OtherKey="IdPay" Type="NOTE" />
+      <Association Name="PAYEMENT_LIGNE_PAYEMENT" Member="LIGNE_PAYEMENT" ThisKey="IdPay" OtherKey="IdPay" Type="LIGNE_PAYEMENT" />
+      <Association Name="UTILISATEUR_PAYEMENT" Member="UTILISATEUR" ThisKey="IdU" OtherKey="IdU" Type="UTILISATEUR" IsForeignKey="true" />
+      <Association Name="CLIENT_PAYEMENT" Member="CLIENT" ThisKey="IdClient" OtherKey="IdClient" Type="CLIENT" IsForeignKey="true" />
+      <Association Name="CONNAISSEMENT_PAYEMENT" Member="CONNAISSEMENT" ThisKey="IdBL" OtherKey="IdBL" Type="CONNAISSEMENT" IsForeignKey="true" />
+      <Association Name="BANQUE_PAYEMENT" Member="BANQUE1" ThisKey="IdBanque" OtherKey="IdBanque" Type="BANQUE" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.PORT" Member="PORT">
+    <Type Name="PORT">
+      <Column Name="CodePort" Type="System.String" DbType="NVarChar(50) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="NomPort" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="PaysPort" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="NomPortEN" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="CodeRadio" Type="System.String" DbType="NVarChar(5)" CanBeNull="true" />
+      <Association Name="PORT_MANIFESTE" Member="MANIFESTE" ThisKey="CodePort" OtherKey="CodePort" Type="MANIFESTE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TYPE_CONVENTIONNEL" Member="TYPE_CONVENTIONNEL">
+    <Type Name="TYPE_CONVENTIONNEL">
+      <Column Name="CodeTypeGC" Type="System.String" DbType="NVarChar(5) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="LibTypeGC" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="SensGC" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Association Name="TYPE_CONVENTIONNEL_CONVENTIONNEL" Member="CONVENTIONNEL" ThisKey="CodeTypeGC" OtherKey="TypeMGC" Type="CONVENTIONNEL" />
+      <Association Name="TYPE_CONVENTIONNEL_CONVENTIONNEL1" Member="CONVENTIONNEL1" ThisKey="CodeTypeGC" OtherKey="TypeCGC" Type="CONVENTIONNEL" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TYPE_OPERATION" Member="TYPE_OPERATION">
+    <Type Name="TYPE_OPERATION">
+      <Column Name="IdTypeOp" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="LibTypeOp" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="EltTypeOp" Type="System.String" DbType="NVarChar(2)" CanBeNull="true" />
+      <Column Name="Statut" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="IdArm" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CodeMvt" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Association Name="TYPE_OPERATION_OCCUPATION" Member="OCCUPATION" ThisKey="IdTypeOp" OtherKey="IdTypeOp" Type="OCCUPATION" />
+      <Association Name="TYPE_OPERATION_OPERATION_ARMATEUR" Member="OPERATION_ARMATEUR" ThisKey="IdTypeOp" OtherKey="IdTypeOp" Type="OPERATION_ARMATEUR" Cardinality="One" />
+      <Association Name="TYPE_OPERATION_OPERATION_CONTENEUR" Member="OPERATION_CONTENEUR" ThisKey="IdTypeOp" OtherKey="IdTypeOp" Type="OPERATION_CONTENEUR" />
+      <Association Name="TYPE_OPERATION_OPERATION_CONVENTIONNEL" Member="OPERATION_CONVENTIONNEL" ThisKey="IdTypeOp" OtherKey="IdTypeOp" Type="OPERATION_CONVENTIONNEL" />
+      <Association Name="TYPE_OPERATION_OPERATION_VEHICULE" Member="OPERATION_VEHICULE" ThisKey="IdTypeOp" OtherKey="IdTypeOp" Type="OPERATION_VEHICULE" />
+      <Association Name="TYPE_OPERATION_OPERATION_CONNAISSEMENT" Member="OPERATION_CONNAISSEMENT" ThisKey="IdTypeOp" OtherKey="IdTypeOp" Type="OPERATION_CONNAISSEMENT" Cardinality="One" />
+      <Association Name="TYPE_OPERATION_OPERATION_ESCALE" Member="OPERATION_ESCALE" ThisKey="IdTypeOp" OtherKey="IdTypeOp" Type="OPERATION_ESCALE" Cardinality="One" />
+      <Association Name="TYPE_OPERATION_OPERATION_MANIFESTE" Member="OPERATION_MANIFESTE" ThisKey="IdTypeOp" OtherKey="IdTypeOp" Type="OPERATION_MANIFESTE" Cardinality="One" />
+      <Association Name="TYPE_OPERATION_OPERATION_MAFI" Member="OPERATION_MAFI" ThisKey="IdTypeOp" OtherKey="IdTypeOp" Type="OPERATION_MAFI" />
+      <Association Name="TYPE_OPERATION_MOUVEMENT_TC" Member="MOUVEMENT_TC" ThisKey="IdTypeOp" OtherKey="IdTypeOp" Type="MOUVEMENT_TC" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TYPE_SINISTRE" Member="TYPE_SINISTRE">
+    <Type Name="TYPE_SINISTRE">
+      <Column Name="IdTypeSinistre" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="LibTypeSinistre" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="TypeMse" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TYPE_VEHICULE" Member="TYPE_VEHICULE">
+    <Type Name="TYPE_VEHICULE">
+      <Column Name="CodeTypeVeh" Type="System.String" DbType="NVarChar(1) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="LibTypeVeh" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="DeVol" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="LimVol" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.UTILISATEUR" Member="UTILISATEUR">
+    <Type Name="UTILISATEUR">
+      <Column Name="IdU" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="LU" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NU" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="MPU" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="EU" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="OA" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Column Name="AIU" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="IdAcc" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Caisse" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="IdParc" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="UTILISATEUR_BON_ENLEVEMENT" Member="BON_ENLEVEMENT" ThisKey="IdU" OtherKey="IdU" Type="BON_ENLEVEMENT" />
+      <Association Name="UTILISATEUR_DEMANDE_LIVRAISON" Member="DEMANDE_LIVRAISON" ThisKey="IdU" OtherKey="IdU" Type="DEMANDE_LIVRAISON" />
+      <Association Name="UTILISATEUR_DROIT" Member="DROIT" ThisKey="IdU" OtherKey="IdU" Type="DROIT" />
+      <Association Name="UTILISATEUR_JOURNAL" Member="JOURNAL" ThisKey="IdU" OtherKey="IdU" Type="JOURNAL" />
+      <Association Name="UTILISATEUR_PAYEMENT" Member="PAYEMENT" ThisKey="IdU" OtherKey="IdU" Type="PAYEMENT" />
+      <Association Name="UTILISATEUR_DEMANDE_REDUCTION" Member="DEMANDE_REDUCTION" ThisKey="IdU" OtherKey="IdU" Type="DEMANDE_REDUCTION" />
+      <Association Name="UTILISATEUR_EXTENSION_FRANCHISE" Member="EXTENSION_FRANCHISE" ThisKey="IdU" OtherKey="IdU" Type="EXTENSION_FRANCHISE" />
+      <Association Name="UTILISATEUR_OPERATION_CONNAISSEMENT" Member="OPERATION_CONNAISSEMENT" ThisKey="IdU" OtherKey="IdU" Type="OPERATION_CONNAISSEMENT" />
+      <Association Name="UTILISATEUR_DEMANDE_VISITE" Member="DEMANDE_VISITE" ThisKey="IdU" OtherKey="IdU" Type="DEMANDE_VISITE" />
+      <Association Name="UTILISATEUR_HIST_CONNAISSEMENT" Member="HIST_CONNAISSEMENT" ThisKey="IdU" OtherKey="IdU" Type="HIST_CONNAISSEMENT" />
+      <Association Name="UTILISATEUR_OPERATION_ESCALE" Member="OPERATION_ESCALE" ThisKey="IdU" OtherKey="IdU" Type="OPERATION_ESCALE" />
+      <Association Name="UTILISATEUR_OPERATION_MANIFESTE" Member="OPERATION_MANIFESTE" ThisKey="IdU" OtherKey="IdU" Type="OPERATION_MANIFESTE" />
+      <Association Name="UTILISATEUR_NOTE" Member="NOTE" ThisKey="IdU" OtherKey="IdU" Type="NOTE" />
+      <Association Name="UTILISATEUR_MOUVEMENT_TC" Member="MOUVEMENT_TC" ThisKey="IdU" OtherKey="IdUser" Type="MOUVEMENT_TC" />
+      <Association Name="ACCONIER_UTILISATEUR" Member="ACCONIER" ThisKey="IdAcc" OtherKey="IdAcc" Type="ACCONIER" IsForeignKey="true" />
+      <Association Name="PARC_UTILISATEUR" Member="PARC" ThisKey="IdParc" OtherKey="IdParc" Type="PARC" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ESCALE" Member="ESCALE">
+    <Type Name="ESCALE">
+      <Column Name="IdEsc" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="NumEsc" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="NumVoySCR" Storage="_NumVoy" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="DCEsc" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DPAEsc" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DRAEsc" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="NbrePManEsc" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Column Name="RGPEsc" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="RREsc" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="RAEsc" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="RCEsc" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="AIEsc" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="SOP" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="IdNav" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdArm" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdAcc" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="StatEsc" Type="System.String" DbType="NVarChar(25)" CanBeNull="true" />
+      <Column Name="IdFArm" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DateFArm" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DDEsc" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="NomCpt" Type="System.String" DbType="NVarChar(70)" CanBeNull="true" />
+      <Column Name="DDechEsc" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="SailingDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="NumManifestSydonia" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="NumVoyDIT" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="FIntern" Type="System.String" DbType="Char(1)" CanBeNull="true" />
+      <Column Name="IdUserFIntern" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="ESCALE_CUBAGE" Member="CUBAGE" ThisKey="IdEsc" OtherKey="IdEsc" Type="CUBAGE" />
+      <Association Name="ESCALE_ORDRE_SERVICE" Member="ORDRE_SERVICE" ThisKey="IdEsc" OtherKey="IdEsc" Type="ORDRE_SERVICE" />
+      <Association Name="ESCALE_MANIFESTE" Member="MANIFESTE" ThisKey="IdEsc" OtherKey="IdEsc" Type="MANIFESTE" />
+      <Association Name="ESCALE_HIST_CONNAISSEMENT" Member="HIST_CONNAISSEMENT" ThisKey="IdEsc" OtherKey="IdEsc" Type="HIST_CONNAISSEMENT" />
+      <Association Name="ESCALE_OPERATION_ESCALE" Member="OPERATION_ESCALE" ThisKey="IdEsc" OtherKey="IdEsc" Type="OPERATION_ESCALE" Cardinality="One" />
+      <Association Name="ESCALE_ELEMENT_FACTURATION" Member="ELEMENT_FACTURATION" ThisKey="IdEsc" OtherKey="IdEsc" Type="ELEMENT_FACTURATION" />
+      <Association Name="ESCALE_CONNAISSEMENT" Member="CONNAISSEMENT" ThisKey="IdEsc" OtherKey="IdEsc" Type="CONNAISSEMENT" />
+      <Association Name="ESCALE_VEHICULE" Member="VEHICULE" ThisKey="IdEsc" OtherKey="IdEsc" Type="VEHICULE" />
+      <Association Name="ESCALE_CONTENEUR" Member="CONTENEUR" ThisKey="IdEsc" OtherKey="IdEsc" Type="CONTENEUR" />
+      <Association Name="ESCALE_CONVENTIONNEL" Member="CONVENTIONNEL" ThisKey="IdEsc" OtherKey="IdEsc" Type="CONVENTIONNEL" />
+      <Association Name="ESCALE_MAFI" Member="MAFI" ThisKey="IdEsc" OtherKey="IdEsc" Type="MAFI" />
+      <Association Name="ESCALE_NOTE" Member="NOTE" ThisKey="IdEsc" OtherKey="IdEsc" Type="NOTE" />
+      <Association Name="ESCALE_FACTURE_ARMATEUR" Member="FACTURE_ARMATEUR" ThisKey="IdEsc" OtherKey="IdEsc" Type="FACTURE_ARMATEUR" />
+      <Association Name="ESCALE_MOUVEMENT_TC" Member="MOUVEMENT_TC" ThisKey="IdEsc" OtherKey="IdEsc" Type="MOUVEMENT_TC" />
+      <Association Name="ESCALE_FACTURE_SOCOMAR" Member="FACTURE_SOCOMAR" ThisKey="IdEsc" OtherKey="IdEsc" Type="FACTURE_SOCOMAR" />
+      <Association Name="ACCONIER_ESCALE" Member="ACCONIER" ThisKey="IdAcc" OtherKey="IdAcc" Type="ACCONIER" IsForeignKey="true" DeleteRule="CASCADE" />
+      <Association Name="ARMATEUR_ESCALE" Member="ARMATEUR" ThisKey="IdArm" OtherKey="IdArm" Type="ARMATEUR" IsForeignKey="true" DeleteRule="CASCADE" />
+      <Association Name="NAVIRE_ESCALE" Member="NAVIRE" ThisKey="IdNav" OtherKey="IdNav" Type="NAVIRE" IsForeignKey="true" DeleteRule="CASCADE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CLIENT" Member="CLIENT">
+    <Type Name="CLIENT">
+      <Column Name="IdClient" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="CodeClient" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NomClient" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="AdrClient" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="EmailClient" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="TelClient" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="CCClient" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="CodeTVA" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="TypeClient" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="StatutClient" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="NumContrib" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumRegCommerce" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Association Name="CLIENT_PAYEMENT" Member="PAYEMENT" ThisKey="IdClient" OtherKey="IdClient" Type="PAYEMENT" />
+      <Association Name="CLIENT_HIST_CONNAISSEMENT" Member="HIST_CONNAISSEMENT" ThisKey="IdClient" OtherKey="IdClient" Type="HIST_CONNAISSEMENT" />
+      <Association Name="CLIENT_AVOIR" Member="AVOIR" ThisKey="IdClient" OtherKey="IdClient" Type="AVOIR" />
+      <Association Name="CLIENT_CONNAISSEMENT" Member="CONNAISSEMENT" ThisKey="IdClient" OtherKey="IdClient" Type="CONNAISSEMENT" />
+      <Association Name="CLIENT_PROFORMA" Member="PROFORMA" ThisKey="IdClient" OtherKey="IdClient" Type="PROFORMA" />
+      <Association Name="CLIENT_FACTURE" Member="FACTURE" ThisKey="IdClient" OtherKey="IdClient" Type="FACTURE" />
+      <Association Name="CODE_TVA_CLIENT" Member="CODE_TVA" ThisKey="CodeTVA" OtherKey="CodeTVA" Type="CODE_TVA" IsForeignKey="true" />
+      <Association Name="AVOIR_SPOT_CLIENT" Member="AVOIR_SPOT" ThisKey="IdClient" OtherKey="IdClient" Type="AVOIR_SPOT" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.DEMANDE_REDUCTION" Member="DEMANDE_REDUCTION">
+    <Type Name="DEMANDE_REDUCTION">
+      <Column Name="IdDDR" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DateDDR" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DatevDDR" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="LibDDR" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="MHT" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TauxTVA" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Column Name="ObsDDR" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="CodeArticle" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Column Name="IdBL" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdU" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdUV" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="AIVDDR" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="Pourcent" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="StatutRed" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Association Name="DEMANDE_REDUCTION_NOTE" Member="NOTE" ThisKey="IdDDR" OtherKey="IdDDR" Type="NOTE" />
+      <Association Name="ARTICLE_DEMANDE_REDUCTION" Member="ARTICLE" ThisKey="CodeArticle" OtherKey="CodeArticle" Type="ARTICLE" IsForeignKey="true" DeleteRule="CASCADE" />
+      <Association Name="UTILISATEUR_DEMANDE_REDUCTION" Member="UTILISATEUR" ThisKey="IdU" OtherKey="IdU" Type="UTILISATEUR" IsForeignKey="true" />
+      <Association Name="CONNAISSEMENT_DEMANDE_REDUCTION" Member="CONNAISSEMENT" ThisKey="IdBL" OtherKey="IdBL" Type="CONNAISSEMENT" IsForeignKey="true" DeleteRule="CASCADE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TYPE_CONTENEUR" Member="TYPE_CONTENEUR">
+    <Type Name="TYPE_CONTENEUR">
+      <Column Name="CodeTypeCtr" Type="System.String" DbType="NVarChar(20) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="LibTypeCtr" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="LimPoids" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Column Name="PUDLA" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="PUCMR" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="PUINT" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="TYPE_CONTENEUR_CONTENEUR" Member="CONTENEUR" ThisKey="CodeTypeCtr" OtherKey="TypeMCtr" Type="CONTENEUR" />
+      <Association Name="TYPE_CONTENEUR_DISPOSITION_CONTENEUR" Member="DISPOSITION_CONTENEUR" ThisKey="CodeTypeCtr" OtherKey="TypeCtr" Type="DISPOSITION_CONTENEUR" />
+    </Type>
+  </Table>
+  <Table Name="dbo.EXTENSION_FRANCHISE" Member="EXTENSION_FRANCHISE">
+    <Type Name="EXTENSION_FRANCHISE">
+      <Column Name="IdDEXT" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DateDEXT" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DatevDEXT" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="NbreSej" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="NbreStat" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="NbreSures" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="NbreDet" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ObsDEXT" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="IdBL" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdU" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdUV" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="AIVDEXT" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Association Name="EXTENSION_FRANCHISE_NOTE" Member="NOTE" ThisKey="IdDEXT" OtherKey="IdDEXT" Type="NOTE" />
+      <Association Name="UTILISATEUR_EXTENSION_FRANCHISE" Member="UTILISATEUR" ThisKey="IdU" OtherKey="IdU" Type="UTILISATEUR" IsForeignKey="true" />
+      <Association Name="CONNAISSEMENT_EXTENSION_FRANCHISE" Member="CONNAISSEMENT" ThisKey="IdBL" OtherKey="IdBL" Type="CONNAISSEMENT" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.MANIFESTE" Member="MANIFESTE">
+    <Type Name="MANIFESTE">
+      <Column Name="IdMan" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="NPBLMan" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Column Name="NPVMan" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Column Name="NPCMan" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Column Name="NPGCMan" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Column Name="DCMan" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="AIMan" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="FormatMan" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Column Name="CAFMan" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="StatutMan" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="IdEsc" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CodePort" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="DVMan" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="NPMMan" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Association Name="MANIFESTE_HIST_CONNAISSEMENT" Member="HIST_CONNAISSEMENT" ThisKey="IdMan" OtherKey="IdMan" Type="HIST_CONNAISSEMENT" />
+      <Association Name="MANIFESTE_CONNAISSEMENT" Member="CONNAISSEMENT" ThisKey="IdMan" OtherKey="IdMan" Type="CONNAISSEMENT" />
+      <Association Name="MANIFESTE_VEHICULE" Member="VEHICULE" ThisKey="IdMan" OtherKey="IdMan" Type="VEHICULE" />
+      <Association Name="MANIFESTE_CONTENEUR" Member="CONTENEUR" ThisKey="IdMan" OtherKey="IdMan" Type="CONTENEUR" />
+      <Association Name="MANIFESTE_CONVENTIONNEL" Member="CONVENTIONNEL" ThisKey="IdMan" OtherKey="IdMan" Type="CONVENTIONNEL" />
+      <Association Name="MANIFESTE_MAFI" Member="MAFI" ThisKey="IdMan" OtherKey="IdMan" Type="MAFI" />
+      <Association Name="MANIFESTE_NOTE" Member="NOTE" ThisKey="IdMan" OtherKey="IdMan" Type="NOTE" />
+      <Association Name="ESCALE_MANIFESTE" Member="ESCALE" ThisKey="IdEsc" OtherKey="IdEsc" Type="ESCALE" IsForeignKey="true" />
+      <Association Name="PORT_MANIFESTE" Member="PORT" ThisKey="CodePort" OtherKey="CodePort" Type="PORT" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.OPERATION_CONNAISSEMENT" Member="OPERATION_CONNAISSEMENT">
+    <Type Name="OPERATION_CONNAISSEMENT">
+      <Column Name="IdBL" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="IdTypeOp" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="DateOp" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="AIOp" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="IdU" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="UTILISATEUR_OPERATION_CONNAISSEMENT" Member="UTILISATEUR" ThisKey="IdU" OtherKey="IdU" Type="UTILISATEUR" IsForeignKey="true" />
+      <Association Name="TYPE_OPERATION_OPERATION_CONNAISSEMENT" Member="TYPE_OPERATION" ThisKey="IdTypeOp" OtherKey="IdTypeOp" Type="TYPE_OPERATION" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TYPE_VISITE" Member="TYPE_VISITE">
+    <Type Name="TYPE_VISITE">
+      <Column Name="IdTypeVisite" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="LibTypeVisite" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Association Name="TYPE_VISITE_DEMANDE_VISITE" Member="DEMANDE_VISITE" ThisKey="IdTypeVisite" OtherKey="IdTypeVisite" Type="DEMANDE_VISITE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.VISITE_VEHICULE" Member="VISITE_VEHICULE">
+    <Type Name="VISITE_VEHICULE">
+      <Column Name="IdDV" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="IdVeh" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Association Name="DEMANDE_VISITE_VISITE_VEHICULE" Member="DEMANDE_VISITE" ThisKey="IdDV" OtherKey="IdDV" Type="DEMANDE_VISITE" IsForeignKey="true" />
+      <Association Name="VEHICULE_VISITE_VEHICULE" Member="VEHICULE" ThisKey="IdVeh" OtherKey="IdVeh" Type="VEHICULE" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.DEMANDE_VISITE" Member="DEMANDE_VISITE">
+    <Type Name="DEMANDE_VISITE">
+      <Column Name="IdDV" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DateDV" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DVDV" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="AIDV" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="AIVDV" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="IdBL" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdU" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdUV" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdVeh" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdTypeVisite" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DateBadge" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DateDebut" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DateFin" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="DEMANDE_VISITE_VISITE_VEHICULE" Member="VISITE_VEHICULE" ThisKey="IdDV" OtherKey="IdDV" Type="VISITE_VEHICULE" Cardinality="One" />
+      <Association Name="DEMANDE_VISITE_NOTE" Member="NOTE" ThisKey="IdDV" OtherKey="IdDV" Type="NOTE" />
+      <Association Name="TYPE_VISITE_DEMANDE_VISITE" Member="TYPE_VISITE" ThisKey="IdTypeVisite" OtherKey="IdTypeVisite" Type="TYPE_VISITE" IsForeignKey="true" />
+      <Association Name="UTILISATEUR_DEMANDE_VISITE" Member="UTILISATEUR" ThisKey="IdU" OtherKey="IdU" Type="UTILISATEUR" IsForeignKey="true" />
+      <Association Name="CONNAISSEMENT_DEMANDE_VISITE" Member="CONNAISSEMENT" ThisKey="IdBL" OtherKey="IdBL" Type="CONNAISSEMENT" IsForeignKey="true" DeleteRule="CASCADE" />
+      <Association Name="VEHICULE_DEMANDE_VISITE" Member="VEHICULE" ThisKey="IdVeh" OtherKey="IdVeh" Type="VEHICULE" IsForeignKey="true" DeleteRule="CASCADE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.HIST_CONNAISSEMENT" Member="HIST_CONNAISSEMENT">
+    <Type Name="HIST_CONNAISSEMENT">
+      <Column Name="IdHistBL" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="IdBL" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="NumBL" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="LPBL" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="DPBL" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="BLGN" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="BLIL" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="BLSocar" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="BLFO" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="BLLT" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="CCBL" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="CCBLMontant" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="BlBloque" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="BLER" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="BLERNote" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="ConsigneeBL" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="AdresseBL" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="NotifyBL" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="StatutBL" Type="System.String" DbType="NVarChar(15)" CanBeNull="true" />
+      <Column Name="IdClient" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdMan" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdEsc" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="EmailBL" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="SensBL" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="BLDette" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="DetteMontant" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="BLBloqueNote" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="DestBL" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
+      <Column Name="IdU" Type="System.Int32" DbType="Int" CanBeNull="false" />
+      <Column Name="NumSocar" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Association Name="ESCALE_HIST_CONNAISSEMENT" Member="ESCALE" ThisKey="IdEsc" OtherKey="IdEsc" Type="ESCALE" IsForeignKey="true" />
+      <Association Name="MANIFESTE_HIST_CONNAISSEMENT" Member="MANIFESTE" ThisKey="IdMan" OtherKey="IdMan" Type="MANIFESTE" IsForeignKey="true" />
+      <Association Name="CLIENT_HIST_CONNAISSEMENT" Member="CLIENT" ThisKey="IdClient" OtherKey="IdClient" Type="CLIENT" IsForeignKey="true" />
+      <Association Name="UTILISATEUR_HIST_CONNAISSEMENT" Member="UTILISATEUR" ThisKey="IdU" OtherKey="IdU" Type="UTILISATEUR" IsForeignKey="true" />
+      <Association Name="CONNAISSEMENT_HIST_CONNAISSEMENT" Member="CONNAISSEMENT" ThisKey="IdBL" OtherKey="IdBL" Type="CONNAISSEMENT" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.OPERATION_ESCALE" Member="OPERATION_ESCALE">
+    <Type Name="OPERATION_ESCALE">
+      <Column Name="IdEsc" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="IdTypeOp" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="DateOp" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="AIOp" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="IdU" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="UTILISATEUR_OPERATION_ESCALE" Member="UTILISATEUR" ThisKey="IdU" OtherKey="IdU" Type="UTILISATEUR" IsForeignKey="true" />
+      <Association Name="TYPE_OPERATION_OPERATION_ESCALE" Member="TYPE_OPERATION" ThisKey="IdTypeOp" OtherKey="IdTypeOp" Type="TYPE_OPERATION" IsForeignKey="true" />
+      <Association Name="ESCALE_OPERATION_ESCALE" Member="ESCALE" ThisKey="IdEsc" OtherKey="IdEsc" Type="ESCALE" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.OPERATION_MANIFESTE" Member="OPERATION_MANIFESTE">
+    <Type Name="OPERATION_MANIFESTE">
+      <Column Name="IdMan" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="IdTypeOp" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="DateOp" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="AIOp" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="IdU" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="UTILISATEUR_OPERATION_MANIFESTE" Member="UTILISATEUR" ThisKey="IdU" OtherKey="IdU" Type="UTILISATEUR" IsForeignKey="true" />
+      <Association Name="TYPE_OPERATION_OPERATION_MANIFESTE" Member="TYPE_OPERATION" ThisKey="IdTypeOp" OtherKey="IdTypeOp" Type="TYPE_OPERATION" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.LIGNE_AVOIR" Member="LIGNE_AVOIR">
+    <Type Name="LIGNE_AVOIR">
+      <Column Name="IdFA" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="IdJEF" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="StatutLP" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="PUEF" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="QTEEF" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="TauxTVA" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Association Name="ELEMENT_FACTURATION_LIGNE_AVOIR" Member="ELEMENT_FACTURATION" ThisKey="IdJEF" OtherKey="IdJEF" Type="ELEMENT_FACTURATION" IsForeignKey="true" />
+      <Association Name="AVOIR_LIGNE_AVOIR" Member="AVOIR" ThisKey="IdFA" OtherKey="IdFA" Type="AVOIR" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CUBAGE_VEHICULE" Member="CUBAGE_VEHICULE">
+    <Type Name="CUBAGE_VEHICULE">
+      <Column Name="IdCubage" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="IdVeh" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="LongAVeh" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Column Name="LargAVeh" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Column Name="HautAVeh" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Column Name="VolAVeh" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Column Name="LongCVeh" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Column Name="LargCVeh" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Column Name="HautCVeh" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Column Name="VolCVeh" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Column Name="TypeCVeh" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="DateCV" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="AICB" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="DateVal" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="CUBAGE_CUBAGE_VEHICULE" Member="CUBAGE" ThisKey="IdCubage" OtherKey="IdCubage" Type="CUBAGE" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+      <Association Name="VEHICULE_CUBAGE_VEHICULE" Member="VEHICULE" ThisKey="IdVeh" OtherKey="IdVeh" Type="VEHICULE" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ELEMENT_FACTURATION" Member="ELEMENT_FACTURATION">
+    <Type Name="ELEMENT_FACTURATION">
+      <Column Name="IdJEF" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DateJEF" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="EltFacture" Type="System.String" DbType="NVarChar(5)" CanBeNull="true" />
+      <Column Name="LibEF" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="IdLP" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="PUEF" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="QTEEF" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="UnitEF" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="PTDIT" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="IdEsc" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdMan" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdBL" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdVeh" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdCtr" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdGC" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdOS" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdLS" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CodeTVA" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="TauxTVA" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Column Name="CCArticle" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="CCCP" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="IdFD" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdDDR" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DestEF" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="DelaiEF" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="StatutEF" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="IdFactDIT" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdFA" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdMafi" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="PUEFBase" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="CodeArticle" Type="System.String" DbType="varchar(10)" CanBeNull="true" />
+      <Column Name="IdFSoc" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="REF_IDJEF" Type="System.Int32" DbType="INT" CanBeNull="true" />
+      <Column Name="ID_QUOTATION" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Association Name="ELEMENT_FACTURATION_LIGNE_PROFORMA" Member="LIGNE_PROFORMA" ThisKey="IdJEF" OtherKey="IdJEF" Type="LIGNE_PROFORMA" />
+      <Association Name="ELEMENT_FACTURATION_LIGNE_AVOIR" Member="LIGNE_AVOIR" ThisKey="IdJEF" OtherKey="IdJEF" Type="LIGNE_AVOIR" />
+      <Association Name="ELEMENT_FACTURATION_LIGNE_FACTURE_ARMATEUR" Member="LIGNE_FACTURE_ARMATEUR" ThisKey="IdJEF" OtherKey="IdJEF" Type="LIGNE_FACTURE_ARMATEUR" Cardinality="One" />
+      <Association Name="ELEMENT_FACTURATION_LIGNE_FACTURE_SOCOMAR" Member="LIGNE_FACTURE_SOCOMAR" ThisKey="IdJEF" OtherKey="IdJEF" Type="LIGNE_FACTURE_SOCOMAR" />
+      <Association Name="LIGNE_SERVICE_ELEMENT_FACTURATION" Member="LIGNE_SERVICE" ThisKey="IdLS" OtherKey="IdLS" Type="LIGNE_SERVICE" IsForeignKey="true" DeleteRule="CASCADE" />
+      <Association Name="CODE_TVA_ELEMENT_FACTURATION" Member="CODE_TVA" ThisKey="CodeTVA" OtherKey="CodeTVA" Type="CODE_TVA" IsForeignKey="true" />
+      <Association Name="CONNAISSEMENT_ELEMENT_FACTURATION" Member="CONNAISSEMENT" ThisKey="IdBL" OtherKey="IdBL" Type="CONNAISSEMENT" IsForeignKey="true" DeleteRule="CASCADE" />
+      <Association Name="VEHICULE_ELEMENT_FACTURATION" Member="VEHICULE" ThisKey="IdVeh" OtherKey="IdVeh" Type="VEHICULE" IsForeignKey="true" />
+      <Association Name="CONTENEUR_ELEMENT_FACTURATION" Member="CONTENEUR" ThisKey="IdCtr" OtherKey="IdCtr" Type="CONTENEUR" IsForeignKey="true" />
+      <Association Name="CONVENTIONNEL_ELEMENT_FACTURATION" Member="CONVENTIONNEL" ThisKey="IdGC" OtherKey="IdGC" Type="CONVENTIONNEL" IsForeignKey="true" />
+      <Association Name="LIGNE_PRIX_ELEMENT_FACTURATION" Member="LIGNE_PRIX" ThisKey="IdLP" OtherKey="IdLP" Type="LIGNE_PRIX" IsForeignKey="true" />
+      <Association Name="ORDRE_SERVICE_ELEMENT_FACTURATION" Member="ORDRE_SERVICE" ThisKey="IdOS" OtherKey="IdOS" Type="ORDRE_SERVICE" IsForeignKey="true" />
+      <Association Name="ESCALE_ELEMENT_FACTURATION" Member="ESCALE" ThisKey="IdEsc" OtherKey="IdEsc" Type="ESCALE" IsForeignKey="true" />
+      <Association Name="MAFI_ELEMENT_FACTURATION" Member="MAFI" ThisKey="IdMafi" OtherKey="IdMafi" Type="MAFI" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.SINISTRE" Member="SINISTRE">
+    <Type Name="SINISTRE">
+      <Column Name="IdSinistre" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DateSinistre" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DescSinistre" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="IdTypeSinistre" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdVeh" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdCtr" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdGC" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="S" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="Be" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="R" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="Br" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="T" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="M" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="Ru" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="Re" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="D" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="IdOpSinistre" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="OPERATION_SINISTRE_SINISTRE" Member="OPERATION_SINISTRE" ThisKey="IdOpSinistre" OtherKey="IdOpSinistre" Type="OPERATION_SINISTRE" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.OPERATION_SINISTRE" Member="OPERATION_SINISTRE">
+    <Type Name="OPERATION_SINISTRE">
+      <Column Name="IdOpSinistre" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DateSinistre" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="AISinistre" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="IdVeh" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdU" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="OPERATION_SINISTRE_SINISTRE" Member="SINISTRE" ThisKey="IdOpSinistre" OtherKey="IdOpSinistre" Type="SINISTRE" />
+      <Association Name="VEHICULE_OPERATION_SINISTRE" Member="VEHICULE" ThisKey="IdVeh" OtherKey="IdVeh" Type="VEHICULE" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.AVOIR" Member="AVOIR">
+    <Type Name="AVOIR">
+      <Column Name="IdFA" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DCFA" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DVFA" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="AIFA" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="AIVFA" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="StatutFA" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="MHT" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="MTVA" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="MTTC" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdBL" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdArm" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdU" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdUV" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdClient" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdFD" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdDocSAP" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ClientAvoir" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="TypeAvoir" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="TypeFacture" Type="System.String" DbType="Varchar(10)" CanBeNull="true" />
+      <Column Name="IdPay" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Association Name="AVOIR_LIGNE_AVOIR" Member="LIGNE_AVOIR" ThisKey="IdFA" OtherKey="IdFA" Type="LIGNE_AVOIR" />
+      <Association Name="CLIENT_AVOIR" Member="CLIENT" ThisKey="IdClient" OtherKey="IdClient" Type="CLIENT" IsForeignKey="true" />
+      <Association Name="CONNAISSEMENT_AVOIR" Member="CONNAISSEMENT" ThisKey="IdBL" OtherKey="IdBL" Type="CONNAISSEMENT" IsForeignKey="true" />
+      <Association Name="FACTURE_AVOIR" Member="FACTURE" ThisKey="IdFD" OtherKey="IdFD" Type="FACTURE" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CONNAISSEMENT" Member="CONNAISSEMENT">
+    <Type Name="CONNAISSEMENT">
+      <Column Name="IdBL" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="NumBL" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="NumBooking" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="DCBL" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="EtatBL" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="LPBL" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="DPBL" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="LDBL" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="BLGN" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="BLIL" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="BLSocar" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="BLFO" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="BLLT" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="CCBL" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="CCBLMontant" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="LPFret" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="BlBloque" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="BLER" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="BLERNote" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="TypeBL" Type="System.String" DbType="NVarChar(2)" CanBeNull="true" />
+      <Column Name="DescBL" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="ConsigneeBL" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="AdresseBL" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="ConsigneeBooking" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="AdresseConsignee" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="AdresseNotify" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="EmailNotify" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="TelNotify" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="NotifyBL" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="StatutBL" Type="System.String" DbType="NVarChar(15)" CanBeNull="true" />
+      <Column Name="IdClient" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdMan" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdEsc" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdAcc" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CodeTVA" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="NomManBL" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="CNIManBL" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="DDCNIManBL" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="LDCNIManBL" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="PhoneManBL" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="EmailBL" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="NContribBL" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="DateAccBL" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="AIBL" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="SensBL" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="PoidsBL" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="VolBL" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="NumCtrBL" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="NumDEBL" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="NumBESCBL" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="NumHSCode" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="DCBLI" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DVCBLI" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="AIVCBLI" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="DCLBL" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="AIDCLBL" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="BLDette" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="DetteMontant" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="BLBloqueNote" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="DVBL" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="AIBLVal" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="DestBL" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
+      <Column Name="LastModif" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IdU" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="NumSocar" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="NomCharger" Type="System.String" DbType="NVarChar(35)" CanBeNull="true" />
+      <Column Name="AdresseCharger" Type="System.String" DbType="NVarChar(175)" CanBeNull="true" />
+      <Column Name="Payor" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="ClearAgent" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="NoSEPBC" Storage="_NoSPEBC" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="NotifyBL2" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="AdresseNotify2" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="EmailNotify2" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="TelNotify2" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Association Name="CONNAISSEMENT_BON_ENLEVEMENT" Member="BON_ENLEVEMENT" ThisKey="IdBL" OtherKey="IdBL" Type="BON_ENLEVEMENT" />
+      <Association Name="CONNAISSEMENT_DEMANDE_CAUTION" Member="DEMANDE_CAUTION" ThisKey="IdBL" OtherKey="IdBL" Type="DEMANDE_CAUTION" />
+      <Association Name="CONNAISSEMENT_DEMANDE_LIVRAISON" Member="DEMANDE_LIVRAISON" ThisKey="IdBL" OtherKey="IdBL" Type="DEMANDE_LIVRAISON" />
+      <Association Name="CONNAISSEMENT_FACTURE_DIT" Member="FACTURE_DIT" ThisKey="IdBL" OtherKey="IdBL" Type="FACTURE_DIT" />
+      <Association Name="CONNAISSEMENT_ORDRE_SERVICE" Member="ORDRE_SERVICE" ThisKey="IdBL" OtherKey="IdBL" Type="ORDRE_SERVICE" />
+      <Association Name="CONNAISSEMENT_PAYEMENT" Member="PAYEMENT" ThisKey="IdBL" OtherKey="IdBL" Type="PAYEMENT" />
+      <Association Name="CONNAISSEMENT_DEMANDE_REDUCTION" Member="DEMANDE_REDUCTION" ThisKey="IdBL" OtherKey="IdBL" Type="DEMANDE_REDUCTION" />
+      <Association Name="CONNAISSEMENT_EXTENSION_FRANCHISE" Member="EXTENSION_FRANCHISE" ThisKey="IdBL" OtherKey="IdBL" Type="EXTENSION_FRANCHISE" />
+      <Association Name="CONNAISSEMENT_DEMANDE_VISITE" Member="DEMANDE_VISITE" ThisKey="IdBL" OtherKey="IdBL" Type="DEMANDE_VISITE" />
+      <Association Name="CONNAISSEMENT_HIST_CONNAISSEMENT" Member="HIST_CONNAISSEMENT" ThisKey="IdBL" OtherKey="IdBL" Type="HIST_CONNAISSEMENT" />
+      <Association Name="CONNAISSEMENT_ELEMENT_FACTURATION" Member="ELEMENT_FACTURATION" ThisKey="IdBL" OtherKey="IdBL" Type="ELEMENT_FACTURATION" />
+      <Association Name="CONNAISSEMENT_AVOIR" Member="AVOIR" ThisKey="IdBL" OtherKey="IdBL" Type="AVOIR" />
+      <Association Name="CONNAISSEMENT_PROFORMA" Member="PROFORMA" ThisKey="IdBL" OtherKey="IdBL" Type="PROFORMA" />
+      <Association Name="CONNAISSEMENT_VEHICULE" Member="VEHICULE" ThisKey="IdBL" OtherKey="IdBL" Type="VEHICULE" />
+      <Association Name="CONNAISSEMENT_CONTENEUR" Member="CONTENEUR" ThisKey="IdBL" OtherKey="IdBL" Type="CONTENEUR" />
+      <Association Name="CONNAISSEMENT_CONVENTIONNEL" Member="CONVENTIONNEL" ThisKey="IdBL" OtherKey="IdBL" Type="CONVENTIONNEL" />
+      <Association Name="CONNAISSEMENT_BON_SORTIE" Member="BON_SORTIE" ThisKey="IdBL" OtherKey="IdBL" Type="BON_SORTIE" />
+      <Association Name="CONNAISSEMENT_MAFI" Member="MAFI" ThisKey="IdBL" OtherKey="IdBL" Type="MAFI" />
+      <Association Name="CONNAISSEMENT_NOTE" Member="NOTE" ThisKey="IdBL" OtherKey="IdBL" Type="NOTE" />
+      <Association Name="CONNAISSEMENT_MOUVEMENT_TC" Member="MOUVEMENT_TC" ThisKey="IdBL" OtherKey="IdBL" Type="MOUVEMENT_TC" />
+      <Association Name="CONNAISSEMENT_DISPOSITION_CONTENEUR" Member="DISPOSITION_CONTENEUR" ThisKey="IdBL" OtherKey="IdBooking" Type="DISPOSITION_CONTENEUR" />
+      <Association Name="ESCALE_CONNAISSEMENT" Member="ESCALE" ThisKey="IdEsc" OtherKey="IdEsc" Type="ESCALE" IsForeignKey="true" />
+      <Association Name="MANIFESTE_CONNAISSEMENT" Member="MANIFESTE" ThisKey="IdMan" OtherKey="IdMan" Type="MANIFESTE" IsForeignKey="true" />
+      <Association Name="CODE_TVA_CONNAISSEMENT" Member="CODE_TVA" ThisKey="CodeTVA" OtherKey="CodeTVA" Type="CODE_TVA" IsForeignKey="true" />
+      <Association Name="CLIENT_CONNAISSEMENT" Member="CLIENT" ThisKey="IdClient" OtherKey="IdClient" Type="CLIENT" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.PROFORMA" Member="PROFORMA">
+    <Type Name="PROFORMA">
+      <Column Name="IdFP" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="RefAS400" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="DCFP" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DVFP" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="AIFP" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="AIVFP" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="StatutFP" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="MHT" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="MTVA" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="MTTC" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdBL" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdArm" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdU" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdUV" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdClient" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ClientFacture" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="MHT_EF" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="MTVA_EF" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="MTTC_EF" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="PROMO" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Association Name="PROFORMA_LIGNE_PROFORMA" Member="LIGNE_PROFORMA" ThisKey="IdFP" OtherKey="IdFP" Type="LIGNE_PROFORMA" />
+      <Association Name="PROFORMA_FACTURE" Member="FACTURE" ThisKey="IdFP" OtherKey="IdFP" Type="FACTURE" />
+      <Association Name="PROFORMA_NOTE" Member="NOTE" ThisKey="IdFP" OtherKey="IdFP" Type="NOTE" />
+      <Association Name="CONNAISSEMENT_PROFORMA" Member="CONNAISSEMENT" ThisKey="IdBL" OtherKey="IdBL" Type="CONNAISSEMENT" IsForeignKey="true" />
+      <Association Name="CLIENT_PROFORMA" Member="CLIENT" ThisKey="IdClient" OtherKey="IdClient" Type="CLIENT" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.FACTURE" Member="FACTURE">
+    <Type Name="FACTURE">
+      <Column Name="IdFD" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="RefAS400" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="DCFD" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DEFD" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="StatutFD" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="MHT" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="MTVA" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="MTTC" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdFP" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdU" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdClient" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="AIFD" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="IdPay" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DateComptable" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IdDocSAP" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="FACTURE_AVOIR" Member="AVOIR" ThisKey="IdFD" OtherKey="IdFD" Type="AVOIR" />
+      <Association Name="FACTURE_NOTE" Member="NOTE" ThisKey="IdFD" OtherKey="IdFD" Type="NOTE" />
+      <Association Name="FACTURE_LIGNE_PAYEMENT" Member="LIGNE_PAYEMENT" ThisKey="IdFD" OtherKey="IdFD" Type="LIGNE_PAYEMENT" />
+      <Association Name="PROFORMA_FACTURE" Member="PROFORMA" ThisKey="IdFP" OtherKey="IdFP" Type="PROFORMA" IsForeignKey="true" DeleteRule="CASCADE" />
+      <Association Name="CLIENT_FACTURE" Member="CLIENT" ThisKey="IdClient" OtherKey="IdClient" Type="CLIENT" IsForeignKey="true" />
+      <Association Name="PAYEMENT_FACTURE" Member="PAYEMENT" ThisKey="IdPay" OtherKey="IdPay" Type="PAYEMENT" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.VEHICULE" Member="VEHICULE">
+    <Type Name="VEHICULE">
+      <Column Name="IdVeh" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="NumChassis" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="BarCode" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
+      <Column Name="DCVeh" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DescVeh" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="TypeMVeh" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="StatutVeh" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="PoidsMVeh" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="VolMVeh" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="LongMVeh" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Column Name="LargMVeh" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Column Name="HautMVeh" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Column Name="NumItem" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Column Name="InfoMan" Type="System.String" DbType="NText" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="TypeCVeh" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="PoidsCVeh" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="VolCVeh" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="LongCVeh" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Column Name="LargCVeh" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Column Name="HautCVeh" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Column Name="StatutCVeh" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="VehPorte" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="VehAttelle" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="VehCle" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="VehStart" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="VehChargé" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="IdVehAP" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="StatVeh" Type="System.String" DbType="NVarChar(25)" CanBeNull="true" />
+      <Column Name="FFVeh" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="FSVeh" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DSRVeh" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IdBL" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdMan" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdEsc" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdAcc" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdBAE" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdDBL" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdBS" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="NomEnVeh" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="CNIEnVeh" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="TelenVeh" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumADDVeh" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumCIVIOveh" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumDDVeh" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumQDVeh" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumFPADVeh" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumQPADVeh" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumAEPADVeh" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumBESCVeh" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumSydoniaVeh" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="SensVeh" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="DSPVeh" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="NumChassisSGS" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="CouleurVeh" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="DateVAE" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="VEHICULE_OCCUPATION" Member="OCCUPATION" ThisKey="IdVeh" OtherKey="IdVeh" Type="OCCUPATION" />
+      <Association Name="VEHICULE_OPERATION_VEHICULE" Member="OPERATION_VEHICULE" ThisKey="IdVeh" OtherKey="IdVeh" Type="OPERATION_VEHICULE" />
+      <Association Name="VEHICULE_ORDRE_SERVICE" Member="ORDRE_SERVICE" ThisKey="IdVeh" OtherKey="IdVeh" Type="ORDRE_SERVICE" />
+      <Association Name="VEHICULE_VISITE_VEHICULE" Member="VISITE_VEHICULE" ThisKey="IdVeh" OtherKey="IdVeh" Type="VISITE_VEHICULE" Cardinality="One" />
+      <Association Name="VEHICULE_DEMANDE_VISITE" Member="DEMANDE_VISITE" ThisKey="IdVeh" OtherKey="IdVeh" Type="DEMANDE_VISITE" />
+      <Association Name="VEHICULE_CUBAGE_VEHICULE" Member="CUBAGE_VEHICULE" ThisKey="IdVeh" OtherKey="IdVeh" Type="CUBAGE_VEHICULE" />
+      <Association Name="VEHICULE_ELEMENT_FACTURATION" Member="ELEMENT_FACTURATION" ThisKey="IdVeh" OtherKey="IdVeh" Type="ELEMENT_FACTURATION" />
+      <Association Name="VEHICULE_OPERATION_SINISTRE" Member="OPERATION_SINISTRE" ThisKey="IdVeh" OtherKey="IdVeh" Type="OPERATION_SINISTRE" />
+      <Association Name="VEHICULE_VEHICULE" Member="VEHICULE2" ThisKey="IdVeh" OtherKey="IdVehAP" Type="VEHICULE" />
+      <Association Name="VEHICULE_NOTE" Member="NOTE" ThisKey="IdVeh" OtherKey="IdVeh" Type="NOTE" />
+      <Association Name="ESCALE_VEHICULE" Member="ESCALE" ThisKey="IdEsc" OtherKey="IdEsc" Type="ESCALE" IsForeignKey="true" />
+      <Association Name="MANIFESTE_VEHICULE" Member="MANIFESTE" ThisKey="IdMan" OtherKey="IdMan" Type="MANIFESTE" IsForeignKey="true" />
+      <Association Name="CONNAISSEMENT_VEHICULE" Member="CONNAISSEMENT" ThisKey="IdBL" OtherKey="IdBL" Type="CONNAISSEMENT" IsForeignKey="true" />
+      <Association Name="BON_ENLEVEMENT_VEHICULE" Member="BON_ENLEVEMENT" ThisKey="IdBAE" OtherKey="IdBAE" Type="BON_ENLEVEMENT" IsForeignKey="true" />
+      <Association Name="DEMANDE_LIVRAISON_VEHICULE" Member="DEMANDE_LIVRAISON" ThisKey="IdDBL" OtherKey="IdDBL" Type="DEMANDE_LIVRAISON" IsForeignKey="true" />
+      <Association Name="BON_SORTIE_VEHICULE" Member="BON_SORTIE" ThisKey="IdBS" OtherKey="IdBS" Type="BON_SORTIE" IsForeignKey="true" />
+      <Association Name="VEHICULE_VEHICULE" Member="VEHICULE1" ThisKey="IdVehAP" OtherKey="IdVeh" Type="VEHICULE" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CONTENEUR" Member="CONTENEUR">
+    <Type Name="CONTENEUR">
+      <Column Name="IdCtr" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="NumCtr" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="PropCtr" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Column Name="MCCtr" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DCCtr" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DescCtr" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="TypeMCtr" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="StatutCtr" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="VolMCtr" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Column Name="PoidsMCtr" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CatMseCtr" Type="System.String" DbType="NVarChar(2)" CanBeNull="true" />
+      <Column Name="TypeMses" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="IMDGCode" Type="System.String" DbType="NVarChar(5)" CanBeNull="true" />
+      <Column Name="DescMses" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="Seal1Ctr" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="Seal2Ctr" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumItem" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Column Name="InfoMan" Type="System.String" DbType="NText" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="TypeCCtr" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="PoidsCCtr" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="StatCtr" Type="System.String" DbType="NVarChar(25)" CanBeNull="true" />
+      <Column Name="FFCtr" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="FFSCtr" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="FSCtr" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DRCtr" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DVD" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DDR" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IdBL" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdMan" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdEsc" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdPay" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdBAE" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdDBL" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdBS" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="NomEnCtr" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="CNIEnCtr" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="TelenCtr" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumADDCtr" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumAVICtr" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumDDCtr" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumQDCtr" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumFPADCtr" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumQPADCtr" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumAEPADCtr" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumBESCCtr" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumSydoniaCtr" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="SensCtr" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="IdDRC" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="DSCtr" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DSPCtr" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="NbDet" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="VGM" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="CONTENEUR_OCCUPATION" Member="OCCUPATION" ThisKey="IdCtr" OtherKey="IdCtr" Type="OCCUPATION" />
+      <Association Name="CONTENEUR_OPERATION_CONTENEUR" Member="OPERATION_CONTENEUR" ThisKey="IdCtr" OtherKey="IdCtr" Type="OPERATION_CONTENEUR" />
+      <Association Name="CONTENEUR_ORDRE_SERVICE" Member="ORDRE_SERVICE" ThisKey="IdCtr" OtherKey="IdCtr" Type="ORDRE_SERVICE" />
+      <Association Name="CONTENEUR_ELEMENT_FACTURATION" Member="ELEMENT_FACTURATION" ThisKey="IdCtr" OtherKey="IdCtr" Type="ELEMENT_FACTURATION" />
+      <Association Name="CONTENEUR_NOTE" Member="NOTE" ThisKey="IdCtr" OtherKey="IdCtr" Type="NOTE" />
+      <Association Name="CONTENEUR_CONTENEUR_TC" Member="CONTENEUR_TC" ThisKey="IdCtr" OtherKey="IdCtr" Type="CONTENEUR_TC" />
+      <Association Name="CONNAISSEMENT_CONTENEUR" Member="CONNAISSEMENT" ThisKey="IdBL" OtherKey="IdBL" Type="CONNAISSEMENT" IsForeignKey="true" DeleteRule="CASCADE" />
+      <Association Name="ESCALE_CONTENEUR" Member="ESCALE" ThisKey="IdEsc" OtherKey="IdEsc" Type="ESCALE" IsForeignKey="true" />
+      <Association Name="MANIFESTE_CONTENEUR" Member="MANIFESTE" ThisKey="IdMan" OtherKey="IdMan" Type="MANIFESTE" IsForeignKey="true" />
+      <Association Name="BON_ENLEVEMENT_CONTENEUR" Member="BON_ENLEVEMENT" ThisKey="IdBAE" OtherKey="IdBAE" Type="BON_ENLEVEMENT" IsForeignKey="true" />
+      <Association Name="TYPE_CONTENEUR_CONTENEUR" Member="TYPE_CONTENEUR" ThisKey="TypeMCtr" OtherKey="CodeTypeCtr" Type="TYPE_CONTENEUR" IsForeignKey="true" />
+      <Association Name="PAYEMENT_CONTENEUR" Member="PAYEMENT" ThisKey="IdPay" OtherKey="IdPay" Type="PAYEMENT" IsForeignKey="true" />
+      <Association Name="DEMANDE_LIVRAISON_CONTENEUR" Member="DEMANDE_LIVRAISON" ThisKey="IdDBL" OtherKey="IdDBL" Type="DEMANDE_LIVRAISON" IsForeignKey="true" />
+      <Association Name="BON_SORTIE_CONTENEUR" Member="BON_SORTIE" ThisKey="IdBS" OtherKey="IdBS" Type="BON_SORTIE" IsForeignKey="true" />
+      <Association Name="DEMANDE_CAUTION_CONTENEUR" Member="DEMANDE_CAUTION" ThisKey="IdDRC" OtherKey="IdDRC" Type="DEMANDE_CAUTION" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CONVENTIONNEL" Member="CONVENTIONNEL">
+    <Type Name="CONVENTIONNEL">
+      <Column Name="IdGC" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="NumGC" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
+      <Column Name="BarCode" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="DCGC" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DescGC" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="TypeMGC" Type="System.String" DbType="NVarChar(5)" CanBeNull="true" />
+      <Column Name="PoidsMGC" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="VolMGC" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="LongMGC" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Column Name="LargMGC" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Column Name="HautMGC" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Column Name="NumItem" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Column Name="InfoMan" Type="System.String" DbType="NText" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="TypeCGC" Type="System.String" DbType="NVarChar(5)" CanBeNull="true" />
+      <Column Name="PoidsCGC" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="VolCGC" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="LongCGC" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Column Name="LargCGC" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Column Name="HautCGC" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Column Name="StatGC" Type="System.String" DbType="NVarChar(25)" CanBeNull="true" />
+      <Column Name="FFGC" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="FSGC" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IdBL" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdMan" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdEsc" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdBAE" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdDBL" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdBS" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DSPGC" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="NomEnGC" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="CNIEnGC" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="TelenGC" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumADDGC" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumCIVIOGC" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumDDGC" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumQDGC" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumFPADGC" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumQPADGC" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumAEPADGC" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumBESCGC" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumSydoniaGC" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="SensGC" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="DescGCEmbarq" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="DescGCRecept" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="PoidsRGC" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="VolRGC" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="QteRGC" Storage="_QteR" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Column Name="QteBGC" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Association Name="CONVENTIONNEL_OPERATION_CONVENTIONNEL" Member="OPERATION_CONVENTIONNEL" ThisKey="IdGC" OtherKey="IdGC" Type="OPERATION_CONVENTIONNEL" />
+      <Association Name="CONVENTIONNEL_ORDRE_SERVICE" Member="ORDRE_SERVICE" ThisKey="IdGC" OtherKey="IdGC" Type="ORDRE_SERVICE" />
+      <Association Name="CONVENTIONNEL_ELEMENT_FACTURATION" Member="ELEMENT_FACTURATION" ThisKey="IdGC" OtherKey="IdGC" Type="ELEMENT_FACTURATION" />
+      <Association Name="CONVENTIONNEL_NOTE" Member="NOTE" ThisKey="IdGC" OtherKey="IdGC" Type="NOTE" />
+      <Association Name="CONNAISSEMENT_CONVENTIONNEL" Member="CONNAISSEMENT" ThisKey="IdBL" OtherKey="IdBL" Type="CONNAISSEMENT" IsForeignKey="true" DeleteRule="CASCADE" />
+      <Association Name="TYPE_CONVENTIONNEL_CONVENTIONNEL" Member="TYPE_CONVENTIONNEL" ThisKey="TypeMGC" OtherKey="CodeTypeGC" Type="TYPE_CONVENTIONNEL" IsForeignKey="true" />
+      <Association Name="ESCALE_CONVENTIONNEL" Member="ESCALE" ThisKey="IdEsc" OtherKey="IdEsc" Type="ESCALE" IsForeignKey="true" />
+      <Association Name="MANIFESTE_CONVENTIONNEL" Member="MANIFESTE" ThisKey="IdMan" OtherKey="IdMan" Type="MANIFESTE" IsForeignKey="true" />
+      <Association Name="BON_ENLEVEMENT_CONVENTIONNEL" Member="BON_ENLEVEMENT" ThisKey="IdBAE" OtherKey="IdBAE" Type="BON_ENLEVEMENT" IsForeignKey="true" />
+      <Association Name="TYPE_CONVENTIONNEL_CONVENTIONNEL1" Member="TYPE_CONVENTIONNEL1" ThisKey="TypeCGC" OtherKey="CodeTypeGC" Type="TYPE_CONVENTIONNEL" IsForeignKey="true" />
+      <Association Name="DEMANDE_LIVRAISON_CONVENTIONNEL" Member="DEMANDE_LIVRAISON" ThisKey="IdDBL" OtherKey="IdDBL" Type="DEMANDE_LIVRAISON" IsForeignKey="true" />
+      <Association Name="BON_SORTIE_CONVENTIONNEL" Member="BON_SORTIE" ThisKey="IdBS" OtherKey="IdBS" Type="BON_SORTIE" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.BON_SORTIE" Member="BON_SORTIE">
+    <Type Name="BON_SORTIE">
+      <Column Name="IdBS" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DateBS" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="AIBS" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="IdBL" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdVeh" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdCtr" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdGC" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdU" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="BON_SORTIE_VEHICULE" Member="VEHICULE" ThisKey="IdBS" OtherKey="IdBS" Type="VEHICULE" />
+      <Association Name="BON_SORTIE_CONTENEUR" Member="CONTENEUR" ThisKey="IdBS" OtherKey="IdBS" Type="CONTENEUR" />
+      <Association Name="BON_SORTIE_CONVENTIONNEL" Member="CONVENTIONNEL" ThisKey="IdBS" OtherKey="IdBS" Type="CONVENTIONNEL" />
+      <Association Name="CONNAISSEMENT_BON_SORTIE" Member="CONNAISSEMENT" ThisKey="IdBL" OtherKey="IdBL" Type="CONNAISSEMENT" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.LIGNE_PRIX" Member="LIGNE_PRIX">
+    <Type Name="LIGNE_PRIX">
+      <Column Name="IdLP" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="CodeLP" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="CodeArticle" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Column Name="DescLP" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="PU1LP" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="PU2LP" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="PU3LP" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="PU4LP" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="PU5LP" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DDLP" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DFLP" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="UniteLP" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="LP" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="LP2" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Regle" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Association Name="LIGNE_PRIX_ELEMENT_FACTURATION" Member="ELEMENT_FACTURATION" ThisKey="IdLP" OtherKey="IdLP" Type="ELEMENT_FACTURATION" />
+      <Association Name="ARTICLE_LIGNE_PRIX" Member="ARTICLE" ThisKey="CodeArticle" OtherKey="CodeArticle" Type="ARTICLE" IsForeignKey="true" DeleteRule="CASCADE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.FOURNISSEUR" Member="FOURNISSEUR">
+    <Type Name="FOURNISSEUR">
+      <Column Name="IdFsseur" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="CodeFsseur" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NomFsseur" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="AdrFsseur" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="EmailFsseur" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="TelFsseur" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="CCFsseur" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="CodeTVA" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="StatutFsseur" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Association Name="FOURNISSEUR_ORDRE_SERVICE" Member="ORDRE_SERVICE" ThisKey="IdFsseur" OtherKey="IdFsseur" Type="ORDRE_SERVICE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.MAFI" Member="MAFI">
+    <Type Name="MAFI">
+      <Column Name="IdMafi" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="NumMafi" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="DCMafi" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DescMafi" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="TypeMMafi" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="VolMMafi" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Column Name="PoidsMMafi" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CatMseMafi" Type="System.String" DbType="NVarChar(2)" CanBeNull="true" />
+      <Column Name="IMDGCode" Type="System.String" DbType="NVarChar(5)" CanBeNull="true" />
+      <Column Name="DescMses" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="NumItem" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Column Name="InfoMan" Type="System.String" DbType="NText" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="TypeCMafi" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="PoidsCMafi" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="StatMafi" Type="System.String" DbType="NVarChar(25)" CanBeNull="true" />
+      <Column Name="FFMafi" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="FFSMafi" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="FSMafi" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DSPMafi" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DVD" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DDR" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IdBL" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdMan" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdEsc" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdBAE" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdDBL" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdBS" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DSMafi" Storage="_DSCtr" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="NomEnMafi" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="CNIEnMafi" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="TelenMafi" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumADDMafi" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumAVIMafi" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumDDMafi" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumQDMafi" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumFPADMafi" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumQPADMafi" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumAEPADMafi" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumBESCMafi" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="NumSydoniaMafi" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="SensMafi" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Association Name="MAFI_ORDRE_SERVICE" Member="ORDRE_SERVICE" ThisKey="IdMafi" OtherKey="IdMafi" Type="ORDRE_SERVICE" />
+      <Association Name="MAFI_ELEMENT_FACTURATION" Member="ELEMENT_FACTURATION" ThisKey="IdMafi" OtherKey="IdMafi" Type="ELEMENT_FACTURATION" />
+      <Association Name="MAFI_OPERATION_MAFI" Member="OPERATION_MAFI" ThisKey="IdMafi" OtherKey="IdMafi" Type="OPERATION_MAFI" />
+      <Association Name="MAFI_NOTE" Member="NOTE" ThisKey="IdMafi" OtherKey="IdMafi" Type="NOTE" />
+      <Association Name="CONNAISSEMENT_MAFI" Member="CONNAISSEMENT" ThisKey="IdBL" OtherKey="IdBL" Type="CONNAISSEMENT" IsForeignKey="true" />
+      <Association Name="MANIFESTE_MAFI" Member="MANIFESTE" ThisKey="IdMan" OtherKey="IdMan" Type="MANIFESTE" IsForeignKey="true" />
+      <Association Name="ESCALE_MAFI" Member="ESCALE" ThisKey="IdEsc" OtherKey="IdEsc" Type="ESCALE" IsForeignKey="true" />
+      <Association Name="BON_ENLEVEMENT_MAFI" Member="BON_ENLEVEMENT" ThisKey="IdBAE" OtherKey="IdBAE" Type="BON_ENLEVEMENT" IsForeignKey="true" />
+      <Association Name="DEMANDE_LIVRAISON_MAFI" Member="DEMANDE_LIVRAISON" ThisKey="IdDBL" OtherKey="IdDBL" Type="DEMANDE_LIVRAISON" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.OPERATION_MAFI" Member="OPERATION_MAFI">
+    <Type Name="OPERATION_MAFI">
+      <Column Name="IdOpMafi" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="IdMafi" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdTypeOp" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DateOp" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="AIOp" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="IdU" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="MAFI_OPERATION_MAFI" Member="MAFI" ThisKey="IdMafi" OtherKey="IdMafi" Type="MAFI" IsForeignKey="true" />
+      <Association Name="TYPE_OPERATION_OPERATION_MAFI" Member="TYPE_OPERATION" ThisKey="IdTypeOp" OtherKey="IdTypeOp" Type="TYPE_OPERATION" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.NOTE" Member="NOTE">
+    <Type Name="NOTE">
+      <Column Name="IdNote" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DescNote" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="DateNote" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IdU" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdEsc" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdMan" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdBL" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdVeh" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdCtr" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdMafi" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdGC" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdFP" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdFD" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdOS" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdCubage" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdBAE" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdDRC" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdDBL" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdDDR" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdDV" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdDEXT" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdFactDIT" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdPay" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TitreNote" Type="System.String" DbType="NChar(50)" CanBeNull="true" />
+      <Association Name="BON_ENLEVEMENT_NOTE" Member="BON_ENLEVEMENT" ThisKey="IdBAE" OtherKey="IdBAE" Type="BON_ENLEVEMENT" IsForeignKey="true" />
+      <Association Name="CONNAISSEMENT_NOTE" Member="CONNAISSEMENT" ThisKey="IdBL" OtherKey="IdBL" Type="CONNAISSEMENT" IsForeignKey="true" />
+      <Association Name="CONTENEUR_NOTE" Member="CONTENEUR" ThisKey="IdCtr" OtherKey="IdCtr" Type="CONTENEUR" IsForeignKey="true" />
+      <Association Name="CONVENTIONNEL_NOTE" Member="CONVENTIONNEL" ThisKey="IdGC" OtherKey="IdGC" Type="CONVENTIONNEL" IsForeignKey="true" />
+      <Association Name="CUBAGE_NOTE" Member="CUBAGE" ThisKey="IdCubage" OtherKey="IdCubage" Type="CUBAGE" IsForeignKey="true" />
+      <Association Name="DEMANDE_CAUTION_NOTE" Member="DEMANDE_CAUTION" ThisKey="IdDRC" OtherKey="IdDRC" Type="DEMANDE_CAUTION" IsForeignKey="true" />
+      <Association Name="DEMANDE_LIVRAISON_NOTE" Member="DEMANDE_LIVRAISON" ThisKey="IdDBL" OtherKey="IdDBL" Type="DEMANDE_LIVRAISON" IsForeignKey="true" />
+      <Association Name="DEMANDE_REDUCTION_NOTE" Member="DEMANDE_REDUCTION" ThisKey="IdDDR" OtherKey="IdDDR" Type="DEMANDE_REDUCTION" IsForeignKey="true" />
+      <Association Name="DEMANDE_VISITE_NOTE" Member="DEMANDE_VISITE" ThisKey="IdDV" OtherKey="IdDV" Type="DEMANDE_VISITE" IsForeignKey="true" />
+      <Association Name="ESCALE_NOTE" Member="ESCALE" ThisKey="IdEsc" OtherKey="IdEsc" Type="ESCALE" IsForeignKey="true" />
+      <Association Name="EXTENSION_FRANCHISE_NOTE" Member="EXTENSION_FRANCHISE" ThisKey="IdDEXT" OtherKey="IdDEXT" Type="EXTENSION_FRANCHISE" IsForeignKey="true" />
+      <Association Name="FACTURE_NOTE" Member="FACTURE" ThisKey="IdFD" OtherKey="IdFD" Type="FACTURE" IsForeignKey="true" />
+      <Association Name="FACTURE_DIT_NOTE" Member="FACTURE_DIT" ThisKey="IdFactDIT" OtherKey="IdFactDIT" Type="FACTURE_DIT" IsForeignKey="true" />
+      <Association Name="MAFI_NOTE" Member="MAFI" ThisKey="IdMafi" OtherKey="IdMafi" Type="MAFI" IsForeignKey="true" />
+      <Association Name="MANIFESTE_NOTE" Member="MANIFESTE" ThisKey="IdMan" OtherKey="IdMan" Type="MANIFESTE" IsForeignKey="true" />
+      <Association Name="ORDRE_SERVICE_NOTE" Member="ORDRE_SERVICE" ThisKey="IdOS" OtherKey="IdOS" Type="ORDRE_SERVICE" IsForeignKey="true" />
+      <Association Name="PAYEMENT_NOTE" Member="PAYEMENT" ThisKey="IdPay" OtherKey="IdPay" Type="PAYEMENT" IsForeignKey="true" />
+      <Association Name="PROFORMA_NOTE" Member="PROFORMA" ThisKey="IdFP" OtherKey="IdFP" Type="PROFORMA" IsForeignKey="true" />
+      <Association Name="UTILISATEUR_NOTE" Member="UTILISATEUR" ThisKey="IdU" OtherKey="IdU" Type="UTILISATEUR" IsForeignKey="true" />
+      <Association Name="VEHICULE_NOTE" Member="VEHICULE" ThisKey="IdVeh" OtherKey="IdVeh" Type="VEHICULE" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.BANQUE" Member="BANQUE">
+    <Type Name="BANQUE">
+      <Column Name="IdBanque" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="CodeBanque" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="CCBanque" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Association Name="BANQUE_PAYEMENT" Member="PAYEMENT" ThisKey="IdBanque" OtherKey="IdBanque" Type="PAYEMENT" />
+    </Type>
+  </Table>
+  <Table Name="dbo.LIGNE_PAYEMENT" Member="LIGNE_PAYEMENT">
+    <Type Name="LIGNE_PAYEMENT">
+      <Column Name="IdPay" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="IdFD" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Type" Type="System.String" DbType="nvarchar(6) " CanBeNull="true" />
+      <Association Name="FACTURE_LIGNE_PAYEMENT" Member="FACTURE" ThisKey="IdFD" OtherKey="IdFD" Type="FACTURE" IsForeignKey="true" />
+      <Association Name="PAYEMENT_LIGNE_PAYEMENT" Member="PAYEMENT" ThisKey="IdPay" OtherKey="IdPay" Type="PAYEMENT" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.FACTURE_ARMATEUR" Member="FACTURE_ARMATEUR">
+    <Type Name="FACTURE_ARMATEUR">
+      <Column Name="IdFArm" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DCFArm" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="AIFArm" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="MHT" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="MTVA" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="MTTC" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdEsc" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdU" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdDocSAP" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="FACTURE_ARMATEUR_LIGNE_FACTURE_ARMATEUR" Member="LIGNE_FACTURE_ARMATEUR" ThisKey="IdFArm" OtherKey="IdFArm" Type="LIGNE_FACTURE_ARMATEUR" Cardinality="One" />
+      <Association Name="ESCALE_FACTURE_ARMATEUR" Member="ESCALE" ThisKey="IdEsc" OtherKey="IdEsc" Type="ESCALE" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.LIGNE_FACTURE_ARMATEUR" Member="LIGNE_FACTURE_ARMATEUR">
+    <Type Name="LIGNE_FACTURE_ARMATEUR">
+      <Column Name="IdFArm" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="IdJEF" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="StatutLP" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Association Name="FACTURE_ARMATEUR_LIGNE_FACTURE_ARMATEUR" Member="FACTURE_ARMATEUR" ThisKey="IdFArm" OtherKey="IdFArm" Type="FACTURE_ARMATEUR" IsForeignKey="true" />
+      <Association Name="ELEMENT_FACTURATION_LIGNE_FACTURE_ARMATEUR" Member="ELEMENT_FACTURATION" ThisKey="IdJEF" OtherKey="IdJEF" Type="ELEMENT_FACTURATION" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.MOUVEMENT_TC" Member="MOUVEMENT_TC">
+    <Type Name="MOUVEMENT_TC">
+      <Column Name="IdMvt" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="IdTC" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdTypeOp" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DateMvt" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IdUser" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdParc" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdEsc" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdBL" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="CONNAISSEMENT_MOUVEMENT_TC" Member="CONNAISSEMENT" ThisKey="IdBL" OtherKey="IdBL" Type="CONNAISSEMENT" IsForeignKey="true" />
+      <Association Name="ESCALE_MOUVEMENT_TC" Member="ESCALE" ThisKey="IdEsc" OtherKey="IdEsc" Type="ESCALE" IsForeignKey="true" />
+      <Association Name="TYPE_OPERATION_MOUVEMENT_TC" Member="TYPE_OPERATION" ThisKey="IdTypeOp" OtherKey="IdTypeOp" Type="TYPE_OPERATION" IsForeignKey="true" />
+      <Association Name="UTILISATEUR_MOUVEMENT_TC" Member="UTILISATEUR" ThisKey="IdUser" OtherKey="IdU" Type="UTILISATEUR" IsForeignKey="true" />
+      <Association Name="PARC_MOUVEMENT_TC" Member="PARC" ThisKey="IdParc" OtherKey="IdParc" Type="PARC" IsForeignKey="true" />
+      <Association Name="CONTENEUR_TC_MOUVEMENT_TC" Member="CONTENEUR_TC" ThisKey="IdTC" OtherKey="IdTC" Type="CONTENEUR_TC" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CONTENEUR_TC" Member="CONTENEUR_TC">
+    <Type Name="CONTENEUR_TC">
+      <Column Name="IdTC" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="IdCtr" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="NumTC" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="DateCréationTC" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="TypeCtr" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="StatutTC" Type="System.String" DbType="NVarChar(25)" CanBeNull="true" />
+      <Column Name="DateDébarquementSCR" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DateDébarquementDIT" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IdUserDébarquement" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdEscDébarquement" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdBLDébarquement" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DateSortiePleinSCR" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DateSortiePleinDIT" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IdUserSortiePlein" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DestinationSortiePlein" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="DateRetourVideSCR" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DateRetourVideDIT" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IdUserRetourVide" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdParcRetourVide" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DateParquing" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IdUserParquing" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdParcParquing" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdEmplacementParc" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DateTransfertZH" Storage="_DateTransfertZN" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IdUserTransfertZH" Storage="_IdUserTransfertZN" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdParcTransfertZH" Storage="_IdParcTransfertZN" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdEmplacementZH" Storage="_IdEmplacementZN" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DateTransfertZR" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IdUserTransfertZR" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdParcTransfertZR" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdEmplacementZR" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DateSortieVide" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IdUserSortieVide" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdEscSortieVide" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdMiseADisposition" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DestinationSortieVide" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="DateRetourPlein" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IdUserRetourPlein" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdEscRetourPlein" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdBooking" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdParcRetourPlein" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DateEmbarquement" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IdUserEmbarquement" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdEscEmbarquement" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdCtrExport" Storage="_IdBLExport" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="EtatRetourVide" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Reparation" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="Nettoyage" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="Lavage" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="Irreparable" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="IdUserRetourArmateur" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DateRetourArmateur" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IsDoublon" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Association Name="CONTENEUR_TC_MOUVEMENT_TC" Member="MOUVEMENT_TC" ThisKey="IdTC" OtherKey="IdTC" Type="MOUVEMENT_TC" />
+      <Association Name="CONTENEUR_CONTENEUR_TC" Member="CONTENEUR" ThisKey="IdCtr" OtherKey="IdCtr" Type="CONTENEUR" IsForeignKey="true" />
+      <Association Name="DISPOSITION_CONTENEUR_CONTENEUR_TC" Member="DISPOSITION_CONTENEUR" ThisKey="IdMiseADisposition" OtherKey="IdDisposition" Type="DISPOSITION_CONTENEUR" IsForeignKey="true" />
+      <Association Name="PARC_CONTENEUR_TC" Member="PARC" ThisKey="IdParcParquing" OtherKey="IdParc" Type="PARC" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.PARC" Member="PARC">
+    <Type Name="PARC">
+      <Column Name="IdParc" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="NomParc" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Type" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Association Name="PARC_EMPLACEMENT" Member="EMPLACEMENT" ThisKey="IdParc" OtherKey="IdParc" Type="EMPLACEMENT" />
+      <Association Name="PARC_UTILISATEUR" Member="UTILISATEUR" ThisKey="IdParc" OtherKey="IdParc" Type="UTILISATEUR" />
+      <Association Name="PARC_MOUVEMENT_TC" Member="MOUVEMENT_TC" ThisKey="IdParc" OtherKey="IdParc" Type="MOUVEMENT_TC" />
+      <Association Name="PARC_CONTENEUR_TC" Member="CONTENEUR_TC" ThisKey="IdParc" OtherKey="IdParcParquing" Type="CONTENEUR_TC" />
+    </Type>
+  </Table>
+  <Table Name="dbo.DISPOSITION_CONTENEUR" Member="DISPOSITION_CONTENEUR">
+    <Type Name="DISPOSITION_CONTENEUR">
+      <Column Name="IdDisposition" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="IdBooking" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="NombreTC" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TypeCtr" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="ContactTransitaire" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Empotage" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="SortieVia" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="TypeHabillage" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="RefDisposition" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Association Name="DISPOSITION_CONTENEUR_CONTENEUR_TC" Member="CONTENEUR_TC" ThisKey="IdDisposition" OtherKey="IdMiseADisposition" Type="CONTENEUR_TC" />
+      <Association Name="CONNAISSEMENT_DISPOSITION_CONTENEUR" Member="CONNAISSEMENT" ThisKey="IdBooking" OtherKey="IdBL" Type="CONNAISSEMENT" IsForeignKey="true" />
+      <Association Name="TYPE_CONTENEUR_DISPOSITION_CONTENEUR" Member="TYPE_CONTENEUR" ThisKey="TypeCtr" OtherKey="CodeTypeCtr" Type="TYPE_CONTENEUR" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.INTERCHANGE" Member="INTERCHANGE">
+    <Type Name="INTERCHANGE">
+      <Column Name="IdCtr" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="IdTypeSinistre" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="InfoIdentification" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="InfoSortie" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="InfoRetour" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="InfoParquing" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="InfoSortieVide" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="InfoRetourPlein" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="InfoEmbarquement" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="InfoRetourArmateur" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="InfoConstatContradictoire" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Column Name="InfoRestitution" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.FACTURE_SOCOMAR" Member="FACTURE_SOCOMAR">
+    <Type Name="FACTURE_SOCOMAR">
+      <Column Name="IdFSoc" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DCFSoc" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="AIFSoc" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="MHT" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="MTVA" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="MTTC" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdEsc" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdU" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IdDocSAP" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Statut" Type="System.String" DbType="Varchar(10)" CanBeNull="true" />
+      <Column Name="FType" Type="System.String" DbType="varchar(10)" CanBeNull="true" />
+      <Association Name="FACTURE_SOCOMAR_LIGNE_FACTURE_SOCOMAR" Member="LIGNE_FACTURE_SOCOMAR" ThisKey="IdFSoc" OtherKey="IdFSoc" Type="LIGNE_FACTURE_SOCOMAR" />
+      <Association Name="ESCALE_FACTURE_SOCOMAR" Member="ESCALE" ThisKey="IdEsc" OtherKey="IdEsc" Type="ESCALE" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.LIGNE_FACTURE_SOCOMAR" Member="LIGNE_FACTURE_SOCOMAR">
+    <Type Name="LIGNE_FACTURE_SOCOMAR">
+      <Column Name="IdFSoc" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="IdJEF" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Statut" Type="System.String" DbType="NVarChar(1)" CanBeNull="true" />
+      <Association Name="FACTURE_SOCOMAR_LIGNE_FACTURE_SOCOMAR" Member="FACTURE_SOCOMAR" ThisKey="IdFSoc" OtherKey="IdFSoc" Type="FACTURE_SOCOMAR" IsForeignKey="true" />
+      <Association Name="ELEMENT_FACTURATION_LIGNE_FACTURE_SOCOMAR" Member="ELEMENT_FACTURATION" ThisKey="IdJEF" OtherKey="IdJEF" Type="ELEMENT_FACTURATION" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.REQUESTS" Member="REQUESTS">
+    <Type Name="REQUESTS">
+      <Column Name="IDAUTO" AutoSync="Never" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DATEREQUEST" Type="System.DateTime" DbType="DateTime" CanBeNull="false" />
+      <Column Name="TYPE" Type="System.String" DbType="nvarchar(20)" CanBeNull="false" />
+      <Column Name="ISTREATED" Type="System.Boolean" DbType="bit" CanBeNull="false" />
+      <Column Name="DIRECTION" Type="System.String" DbType="nvarchar(10)" CanBeNull="true" />
+      <Association Name="REQUESTS_REQUESTS_DETAILS" Member="REQUESTS_DETAILS" ThisKey="IDAUTO" OtherKey="IDREQUEST" Type="REQUESTS_DETAILS" />
+    </Type>
+  </Table>
+  <Table Name="dbo.REQUESTS_DETAILS" Member="REQUESTS_DETAILS">
+    <Type Name="REQUESTS_DETAILS">
+      <Column Name="IDAUTO" AutoSync="Never" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="IDREQUEST" Type="System.Int32" DbType="Int Not NULL" CanBeNull="false" />
+      <Column Name="ESC_NUM_MANIF" Type="System.String" DbType="nvarchar(10)" CanBeNull="true" />
+      <Column Name="ESC_NUM_VOY" Type="System.String" DbType="nvarchar(10)" CanBeNull="true" />
+      <Column Name="ESC_DATEARR_REEL" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ESC_DATEDEP_REEL" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ESC_ARMATEUR_CODE" Type="System.String" DbType="nvarchar(10)" CanBeNull="true" />
+      <Column Name="ESC_ACONIER_CODE" Type="System.String" DbType="nvarchar(10)" CanBeNull="true" />
+      <Column Name="ESC_CODE_NAVIRE" Type="System.String" DbType="nvarchar(10)" CanBeNull="true" />
+      <Column Name="ESC_NBRE_VHL" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ESC_PORT_EMBA" Type="System.String" DbType="nvarchar(10)" CanBeNull="true" />
+      <Column Name="VHL_CHASSIS" Type="System.String" DbType="nvarchar(20)" CanBeNull="true" />
+      <Column Name="VHL_DESC" Type="System.String" DbType="nvarchar(255)" CanBeNull="true" />
+      <Column Name="VHL_VOL" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="VHL_LONGUEUR" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Column Name="VHL_LARG" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Column Name="VHL_HAUT" Type="System.Single" DbType="Real" CanBeNull="true" />
+      <Column Name="VHL_POIDS" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="VHL_PORTE" Type="System.String" DbType="nvarchar(5)" CanBeNull="true" />
+      <Column Name="VHL_ATELE" Type="System.String" DbType="nvarchar(5)" CanBeNull="true" />
+      <Column Name="VHL_NUM_BL" Type="System.String" DbType="nvarchar(50)" CanBeNull="true" />
+      <Column Name="VHL_NUM_ADD" Type="System.String" DbType="nvarchar(20)" CanBeNull="true" />
+      <Column Name="VHL_ENLEVEUR_NOM" Type="System.String" DbType="nvarchar(50)" CanBeNull="true" />
+      <Column Name="VHL_ENLEVEUR_CNI" Type="System.String" DbType="nvarchar(20)" CanBeNull="true" />
+      <Column Name="VHL_ENLEVEUR_TEL" Type="System.String" DbType="nvarchar(20)" CanBeNull="true" />
+      <Column Name="VHL_NUM_DEC" Type="System.String" DbType="nvarchar(20)" CanBeNull="true" />
+      <Column Name="VHL_NUM_QUIT" Type="System.String" DbType="nvarchar(20)" CanBeNull="true" />
+      <Column Name="VHL_STATUT" Type="System.String" DbType="nvarchar(20)" CanBeNull="true" />
+      <Column Name="VHL_EMPLACEMENT" Type="System.String" DbType="nvarchar(50)" CanBeNull="true" />
+      <Column Name="VHL_TYPE" Type="System.String" DbType="nvarchar(20)" CanBeNull="true" />
+      <Column Name="VHL_DAT_S" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DATE_ENTREE" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="VHL_CONSIGNEE" Type="System.String" DbType="nvarchar(50)" CanBeNull="true" />
+      <Column Name="DATE_REQUEST" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ESC_DATEDEP_PREV" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ARMATEUR_NOM" Type="System.String" DbType="nvarchar(50)" CanBeNull="true" />
+      <Column Name="ACCONIER_NOM" Type="System.String" DbType="nvarchar(50)" CanBeNull="true" />
+      <Column Name="NAVIRE_NOM" Type="System.String" DbType="nvarchar(50)" CanBeNull="true" />
+      <Column Name="VHL_BS_REF" Type="System.String" DbType="nvarchar(50)" CanBeNull="true" />
+      <Column Name="VHL_BS_DATE" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="REQUESTS_REQUESTS_DETAILS" Member="REQUESTS" ThisKey="IDREQUEST" OtherKey="IDAUTO" Type="REQUESTS" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="PSION_SORTIES">
+    <Type Name="PSION_SORTIES">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="CHASSIS" Type="System.String" DbType="NVARCHAR(17)" CanBeNull="true" />
+      <Column Name="SCAN" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="TRANSACTIONS">
+    <Type Name="TRANSACTIONS">
+      <Column Name="IDAUTO" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="CJ" Type="System.String" DbType="nvarchar(3)" CanBeNull="true" />
+      <Column Name="DPIECE" Type="System.String" DbType="nvarchar(6)" CanBeNull="true" />
+      <Column Name="TPIECE" Type="System.String" DbType="nvarchar(2)" CanBeNull="true" />
+      <Column Name="CMPTGEN" Type="System.String" DbType="nvarchar(13)" CanBeNull="true" />
+      <Column Name="CMPTTYP" Type="System.String" DbType="nvarchar(1)" CanBeNull="true" />
+      <Column Name="CMPTAUX" Type="System.String" DbType="nvarchar(13)" CanBeNull="true" />
+      <Column Name="REF" Type="System.String" DbType="nvarchar(13)" CanBeNull="true" />
+      <Column Name="LIB" Type="System.String" DbType="nvarchar(25)" CanBeNull="false" />
+      <Column Name="PAYMOD" Type="System.String" DbType="nvarchar(1)" CanBeNull="true" />
+      <Column Name="DATECH" Type="System.String" DbType="nvarchar(6)" CanBeNull="true" />
+      <Column Name="SENS" Type="System.String" DbType="nvarchar(1)" CanBeNull="true" />
+      <Column Name="MONTANT" Type="System.String" DbType="nvarchar(20)" CanBeNull="true" />
+      <Column Name="TYPE" Type="System.String" DbType="nvarchar(1)" CanBeNull="true" />
+      <Column Name="CODE_TVA" Type="System.String" DbType="nvarchar(10)" CanBeNull="true" />
+      <Column Name="TAUX" Type="System.String" DbType="nvarchar(5)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="" Member="AVOIR_SPOT">
+    <Type Name="AVOIR_SPOT">
+      <Column Name="IdFA" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DCFA" Type="System.DateTime" DbType="datetime" CanBeNull="false" />
+      <Column Name="AIFA" Type="System.String" DbType="nvarchar(255)" CanBeNull="true" />
+      <Column Name="StatutFA" Type="System.String" DbType="nvarchar(1)" CanBeNull="true" />
+      <Column Name="MHT" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="MTTC" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="MTVA" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="IdU" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="IdClient" Type="System.Int32" DbType="int" CanBeNull="false" />
+      <Association Name="AVOIR_SPOT_CLIENT" Member="CLIENT" ThisKey="IdClient" OtherKey="IdClient" Type="CLIENT" />
+    </Type>
+  </Table>
+  <Table Name="" Member="LIGNE_AVOIR_SPOT">
+    <Type Name="LIGNE_AVOIR_SPOT">
+      <Column Name="IdFA" Type="System.Int32" DbType="int " CanBeNull="false" />
+      <Column Name="CodeArticle" Type="System.Int16" DbType="SmallInt " CanBeNull="false" />
+      <Column Name="StatutLP" Type="System.String" DbType="nvarchar(1)" CanBeNull="true" />
+      <Column Name="PUEF" Type="System.Single" DbType="float" CanBeNull="false" />
+      <Column Name="QTEEF" Type="System.Single" DbType="float" CanBeNull="false" />
+      <Column Name="TauxTVA" Type="System.Double" DbType="real" CanBeNull="false" />
+      <Column Name="IdAuto" Type="System.Int32" DbType="int" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Lib" Type="System.String" DbType="nvarchar(80)" CanBeNull="true" />
+      <Column Name="CCOMPTABLE" Type="System.String" DbType="nvarchar(10)" CanBeNull="true" />
+      <Column Name="IDJEF" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Association Name="LIGNE_AVOIR_SPOT_ARTICLE" Member="ARTICLE" ThisKey="CodeArticle" OtherKey="CodeArticle" Type="ARTICLE" />
+    </Type>
+  </Table>
+  <Table Name="RMT_FACTURES">
+    <Type Name="RMT_FACTURES">
+      <Column Name="SysId" Type="System.Int32" DbType="int" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="DCFD" Type="System.DateTime" DbType="datetime" CanBeNull="false" />
+      <Column Name="StatutFD" Type="System.String" DbType="nvarchar(10)" CanBeNull="false" />
+      <Column Name="MHT" Type="System.Int32" DbType="int" CanBeNull="false" />
+      <Column Name="MTTC" Type="System.Int32" DbType="int" CanBeNull="false" />
+      <Column Name="MTVA" Type="System.Int32" DbType="int" CanBeNull="false" />
+      <Column Name="IdCli" Type="System.Int32" DbType="int" CanBeNull="false" />
+      <Column Name="IdPay" Type="System.Int32" DbType="int" CanBeNull="false" />
+      <Column Name="IdBl" Type="System.Int32" DbType="int" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="RMT_CONNAISSEMENT">
+    <Type Name="RMT_CONNAISSEMENT">
+      <Column Name="SysId" Type="System.Int32" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="NumBl" Type="System.String" DbType="nvarchar(45)" CanBeNull="false" />
+      <Column Name="Consignee" Type="System.String" DbType="nvarchar(50)" CanBeNull="false" />
+      <Column Name="Adresse" Type="System.String" DbType="nvarchar(100)" CanBeNull="false" />
+      <Column Name="Notify" Type="System.String" DbType="nvarchar(80)" CanBeNull="false" />
+      <Column Name="Client" Type="System.Int32" DbType="int" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="RMT_ELEMENT_FACTURE">
+    <Type Name="RMT_ELEMENT_FACTURE">
+      <Column Name="SysId" Type="System.Int32" DbType="int" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Elt" Type="System.String" DbType="nvarchar(10)" CanBeNull="false" />
+      <Column Name="Lib" Type="System.String" DbType="nvarchar(150)" CanBeNull="false" />
+      <Column Name="PU" Type="System.Int32" DbType="int" CanBeNull="false" />
+      <Column Name="Qte" Type="System.Double" DbType="float" CanBeNull="false" />
+      <Column Name="Unite" Type="System.String" DbType="nvarchar(5)" CanBeNull="false" />
+      <Column Name="IdBl" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="CodeTva" Type="System.String" DbType="nvarchar(10)" CanBeNull="false" />
+      <Column Name="TauxTva" Type="System.String" DbType="nvarchar(7)" CanBeNull="false" />
+      <Column Name="IdFD" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="Statut" Type="System.String" DbType="nvarchar(10)" CanBeNull="false" />
+      <Column Name="CodeArt" Type="System.String" DbType="nvarchar(5)" CanBeNull="false" />
+      <Column Name="IdFA" Type="System.Int32" DbType="int" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="RMT_AVOIR">
+    <Type Name="RMT_AVOIR">
+      <Column Name="SysId" Type="System.Int32" DbType="int" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="MTTC" Type="System.Int32" DbType="int" CanBeNull="false" />
+      <Column Name="MTVA" Type="System.Int32" DbType="int" CanBeNull="false" />
+      <Column Name="MHT" Type="System.Int32" DbType="int" CanBeNull="false" />
+      <Column Name="DCFA" Type="System.DateTime" DbType="datetime" CanBeNull="false" />
+      <Column Name="Note" Type="System.String" DbType="nvarchar(150)" CanBeNull="false" />
+      <Column Name="IdFD" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="Typ" Type="System.String" DbType="nvarchar(10)" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="RMT_PAYEMENT">
+    <Type Name="RMT_PAYEMENT">
+      <Column Name="SysId" Type="System.Int32" DbType="int" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="DatePay" Type="System.DateTime" DbType="datetime" CanBeNull="true" />
+      <Column Name="ModePay" Type="System.Int32" DbType="smallint" CanBeNull="true" />
+      <Column Name="MAPay" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="MRPay" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="AIPay" Type="System.String" DbType="nvarchar(255)" CanBeNull="true" />
+      <Column Name="IdBL" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="IdClient" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="NumCheque" Type="System.String" DbType="nvarchar(50)" CanBeNull="true" />
+      <Column Name="RefVirement" Type="System.String" DbType="nvarchar(50)" CanBeNull="true" />
+      <Column Name="Banque" Type="System.String" DbType="nvarchar(50)" CanBeNull="true" />
+      <Column Name="NumCompte" Type="System.String" DbType="nvarchar(50)" CanBeNull="true" />
+      <Column Name="StatutPay" Type="System.String" DbType="nvarchar(1)" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="CLIENT_FIN_COND">
+    <Type Name="CLIENT_FIN_COND">
+      <Column Name="DOSSIER" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="IDCLIENT" Type="System.Int32" DbType="int" CanBeNull="false" />
+      <Column Name="CTR_FRET" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="CTR_SUR" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="CTR_DET" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="CTR_REP" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="CTR_VAL_RSDL" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="CTR_OP_DIVERS" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="CTR_M_PAY" Type="System.String" DbType="nvarchar(50)" CanBeNull="true" />
+      <Column Name="CAUTION_T" Type="System.String" DbType="nvarchar(50)" CanBeNull="true" />
+      <Column Name="CAUTION_MT" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="CAUTION_M_PAY" Type="System.String" DbType="nvarchar(50)" CanBeNull="true" />
+      <Column Name="VEH_MANUT" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="VEH_PG" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="VEH_FRET" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="VEH_SEJOUR" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="VEH_OP_DIVERS" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="CONV_MANUT" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="CONV_SEJOUR" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="CONV_OP_DIVERS" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="PLAFOND" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="COVVD" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="SENS" Type="System.String" DbType="nvarchar(1)" CanBeNull="false" />
+      <Column Name="DATE_ENREG" Type="System.DateTime" DbType="datetime" CanBeNull="true" />
+      <Column Name="ID_AUTO" AutoSync="Never" Type="System.Int32" DbType="int" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="" Member="CLIENT_M_PAY">
+    <Type Name="CLIENT_M_PAY">
+      <Column Name="IDCLIENT" Type="System.Int32" DbType="int" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="SENS" Type="System.String" DbType="nvarchar(5)" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="TYPE" Type="System.String" DbType="nvarchar(5)" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="DATE_ENREG" Type="System.DateTime" DbType="datetime" CanBeNull="true" />
+      <Column Name="STATUS" Type="System.String" DbType="nvarchar(10)" CanBeNull="true" />
+      <Column Name="CASH" Type="System.Boolean" DbType="bit" CanBeNull="false" />
+      <Column Name="CC" Type="System.Boolean" DbType="bit" CanBeNull="false" />
+      <Column Name="CB" Type="System.Boolean" DbType="bit" CanBeNull="false" />
+      <Column Name="WT" Type="System.Boolean" DbType="bit" CanBeNull="false" />
+      <Column Name="CS" Type="System.Boolean" DbType="bit" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="FACTURE_CTRL">
+    <Type Name="FACTURE_CTRL">
+      <Column Name="IDFD" Type="System.Int32" DbType="int" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="DOP" Type="System.DateTime" DbType="datetime" CanBeNull="false" />
+      <Column Name="STATUT" Type="System.String" DbType="nvarchar(7)" CanBeNull="false" />
+      <Column Name="IDCli" Type="System.Int32" DbType="int" CanBeNull="false" />
+      <Column Name="IdU" Type="System.Int32" DbType="int" CanBeNull="false" />
+    </Type>
+  </Table>
+</Database>

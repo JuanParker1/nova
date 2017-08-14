@@ -1,0 +1,144 @@
+﻿<DockPanel x:Class="VesselStopOverPresentation.ConteneurPanel"
+           xmlns:local="clr-namespace:VesselStopOverPresentation"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="800">
+    <Border DockPanel.Dock="Top" BorderThickness="1.5" CornerRadius="1.5" BorderBrush="#FF6A87C8">
+        <StackPanel Name="stackPanelCommands" Orientation="Horizontal" Background="#3F51B5">
+            <GridSplitter Width="1.5" Background="Transparent"/>
+            <Border BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                <DockPanel Margin="1">
+                    <TextBlock DockPanel.Dock="Bottom" Text="Nouveau" TextAlignment="Center" Height="18" Width="Auto" TextWrapping="Wrap" Foreground="White" Background="#FF50509D"/>
+                    <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnNouveau" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnNouveau_Click">
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                            <Image Source="/VesselStopOverPresentation;component/Icons/File-new-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                            <TextBlock Text="Nouveau" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                        </StackPanel>
+                    </Button>
+                </DockPanel>
+            </Border>
+            <GridSplitter Width="3" Background="Transparent" Cursor="Arrow" />
+            <Border Name="actionsBorder" BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                <DockPanel Margin="1">
+                    <TextBlock DockPanel.Dock="Bottom" Text="Actions" TextAlignment="Center" Height="18" Width="Auto" TextWrapping="Wrap" Foreground="White" Background="#FF50509D"/>
+                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" HorizontalAlignment="Left">
+                        <StackPanel DockPanel.Dock="Left" Orientation="Vertical" HorizontalAlignment="Left">
+                            <Button DockPanel.Dock="Left" Height="25" Width="150" VerticalAlignment="Top" Name="btnIdentifier" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnIdentifier_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/bar-code-icon.png" Stretch="Uniform" Height="20" Width="20" />
+                                    <TextBlock Text=" Identifier" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                                </StackPanel>
+                            </Button>
+                            <Button DockPanel.Dock="Left" Height="25" Width="150" VerticalAlignment="Top" Name="btnSortir" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnSortir_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/export-icon.png" Stretch="Uniform" Height="20" Width="20" />
+                                    <TextBlock Text=" Sortir" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                                </StackPanel>
+                            </Button>
+                            <Button DockPanel.Dock="Left" Height="25" Width="150" VerticalAlignment="Top" Name="btnRetour" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnRetour_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/import-icon.png" Stretch="Uniform" Height="20" Width="20" />
+                                    <TextBlock Text=" Retour" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+        </StackPanel>
+    </Border>
+    <Border DockPanel.Dock="Top" BorderThickness="1.5" CornerRadius="1.5" BorderBrush="#FFD8D2D2">
+        <DockPanel Name="panelRecherche" Background="#FFD8D2D2">
+            <ComboBox DockPanel.Dock="Right" Name="listRechercher" Width="150" VerticalContentAlignment="Center" Background="#FFD8D2D2" AllowDrop="True">
+                <ComboBoxItem Content="N° connaissement"/>
+                <ComboBoxItem Content="N° conteneur"/>
+                <ComboBoxItem Content="N° escale"/>
+                <ComboBoxItem Content="Description"/>
+            </ComboBox>
+            <Button Name="btnAnnulerRecherche" Width="20" DockPanel.Dock="Right" Focusable="False">
+                <Button.Background>
+                    <ImageBrush ImageSource="/VesselStopOverPresentation;component/Icons/cross.png" Stretch="UniformToFill" TileMode="None" />
+                </Button.Background>
+            </Button>
+            <TextBox Name="txtRechercher" DockPanel.Dock="Right" Width="150" FlowDirection="LeftToRight" TextAlignment="Right" PreviewKeyDown="txtRechercher_PreviewKeyDown" />
+            <Label Content="Rechercher" DockPanel.Dock="Right" FontStyle="Italic" FontWeight="Bold" FlowDirection="LeftToRight"/>
+            <Label Content="Conteneurs : " DockPanel.Dock="Left" FontWeight="Bold" FlowDirection="LeftToRight"/>
+            <ComboBox Name="cbFiltres" DockPanel.Dock="Left" Width="200" HorizontalAlignment="Left" VerticalContentAlignment="Center" Background="#FFD8D2D2" BorderThickness="0" BorderBrush="Transparent" SelectionChanged="cbFiltres_SelectionChanged">
+                <ComboBoxItem Content="Tous les conteneurs"/>
+                <ComboBoxItem Content="Conteneur(s) non initié(s)"/>
+                <ComboBoxItem Content="Conteneur(s) traité(s)"/>
+                <ComboBoxItem Content="Conteneur(s) manifesté(s)"/>
+                <ComboBoxItem Content="Conteneur(s) déchargé(s)"/>
+                <ComboBoxItem Content="Conteneur(s) parqué(s)"/>
+                <ComboBoxItem Content="Conteneur(s) en enlèvement"/>
+                <ComboBoxItem Content="Conteneur(s) livré(s)"/>
+                <ComboBoxItem Content="Conteneur(s) retourné(s)"/>
+            </ComboBox>
+        </DockPanel>
+    </Border>
+    <StatusBar DockPanel.Dock="Bottom" Height="30" FlowDirection="RightToLeft">
+        <Label Name="lblStatut" FlowDirection="LeftToRight" FontWeight="SemiBold" FontFamily="Segoe UI" FontSize="11" />
+    </StatusBar>
+    <DataGrid Name="dataGrid" IsReadOnly="True" ItemsSource="{Binding conteneurs}" AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader" MouseDoubleClick="dataGrid_MouseDoubleClick" SelectionChanged="dataGrid_SelectionChanged">
+        <DataGrid.Resources>
+            <local:ConteneurStationnementConverter x:Key="conteneurStationnementConverter"/>
+            <local:StationnementDepasseConverter x:Key="stationnementDepasseConverter"/>
+            <Style TargetType="DataGridRow">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IdCtr, Converter={StaticResource ResourceKey=stationnementDepasseConverter}}" Value="true">
+                        <Setter Property="Foreground" Value="Red" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </DataGrid.Resources>
+        <DataGrid.Columns>
+            <DataGridTextColumn Header=" "></DataGridTextColumn>
+            <DataGridTextColumn Header="N° escale" Width="Auto" Binding="{Binding ESCALE.NumEsc}"></DataGridTextColumn>
+            <DataGridTextColumn Header="Navire" Width="Auto" Binding="{Binding ESCALE.NAVIRE.NomNav}"></DataGridTextColumn>
+            <DataGridTextColumn Header="Armateur" Width="Auto" Binding="{Binding ESCALE.ARMATEUR.NomArm}"></DataGridTextColumn>
+            <DataGridTextColumn Header="N° connaissement" Width="Auto" Binding="{Binding CONNAISSEMENT.NumBL}"></DataGridTextColumn>
+            <DataGridTextColumn Header="Client" Width="Auto" Binding="{Binding CONNAISSEMENT.CLIENT.NomClient}"></DataGridTextColumn>
+            <DataGridTextColumn Header="Consignee" Width="Auto" Binding="{Binding CONNAISSEMENT.ConsigneeBL}"></DataGridTextColumn>
+            <DataGridTextColumn Header="N° conteneur" Width="Auto" Binding="{Binding NumCtr}"></DataGridTextColumn>
+            <DataGridTextColumn Header="Description" Width="140" Binding="{Binding DescCtr}"></DataGridTextColumn>
+            <DataGridTextColumn Header="Type" Width="Auto" Binding="{Binding TypeMCtr}">
+                <DataGridTextColumn.ElementStyle>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="TextAlignment" Value="Center"/>
+                    </Style>
+                </DataGridTextColumn.ElementStyle>
+            </DataGridTextColumn>
+            <DataGridTextColumn Header="Etat" Width="Auto" Binding="{Binding StatutCtr}">
+                <DataGridTextColumn.ElementStyle>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="TextAlignment" Value="Center"/>
+                    </Style>
+                </DataGridTextColumn.ElementStyle>
+            </DataGridTextColumn>
+            <DataGridTextColumn Header="Poids" Width="Auto" Binding="{Binding PoidsCCtr, ConverterCulture=fr-FR, StringFormat={}{0:N0} Kg}">
+                <DataGridTextColumn.ElementStyle>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="TextAlignment" Value="Right"/>
+                    </Style>
+                </DataGridTextColumn.ElementStyle>
+            </DataGridTextColumn>
+            <DataGridTextColumn Header="Stationnement" Width="Auto" Binding="{Binding IdCtr, Converter={StaticResource ResourceKey=conteneurStationnementConverter}}">
+                <DataGridTextColumn.ElementStyle>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="TextAlignment" Value="Right"/>
+                    </Style>
+                </DataGridTextColumn.ElementStyle>
+            </DataGridTextColumn>
+            <DataGridTextColumn Header="Date de sortie" Width="Auto" Binding="{Binding DSCtr, StringFormat='{}{0:dd/MM/yyyy}'}"></DataGridTextColumn>
+            <DataGridTextColumn Header="Date de retour" Width="Auto" Binding="{Binding DRCtr, StringFormat='{}{0:dd/MM/yyyy}'}"></DataGridTextColumn>
+            <DataGridTextColumn Header="Commodity category" Width="Auto" Binding="{Binding CatMseCtr}"></DataGridTextColumn>
+            <DataGridTextColumn Header="Seal 1" Width="Auto" Binding="{Binding Seal1Ctr}"></DataGridTextColumn>
+            <DataGridTextColumn Header="Seal 2" Width="Auto" Binding="{Binding Seal2Ctr}"></DataGridTextColumn>
+            <DataGridTextColumn Header="Statut BL" Width="Auto" Binding="{Binding CONNAISSEMENT.StatutBL}"></DataGridTextColumn>
+            <DataGridTextColumn Header="Statut Ctr" Width="Auto" Binding="{Binding StatCtr}"></DataGridTextColumn>
+        </DataGrid.Columns>
+    </DataGrid>
+</DockPanel>

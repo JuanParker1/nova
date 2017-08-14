@@ -1,0 +1,57 @@
+﻿<Window x:Class="VesselStopOverPresentation.TransfertEmplacementConteneurForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        Title="TransfertEmplacementConteneurForm" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Height="310" Width="350" WindowStartupLocation="CenterScreen" FontFamily="Segoe UI" FontSize="11" Icon="/VesselStopOverPresentation;component/Icons/LogoApp.png" ResizeMode="NoResize">
+    <DockPanel>
+        <StackPanel Name="stackPanelCommands" DockPanel.Dock="Top" Orientation="Horizontal" Background="#3F51B5">
+            <GridSplitter Width="1.5" Background="Transparent"/>
+            <Border BorderThickness="1.5" CornerRadius="3" BorderBrush="DarkSlateBlue">
+                <DockPanel Margin="1">
+                    <TextBlock DockPanel.Dock="Bottom" Text="Transferer" TextAlignment="Center" Height="18" Width="Auto" TextWrapping="Wrap" Foreground="White" Background="#FF50509D"/>
+                    <Button DockPanel.Dock="Left" Height="75" Width="80" Name="btnTransferer" HorizontalContentAlignment="Center" Background="{x:Null}" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnTransferer_Click">
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                            <Image Source="/VesselStopOverPresentation;component/Icons/Transfer-icon.png" Stretch="Uniform" Height="50" Width="50" />
+                            <TextBlock Text="Transferer" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                        </StackPanel>
+                    </Button>
+                </DockPanel>
+            </Border>
+        </StackPanel>
+        <StatusBar DockPanel.Dock="Bottom" Height="30" FlowDirection="RightToLeft">
+            <Label Name="lblStatut" FlowDirection="LeftToRight" FontWeight="SemiBold" FontFamily="Segoe UI" FontSize="11" />
+        </StatusBar>
+        <DockPanel>
+            <GroupBox DockPanel.Dock="Top" Header="Transfert d'emplacement" BorderThickness="2" Height="Auto">
+                <Grid Background="#FAFAFA" Margin="2" UseLayoutRounding="True">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="27"/>
+                        <RowDefinition Height="27"/>
+                        <RowDefinition Height="27"/>
+                        <RowDefinition Height="27"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="110"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="0" Content="Emplacement actuel : " Margin="0,2,0,2"/>
+                    <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="4">
+                        <TextBox Name="txtParcActuel" Width="100" Margin="0,2,0,2" IsReadOnly="True" Background="AntiqueWhite" />
+                        <TextBox Name="txtEmplacementActuel" Width="100" Margin="2,2,0,2" IsReadOnly="True" Background="AntiqueWhite"/>
+                    </StackPanel>
+
+                    <Label Grid.Row="1" Grid.Column="0" Content="Parc/Emplacement : " Margin="0,2,0,2"/>
+                    <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4">
+                        <ComboBox Name="cbParcNouveau" Width="100" Margin="0,2,0,2" ItemsSource="{Binding prcsNouveau}" SelectionChanged="cbParcNouveau_SelectionChanged" />
+                        <ComboBox Name="cbEmplacementNouveau" Width="100" Margin="2,2,0,2" ItemsSource="{Binding emplsNouveau}" IsEditable="True"/>
+                    </StackPanel>
+
+                    <Label Grid.Row="2" Grid.Column="0" Content="Observations : " Margin="0,2,0,2"/>
+                    <RichTextBox Grid.Row="2" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="2" Name="txtObservations" HorizontalAlignment="Left" Width="202" Margin="0,2,0,2" VerticalScrollBarVisibility="Auto" />
+                    
+                </Grid>
+            </GroupBox>
+        </DockPanel>
+    </DockPanel>
+</Window>

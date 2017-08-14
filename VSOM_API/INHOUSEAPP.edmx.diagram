@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="29b9f7b6510d4fee8e9f2631997728ad" Name="Diagramme1">
+        <EntityTypeShape EntityType="INHOUSEAPPModel.POINTAGES" Width="1.5" PointX="3" PointY="3.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="INHOUSEAPPModel.PRM_CALENDRE" Width="1.5" PointX="5.75" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="INHOUSEAPPModel.PRM_EMPL" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="INHOUSEAPPModel.PRM_GROUPE" Width="1.5" PointX="2.75" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="INHOUSEAPPModel.PRM_PERIODE" Width="1.5" PointX="0.75" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="INHOUSEAPPModel.PRM_PROGRAM" Width="1.5" PointX="3" PointY="11.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="INHOUSEAPPModel.PRM_SVC" Width="1.5" PointX="5.75" PointY="3.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="INHOUSEAPPModel.PRM_SVC_HOUR" Width="1.5" PointX="5.75" PointY="6.875" IsExpanded="true" />
+        <AssociationConnector Association="INHOUSEAPPModel.FK_POINTAGES_PRM_EMPL" ManuallyRouted="false" />
+        <AssociationConnector Association="INHOUSEAPPModel.FK_POINTAGES_PRM_PERIODE" ManuallyRouted="false" />
+        <AssociationConnector Association="INHOUSEAPPModel.FK_PRM_PROGRAM_PRM_PERIODE" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

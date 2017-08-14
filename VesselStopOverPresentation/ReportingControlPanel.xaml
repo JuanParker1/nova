@@ -1,0 +1,188 @@
+﻿<StackPanel x:Class="VesselStopOverPresentation.ReportingControlPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Button Name="btnPaiement" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnPaiement_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Journal des paiements" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnFacturesDIT" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnFacturesDIT_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Journal des factures DIT" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnElementsDIT" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnElementsDIT_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Journal des élements DIT" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnElementsSEPBC" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnElementsSEPBC_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Journal de élements SEPBC" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnSyntheseParAcconier" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnSyntheseParAcconier_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Synthèse par acconier" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnSyntheseSEPBC" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnSyntheseSEPBC_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Synthèse SEPBC" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnExtractParc" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnExtractParc_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Extract parc" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnExtractParcExcel" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnExtractParcExcel_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Extract parc (Excel)" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnHistOccup" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnHistPosition_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Historique position" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnVehEntres" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnVehEntres_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Extract véhicules entrés" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnVehSortis" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnVehSortis_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Extract véhicules sortis" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnStockConteneur" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnStockConteneur_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Stock conteneurs" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnBilanTracking" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnBilanTracking_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Bilan Tracking" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnExtractManut" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnExtractManut_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Extract manutention autres acconiers" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnExtractSejour" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnExtractSejour_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Extract séjour autres acconiers" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnExtractDiversReversements" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnExtractDiversReversements_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Extract Divers reversements" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnExtractEntrees" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnExtractEntrees_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Extract entrées parc auto" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnExtractSorties" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnExtractSorties_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Extract sorties parc auto" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnExtractCA" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnExtractCA_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Extraction CA" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnExtractCADetail" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnExtractCADetail_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Extraction CA detaillé" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnExtractSOCAR" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnExtractSOCAR_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Extract SOCAR" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnExtractArmateur" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnExtractArmateur_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Extract Surest. Dét." VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnExtractDouane" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnExtractDouane_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Extract Douane" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnExtractPrevImportDIT" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnExtractPrevImportDIT_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Extract Prév. Import DIT" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnExtractPrevExportDIT" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnExtractPrevExportDIT_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Extract Prév. Export DIT" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnDailyMoves" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnDailyMoves_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Extract Daily Moves" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnExtractCNCC" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnExtractCNCC_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Extract CNCC" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnRecapSurestaries" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnRecapSurestaries_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Recap Surestaries" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnRecapDetention" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnRecapDetention_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Recap Détention" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnImprimerCommandeSAP" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnImprimerCommandeSAP_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Imprimer Commande SAP" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+</StackPanel>

@@ -1,0 +1,106 @@
+﻿<StackPanel x:Class="VesselStopOverPresentation.AdministrationControlPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Button Name="btnNavire" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnNavire_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Navire" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnArmateur" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnArmateur_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Armateur" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnAcconier" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnAcconier_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Acconier" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnPort" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnPort_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Port" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnMAJSGS" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnMAJSGS_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Import CIVIO" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnUtilisateur" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnUtilisateur_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Utilisateur" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <!--<Button Name="btnJournal" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Journal" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>-->
+    <Button Name="btnMotDePasse" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnMotDePasse_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Changer mot de passe" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnImportSAP" Visibility="Visible" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnImportSAP_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Import SAP" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnArticles"  HorizontalContentAlignment="Left" Click="btnArticles_Click_1" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" >
+            
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Articles" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+
+    <Button Name="btnCorrectionSorties" Visibility="Collapsed" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnCorrectionSorties_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Correction sortie" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnCorrectionLignesSAP" Visibility="Collapsed" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnCorrectionLignesSAP_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Correction lignes" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnCorrectionParc3000" Visibility="Collapsed" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnCorrectionParc3000_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Correction Parc 30000" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnCorrectionSortieConteneur" Visibility="Collapsed" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnCorrectionSortieConteneur_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Correction Sortie Conteneur" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnCorrectionDoublonConteneur" Visibility="Collapsed" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnCorrectionDoublonConteneur_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Correction Doublon Conteneur" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    <Button Name="btnCorrectionImportDIT" Visibility="Collapsed" HorizontalContentAlignment="Left" ClickMode="Press" Background="{x:Null}" BorderThickness="0" BorderBrush="{x:Null}" Click="btnCorrectionImportDIT_Click">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/VesselStopOverPresentation;component/Icons/data.PNG" Stretch="Uniform" Height="15" Width="15" />
+            <TextBlock Text=" Correction Import DIT" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Button>
+</StackPanel>
