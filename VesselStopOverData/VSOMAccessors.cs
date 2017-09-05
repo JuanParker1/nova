@@ -1142,7 +1142,7 @@ namespace VesselStopOverData
                 //    throw new ApplicationException("Facturation de l'armateur impossible : Le summary of operations est n'est pas encore clôturé sur cette escale");
                 //}
 
-                DateTime datetime = DateTime.Today.AddDays(-4); DateTime today = DateTime.Today;
+                DateTime datetime = DateTime.Today; DateTime today = DateTime.Today;
                 matchedEscale.DateFArm = datetime;
 
                 FACTURE_ARMATEUR factArm = new FACTURE_ARMATEUR();
@@ -3682,9 +3682,13 @@ namespace VesselStopOverData
                 {
                     foreach (ELEMENT_FACTURATION elt in matchedConnaissement.ELEMENT_FACTURATION)
                     {
-                        elt.CodeTVA = "TVAEX";
-                        elt.TauxTVA = 0;
-                        elt.QTEEF = elt.LibEF.Contains("TVA") ? 0 : elt.QTEEF;
+                        //AH ne plus touche les element facturé et annulé
+                        if (elt.StatutEF != "Annule" && elt.StatutEF != "Facturé")
+                        {
+                            elt.CodeTVA = "TVAEX";
+                            elt.TauxTVA = 0;
+                            elt.QTEEF = elt.LibEF.Contains("TVA") ? 0 : elt.QTEEF;
+                        }
                     }
                 }
 

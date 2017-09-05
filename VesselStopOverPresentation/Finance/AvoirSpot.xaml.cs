@@ -69,14 +69,14 @@ namespace VesselStopOverPresentation.Finance
                 ElementLigneFactureSpot elt = new ElementLigneFactureSpot();
                 elt.Code = ef.CodeArticle.ToString();
                 elt.Libelle = ef.LibArticle;
-                elt.PrixTotal = -1* ef.PrixUnitaire;
+                elt.PrixTotal = -1 * ef.MontantTTC; //-1* ef.PrixUnitaire;
                 elt.PrixUnitaire =  (int)ef.PrixUnitaire;
                 elt.Qte = -1;// ef.Qte;
-                elt.TVA = 0;
+                elt.TVA = ef.MontantTVA;
                 // elt.CompteComptable = txtTVA.Text == "19,25 %" ? art.CCArticle : art.CCArticleEx; //txtCompteComptable.Text;
                 elt.CompteComptable = ef.Compte;
                 elt.Unite = "u"; 
-                elt.CodeTVA = "TVAEX";
+                elt.CodeTVA =ef.MontantTVA==0 ? "TVAEX" : "TVAAP";
                 elt.EltCompulsory = ef;
                       
                 eltsLigneOS.Add(elt);

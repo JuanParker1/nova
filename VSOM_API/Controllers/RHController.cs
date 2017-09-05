@@ -135,7 +135,7 @@ namespace VSOM_API.Controllers
                                         diff = Math.Round((pt.MHS.TotalHours - pt.MHE.TotalHours) + (pt.SHS.TotalHours - pt.SHE.TotalHours), 0, MidpointRounding.AwayFromZero);
                                     }
 
-                                    //tous a 140, moins heure de pause sil y a bateau
+                                    //tous a 140, moins heure de pause sil y a pas bateau
                                     if (diff > 0)
                                     {
                                         pt.DIFF = abateau == true ? (int)diff : (int)(diff - nbrheurpause);
@@ -165,7 +165,7 @@ namespace VSOM_API.Controllers
                                         diff = 13;
                                         pt.DIFF = (int)diff;
                                         pt.T150 = 8;
-                                        pt.T140 = 4;
+                                        pt.T140 = 5;
                                         pt.T130 = pt.T120 = 0;
                                         pt.HM = abateau == true ? 1 : 0;
                                     }
@@ -174,7 +174,7 @@ namespace VSOM_API.Controllers
                             } 
                             #endregion
                         }
-                        else if (dayname == "Samedi" || dayname == "Saterday")
+                        else if (dayname == "Samedi" || dayname == "Saturday")
                         {
                             if (estferie)
                             {
@@ -356,7 +356,7 @@ namespace VSOM_API.Controllers
 
                                     if (diff > 0)
                                     {
-                                        pt.DIFF = abateau == true ? (int)diff : (int)(diff - nbrheurpause);
+                                        pt.DIFF = abateau == true ? (int)diff : (int)(diff);
                                         pt.T140 = pt.DIFF;
                                         pt.T120 = pt.T130 = pt.T150 = pt.HM = 0;
                                     }

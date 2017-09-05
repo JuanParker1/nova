@@ -1110,7 +1110,8 @@ namespace VesselStopOverPresentation
             form.txtFretCollecter.IsEnabled = con.ELEMENT_FACTURATION.Count(elt => (elt.StatutEF == "Proforma" || elt.IdFD != null) && elt.LibEF.Contains("Débours SOCAR : Fret à collecter")) == 0 /*&& form.chkBLSOCAR.IsChecked == true*/ && form.chkFretCollecter.IsChecked == true ? true : false;
             form.chkDetteCollecter.IsEnabled = con.ELEMENT_FACTURATION.Count(elt => (elt.StatutEF == "Proforma" || elt.IdFD != null) && elt.LibEF.Contains("Débours SOCAR : Dette à collecter")) == 0 && form.chkBLSOCAR.IsChecked == true ? true : false;
             form.txtDetteCollecter.IsEnabled = con.ELEMENT_FACTURATION.Count(elt => (elt.StatutEF == "Proforma" || elt.IdFD != null) && elt.LibEF.Contains("Débours SOCAR : Dette à collecter")) == 0 && form.chkBLSOCAR.IsChecked == true && form.chkDetteCollecter.IsChecked == true ? true : false;
-            form.groupIncoterms.IsEnabled = con.ELEMENT_FACTURATION.Count(elt => (/*elt.StatutEF == "Proforma" || */elt.IdFD != null && elt.StatutEF !="Annule")) == 0 ? true : false;
+            int nbr = con.ELEMENT_FACTURATION.Count(elt => (/*elt.StatutEF == "Proforma" || */elt.IdFD != null && elt.StatutEF != "Annule"));
+            form.groupIncoterms.IsEnabled =nbr == 0 ? true : false;
 
             form.btnProforma.Visibility = con.DVBL.HasValue ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
             //form.cbClient.IsEnabled = con.PROFORMA.Count == 0 ? true : false;
