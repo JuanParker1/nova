@@ -27,7 +27,7 @@ namespace VSOM_API.Controllers
         /// <param name="type">inv, quote</param>
         /// <param name="tok">token de communication. contient le id client 1 pour particulier ou >1 pour entreprise</param>
         /// <returns></returns>
-        [AllowAnonymous]
+        [Authorize]
         [HttpGet]
        // [Route("api/Navy/Doc/")]
         public IHttpActionResult GetDoc(string bl,string type,string tok)
@@ -45,7 +45,7 @@ namespace VSOM_API.Controllers
                     CONNAISSEMENT con = null;
                     //con = ctx.CONNAISSEMENTs.Include("VEHICULEs").Where(s => s.NumBL == bl && s.StatutBL != "Initié" && s.StatutBL != "Cloturé" && s.TypeBL == "R")
                     //                        .FirstOrDefault<CONNAISSEMENT>();
-                    if (type == "quote" || type=="inv")
+                    if (type == "quote" || type == "inv" || type == "obl" || type == "ovin")
                     {
                         //if (!tok.Equals("1"))
                             con = ctx.CONNAISSEMENTs.Include("VEHICULEs").Where(s => s.IdClient.Value == idclient&& s.DCBL.Value>=startdate && s.NumBL == bl && s.StatutBL != "Initié" && s.StatutBL != "Cloturé" && s.TypeBL == "R")
@@ -62,18 +62,40 @@ namespace VSOM_API.Controllers
 
                     if (con != null)
                     {
-                        blview = new BL()
+                        if (type == "obl") //demande particulier controle dexistance de BL
                         {
-                            Adresse = con.AdresseBL,
-                            CodeTva = con.CodeTVA,
-                            Consignee = con.ConsigneeBL,
-                            Notify = con.NotifyBL,
-                            NumBl = con.NumBL,
-                            Statut = con.StatutBL,
-                            FinFranchise=con.VEHICULEs.ToList<VEHICULE>()[0].FFVeh.Value.ToShortDateString(),
-                            Vehicules = new List<Cars>()
-                        };
+                           
+                            //selection d'un index aleatoire de chassis
+                            var rand =new Random();
+                            int indveh = rand.Next(con.VEHICULEs.Count);
+                            List<VEHICULE> lveh = con.VEHICULEs.ToList<VEHICULE>();
 
+                            VEHICULE veh = lveh[indveh];
+                            blview = new BL() { NumBl = "1", Lib="*******"+veh.NumChassis.Remove(0,6) };
+                        }
+
+                        if (type == "ovin") //controle de chassis
+                        { 
+                          
+                        }
+
+                        if( type == "quote" || type == "inv")
+                        {
+                            //demande entreprise
+                            blview = new BL()
+                            {
+                                Adresse = con.AdresseBL,
+                                CodeTva = con.CodeTVA,
+                                Consignee = con.ConsigneeBL,
+                                Notify = con.NotifyBL,
+                                NumBl = con.NumBL,
+                                Statut = con.StatutBL,
+                                FinFranchise = con.VEHICULEs.ToList<VEHICULE>()[0].FFVeh.Value.ToShortDateString(),
+                                Vehicules = new List<Cars>()
+                            };
+                        }
+
+                        #region bl list vehicule
                         if (type == "quote")
                         {
                             foreach (VEHICULE veh in con.VEHICULEs)
@@ -97,15 +119,17 @@ namespace VSOM_API.Controllers
                                     });
                                 }
                             }
-                        }
+                        } 
+                        #endregion
 
+                        #region bl factures
                         if (type == "inv")
                         {
                             List<FACTURE> invs = (from f in ctx.FACTUREs join p in ctx.PROFORMAs on f.IdFP equals p.IdFP where p.IdBL == con.IdBL select f).ToList<FACTURE>();
                             blview.Invoices = new List<Invoices>();
                             foreach (FACTURE fact in invs)
                             {
-                                blview.Invoices.Add(new Invoices { Date = fact.DCFD.Value.ToShortDateString(), HT = fact.MHT.Value, MTTC = fact.MTTC.Value, TVA = fact.MTVA.Value, Statut = fact.StatutFD == "P" ? "Payée" : (fact.StatutFD=="O"? "En cours" :"Annulée"), Num = fact.IdDocSAP.Value.ToString() });
+                                blview.Invoices.Add(new Invoices { Date = fact.DCFD.Value.ToShortDateString(), HT = fact.MHT.Value, MTTC = fact.MTTC.Value, TVA = fact.MTVA.Value, Statut = fact.StatutFD == "P" ? "Payée" : (fact.StatutFD == "O" ? "En cours" : "Annulée"), Num = fact.IdDocSAP.Value.ToString() });
                             }
                             //liste avoires
                             List<AVOIR> av = ctx.AVOIRs.Where(a => a.IdBL == con.IdBL).ToList<AVOIR>();
@@ -119,9 +143,10 @@ namespace VSOM_API.Controllers
                             blview.Payments = new List<Payments>();
                             foreach (PAYEMENT obj in pays)
                             {
-                                blview.Payments.Add(new Payments { Date = obj.DatePay.Value.ToShortDateString(), MTTC = obj.MRPay.Value, Statut = obj.StatutPay=="O"? "" :"Annulé" , Num = obj.IdPaySAP.Value.ToString() });
+                                blview.Payments.Add(new Payments { Date = obj.DatePay.Value.ToShortDateString(), MTTC = obj.MRPay.Value, Statut = obj.StatutPay == "O" ? "" : "Annulé", Num = obj.IdPaySAP.Value.ToString() });
                             }
-                        }
+                        } 
+                        #endregion
                     }
                 }
 
@@ -136,6 +161,7 @@ namespace VSOM_API.Controllers
                    // return NotFound();
                 }
 
+                
                 return Ok(blview);
             }
             catch (Exception ex)
@@ -165,7 +191,7 @@ namespace VSOM_API.Controllers
         /// <param name="tok"></param>
         /// <returns></returns>
         
-        [AllowAnonymous]
+        [Authorize]
         [HttpGet]
         public IHttpActionResult GetQuotation(string bl, string chassis, string date, string type , string tok, int owner )
         {
@@ -2026,6 +2052,85 @@ namespace VSOM_API.Controllers
             }
 
 
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public IHttpActionResult GetVin(string bl, string vin, string type)
+        {
+            BL blview = null;
+            DateTime startdate = DateTime.Parse("1/1/2017");
+            //le token devrai permettre de savoir el type de client entreprise ou client et gerer la requete en consequence
+            try
+            {
+                //var identity = (ClaimsIdentity)User.Identity;
+                //int idclient = int.Parse(tok);
+                using (var ctx = new VSOMEntities())
+                {
+                    CONNAISSEMENT con = null; //je force que le client qui peut verifier ce bl doit etre comptant
+                    con = ctx.CONNAISSEMENTs.Include("VEHICULEs").Where(s => s.IdClient.Value == 1 && s.DCBL.Value >= startdate && s.NumBL == bl && s.StatutBL != "Initié" && s.StatutBL != "Cloturé" && s.TypeBL == "R")
+                                            .FirstOrDefault<CONNAISSEMENT>();
+                         
+                    if (con != null)
+                    {
+                        if (type == "obl") //demande particulier controle dexistance de BL
+                        {
+
+                            //selection d'un index aleatoire de chassis
+                            var rand = new Random();
+                            int indveh = rand.Next(con.VEHICULEs.Count);
+                            List<VEHICULE> lveh = con.VEHICULEs.ToList<VEHICULE>();
+
+                            VEHICULE veh = lveh[indveh];
+                            blview = new BL() { NumBl = "1", Lib = veh.NumChassis.Remove(0, 6) };
+                        }
+
+                        if (type == "ovin") //controle de chassis
+                        {
+                            List<VEHICULE> lveh = con.VEHICULEs.ToList<VEHICULE>();
+                            VEHICULE veh = lveh.SingleOrDefault(s => s.NumChassis == vin);
+                            if (veh == null)
+                            {
+                                blview = new BL() { NumBl = bl, Lib = "0" };
+                            }
+                            else
+                            {
+                                blview = new BL() { NumBl = bl, Lib = "1" };
+                            }
+                        }
+
+                        
+                    }
+                }
+
+                if (blview == null)
+                {
+                    var message = new HttpResponseMessage(HttpStatusCode.BadRequest)
+                    {
+                        Content = new StringContent("Aucun connaissement trouvé")
+                    };
+                    throw new HttpResponseException(message);
+                    // return NotFound();
+                }
+
+
+                return Ok(blview);
+            }
+            catch (Exception ex)
+            {
+                using (System.IO.StreamWriter sw = new System.IO.StreamWriter(String.Format("E:\\enavy\\error_vin_{0}_{1}_{2}_{3}_{4}_{5}_{6}_{7}.txt", bl, type, DateTime.Today.Day, DateTime.Today.Month, DateTime.Today.Year, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second)))
+                {
+                    sw.WriteLine("message : " + ex.Message); sw.WriteLine("innerexception : " + ex.InnerException); sw.WriteLine("StackTrace : " + ex.StackTrace);
+                }
+
+
+                var message = new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new StringContent("Demande non traitée : ")
+                };
+                throw new HttpResponseException(message);
+                //return NotFound();
+            }
         }
 
         /// <summary>

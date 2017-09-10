@@ -28,12 +28,13 @@ namespace VSOM_API.Models
         public string FinFranchise { get; set; }
         public ICollection<Cars> Vehicules { get; set; }
         public ICollection<InvoiceDetails> Lignes { get; set; }
-        
+        public string Lib { get; set; }
         public ICollection<Invoices> Invoices { get; set; }
         public ICollection<CreditNotes> CN { get; set; }
         public ICollection<Payments> Payments { get; set; }
     }
-     
+    
+
     public class Cars   
     {
         public string Chassis { get; set; }

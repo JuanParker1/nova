@@ -72,7 +72,7 @@ namespace VesselStopOverPresentation.Finance
                 elt.PrixTotal = -1 * ef.MontantTTC; //-1* ef.PrixUnitaire;
                 elt.PrixUnitaire =  (int)ef.PrixUnitaire;
                 elt.Qte = -1;// ef.Qte;
-                elt.TVA = ef.MontantTVA;
+                elt.TVA = -1* ef.MontantTVA;
                 // elt.CompteComptable = txtTVA.Text == "19,25 %" ? art.CCArticle : art.CCArticleEx; //txtCompteComptable.Text;
                 elt.CompteComptable = ef.Compte;
                 elt.Unite = "u"; 
@@ -151,14 +151,26 @@ namespace VesselStopOverPresentation.Finance
                         ElementLigneFactureSpot elt = new ElementLigneFactureSpot();
                         elt.Code = txtCodeArticle.Text;
                         elt.Libelle = txtlibArticle.Text; //cbArticle.Text;
-                        elt.PrixTotal = Convert.ToDouble(txtPT.Text.Replace(".", ",")) ; // Math.Round(Convert.ToDouble(txtPT.Text.Replace(".", ",")),3);
-                        elt.PrixUnitaire = Convert.ToDouble(txtPU.Text.Replace(".", ","));
-                        elt.Qte = (float)Convert.ToDouble(txtQte.Text.Replace(".", ","));
-                        elt.TVA = txtTVA.Text == "19,25 %" ? (elt.PrixTotal - (elt.PrixUnitaire * elt.Qte)) : 0;
-                       // elt.CompteComptable = txtTVA.Text == "19,25 %" ? art.CCArticle : art.CCArticleEx; //txtCompteComptable.Text;
                         elt.CompteComptable = art.CCArticle;
                         elt.Unite = txtUnite.Text;
-                        //recupère le codetva de l'article
+                        if (elt.Code == "1005")
+                        {
+                            elt.PrixTotal = -1 * Convert.ToDouble(txtPT.Text.Replace(".", ",")); // Math.Round(Convert.ToDouble(txtPT.Text.Replace(".", ",")),3);
+                            elt.PrixUnitaire = 0; //-1 * Convert.ToDouble(txtPU.Text.Replace(".", ","));
+                            elt.Qte = -1;
+                            elt.TVA = elt.PrixTotal;
+                        }
+                        else
+                        {
+                           
+                            elt.PrixTotal = Convert.ToDouble(txtPT.Text.Replace(".", ",")); // Math.Round(Convert.ToDouble(txtPT.Text.Replace(".", ",")),3);
+                            elt.PrixUnitaire = Convert.ToDouble(txtPU.Text.Replace(".", ","));
+                            elt.Qte = (float)Convert.ToDouble(txtQte.Text.Replace(".", ","));
+                            elt.TVA = txtTVA.Text == "19,25 %" ? (elt.PrixTotal - (elt.PrixUnitaire * elt.Qte)) : 0;
+                            // elt.CompteComptable = txtTVA.Text == "19,25 %" ? art.CCArticle : art.CCArticleEx; //txtCompteComptable.Text;
+                            
+                            //recupère le codetva de l'article
+                        }
 
                         if (txtTVA.Text == "19,25 %")
                         {
@@ -188,9 +200,17 @@ namespace VesselStopOverPresentation.Finance
 
                         txtCodeArticle.Text = ""; txtQte.Text = ""; txtUnite.Text = "";
                         txtTVA.SelectedIndex = -1; txtPU.Text = ""; txtPT.Text = "0"; cbArticle.SelectedIndex = -1;
-                         
-                        double _ht = Math.Abs(eltsLigneOS.Sum(r => r.PrixUnitaire * r.Qte));
-                        double _tva = Math.Abs(eltsLigneOS.Sum(r => r.TVA));
+                        double _ht = 0; double _tva = 0;
+                        if (elt.Code == "1005")
+                        {
+                            _ht = Math.Abs(eltsLigneOS.Sum(r => r.PrixUnitaire * r.Qte));
+                              _tva = Math.Abs(eltsLigneOS.Sum(r => r.TVA));
+                        }
+                        else
+                        {
+                            _ht = Math.Abs(eltsLigneOS.Sum(r => r.PrixUnitaire * r.Qte));
+                            _tva = Math.Abs(eltsLigneOS.Sum(r => r.TVA));
+                        }
                         montantHTCpteFact.Content = _ht; //Convert.ToInt32(_ht);
                         montantTVACpteFact.Content = _tva; //Convert.ToInt32(_tva);
                         montantTTCCpteFact.Content = _ht + _tva; //(Convert.ToInt32(_ht) + Convert.ToInt32(_tva));
