@@ -342,10 +342,10 @@ namespace VSOM_API.Controllers
                                             if (nbrvae != 0)
                                             {
                                                 #region VAE
-                                                double derogation = (con.BLIL == "Y" || con.BLGN == "Y") ? 0.75 : 0;
+                                                double derogation = 0;//AH (con.BLIL == "Y" || con.BLGN == "Y") ? 0.75 : 0;
                                                 InvoiceDetails eltFactSejourParcAuto = new InvoiceDetails();
 
-                                                eltFactSejourParcAuto.Prix = lpSejourParcAuto.PU4LP.Value - lpSejourParcAuto.PU4LP.Value * derogation;
+                                                eltFactSejourParcAuto.Prix = lpSejourParcAuto.PU4LP.Value * 2; //lpSejourParcAuto.PU4LP.Value - lpSejourParcAuto.PU4LP.Value * derogation;
                                                 eltFactSejourParcAuto.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
                                                 eltFactSejourParcAuto.TvaTaux = eltFactSejourParcAuto.TvaCode == "TVAEX" ? 0 : 0.1925f;
                                                 eltFactSejourParcAuto.Libelle = articleSejourParcAuto.LibArticle + "Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays((dateFin - matchedVehicule.FFVeh.Value).Days).ToShortDateString();
@@ -357,7 +357,8 @@ namespace VSOM_API.Controllers
                                                 eltFactSejourParcAuto.MT = eltFactSejourParcAuto.Ht + eltFactSejourParcAuto.Tva;
                                                 details.Add(eltFactSejourParcAuto);
 
-                                                InvoiceDetails eltFactDeboursPADParcAuto = new InvoiceDetails();
+                                                /* pas de debours pad en VAE
+                                                 * InvoiceDetails eltFactDeboursPADParcAuto = new InvoiceDetails();
 
                                                 eltFactDeboursPADParcAuto.Prix = lpDeboursPADPenalite.PU4LP.Value - lpDeboursPADPenalite.PU4LP.Value * derogation;
                                                 eltFactDeboursPADParcAuto.TvaCode = articleDeboursPADPenalite.CodeTVA;// "TVAEX";
@@ -369,7 +370,7 @@ namespace VSOM_API.Controllers
                                                 eltFactDeboursPADParcAuto.Tva = Math.Round((eltFactDeboursPADParcAuto.Ht * eltFactDeboursPADParcAuto.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
                                                 eltFactDeboursPADParcAuto.MT = eltFactDeboursPADParcAuto.Ht + eltFactDeboursPADParcAuto.Tva;
                                                 details.Add(eltFactDeboursPADParcAuto);
-
+                                                */
                                                 #endregion
 
                                             }
@@ -713,10 +714,10 @@ namespace VSOM_API.Controllers
                                             {
                                                 // Gestion pour les véhicules vendus aux enchères
                                                 #region VAE
-                                                double derogation = (con.BLIL == "Y" || con.BLGN == "Y") ? 0.75 : 0;
+                                                double derogation = 0;// (con.BLIL == "Y" || con.BLGN == "Y") ? 0.75 : 0;
                                                 InvoiceDetails eltFactSejourParcAuto = new InvoiceDetails();
 
-                                                eltFactSejourParcAuto.Prix = lpSejourParcAuto.PU4LP.Value - lpSejourParcAuto.PU4LP.Value * derogation;
+                                                eltFactSejourParcAuto.Prix = lpSejourParcAuto.PU4LP.Value * 2; //lpSejourParcAuto.PU4LP.Value - lpSejourParcAuto.PU4LP.Value * derogation;
                                                 eltFactSejourParcAuto.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
                                                 eltFactSejourParcAuto.TvaTaux = eltFactSejourParcAuto.TvaCode == "TVAEX" ? 0 : 0.1925f;
                                                 eltFactSejourParcAuto.Qte = dateFin.Date < finAncienSejour ? 0 : (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU4LP.Value * (1 - derogation)).Sum(el => el.QTEEF) <= 9) ? (dateFin - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU4LP.Value * (1 - derogation)).Sum(el => el.QTEEF.Value) : 0;
@@ -728,7 +729,8 @@ namespace VSOM_API.Controllers
                                                 eltFactSejourParcAuto.MT = eltFactSejourParcAuto.Ht + eltFactSejourParcAuto.Tva;
                                                 details.Add(eltFactSejourParcAuto);
 
-                                                InvoiceDetails eltFactDeboursPADParcAuto = new InvoiceDetails();
+                                               /*pas de debourd pad en VAE 
+                                                * InvoiceDetails eltFactDeboursPADParcAuto = new InvoiceDetails();
 
                                                 eltFactDeboursPADParcAuto.Prix = lpDeboursPADPenalite.PU4LP.Value - lpDeboursPADPenalite.PU4LP.Value * derogation;
                                                 eltFactDeboursPADParcAuto.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA; //TVAEX
@@ -743,6 +745,7 @@ namespace VSOM_API.Controllers
                                                 eltFactDeboursPADParcAuto.Tva = Math.Round((eltFactDeboursPADParcAuto.Ht * eltFactDeboursPADParcAuto.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
                                                 eltFactDeboursPADParcAuto.MT = eltFactDeboursPADParcAuto.Ht + eltFactDeboursPADParcAuto.Tva;
                                                 details.Add(eltFactDeboursPADParcAuto);
+                                                */ 
                                                 #endregion
                                             }
                                             else
@@ -1165,10 +1168,10 @@ namespace VSOM_API.Controllers
                                             if (nbrvae != 0)
                                             {
                                                 #region VAE
-                                                double derogation = (con.BLIL == "Y" || con.BLGN == "Y") ? 0.75 : 0;
+                                                double derogation = 0;// (con.BLIL == "Y" || con.BLGN == "Y") ? 0.75 : 0;
                                                 InvoiceDetails eltFactSejourParcAuto = new InvoiceDetails();
 
-                                                eltFactSejourParcAuto.Prix = lpSejourParcAuto.PU4LP.Value - lpSejourParcAuto.PU4LP.Value * derogation;
+                                                eltFactSejourParcAuto.Prix = lpSejourParcAuto.PU4LP.Value * 2; //lpSejourParcAuto.PU4LP.Value - lpSejourParcAuto.PU4LP.Value * derogation;
                                                 eltFactSejourParcAuto.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
                                                 eltFactSejourParcAuto.TvaTaux = eltFactSejourParcAuto.TvaCode == "TVAEX" ? 0 : 0.1925f;
                                                 eltFactSejourParcAuto.Libelle = articleSejourParcAuto.LibArticle + "Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays((dateFin - matchedVehicule.FFVeh.Value).Days).ToShortDateString();
@@ -1180,7 +1183,8 @@ namespace VSOM_API.Controllers
                                                 eltFactSejourParcAuto.MT = eltFactSejourParcAuto.Ht + eltFactSejourParcAuto.Tva;
                                                 details.Add(eltFactSejourParcAuto);
 
-                                                InvoiceDetails eltFactDeboursPADParcAuto = new InvoiceDetails();
+                                                /*pas de debours PAD en VAE
+                                                 * InvoiceDetails eltFactDeboursPADParcAuto = new InvoiceDetails();
 
                                                 eltFactDeboursPADParcAuto.Prix = lpDeboursPADPenalite.PU4LP.Value - lpDeboursPADPenalite.PU4LP.Value * derogation;
                                                 eltFactDeboursPADParcAuto.TvaCode = articleDeboursPADPenalite.CodeTVA;// "TVAEX";
@@ -1194,7 +1198,7 @@ namespace VSOM_API.Controllers
                                                 eltFactDeboursPADParcAuto.Tva = Math.Round((eltFactDeboursPADParcAuto.Ht * eltFactDeboursPADParcAuto.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
                                                 eltFactDeboursPADParcAuto.MT = eltFactDeboursPADParcAuto.Ht + eltFactDeboursPADParcAuto.Tva;
                                                 details.Add(eltFactDeboursPADParcAuto);
-
+                                                */
                                                 #endregion
 
                                             }
@@ -1540,10 +1544,10 @@ namespace VSOM_API.Controllers
                                             {
                                                 // Gestion pour les véhicules vendus aux enchères
                                                 #region VAE
-                                                double derogation = (con.BLIL == "Y" || con.BLGN == "Y") ? 0.75 : 0;
+                                                double derogation = 0;// (con.BLIL == "Y" || con.BLGN == "Y") ? 0.75 : 0;
                                                 InvoiceDetails eltFactSejourParcAuto = new InvoiceDetails();
 
-                                                eltFactSejourParcAuto.Prix = lpSejourParcAuto.PU4LP.Value - lpSejourParcAuto.PU4LP.Value * derogation;
+                                                eltFactSejourParcAuto.Prix = lpSejourParcAuto.PU4LP.Value * 2; //lpSejourParcAuto.PU4LP.Value - lpSejourParcAuto.PU4LP.Value * derogation;
                                                 eltFactSejourParcAuto.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
                                                 eltFactSejourParcAuto.TvaTaux = eltFactSejourParcAuto.TvaCode == "TVAEX" ? 0 : 0.1925f;
                                                 eltFactSejourParcAuto.Qte = dateFin.Date < finAncienSejour ? 0 : (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU4LP.Value * (1 - derogation)).Sum(el => el.QTEEF) <= 9) ? (dateFin - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU4LP.Value * (1 - derogation)).Sum(el => el.QTEEF.Value) : 0;
@@ -1555,7 +1559,8 @@ namespace VSOM_API.Controllers
                                                 eltFactSejourParcAuto.MT = eltFactSejourParcAuto.Ht + eltFactSejourParcAuto.Tva;
                                                 details.Add(eltFactSejourParcAuto);
 
-                                                InvoiceDetails eltFactDeboursPADParcAuto = new InvoiceDetails();
+                                                /*pas de debourd pad en vae.
+                                                 * InvoiceDetails eltFactDeboursPADParcAuto = new InvoiceDetails();
 
                                                 eltFactDeboursPADParcAuto.Prix = lpDeboursPADPenalite.PU4LP.Value - lpDeboursPADPenalite.PU4LP.Value * derogation;
                                                 eltFactDeboursPADParcAuto.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA; //TVAEX
@@ -1570,6 +1575,7 @@ namespace VSOM_API.Controllers
                                                 eltFactDeboursPADParcAuto.Tva = Math.Round((eltFactDeboursPADParcAuto.Ht * eltFactDeboursPADParcAuto.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
                                                 eltFactDeboursPADParcAuto.MT = eltFactDeboursPADParcAuto.Ht + eltFactDeboursPADParcAuto.Tva;
                                                 details.Add(eltFactDeboursPADParcAuto);
+                                                 */ 
                                                 #endregion
                                             }
                                             else
@@ -2095,7 +2101,35 @@ namespace VSOM_API.Controllers
                             }
                             else
                             {
-                                blview = new BL() { NumBl = bl, Lib = "1" };
+                                blview = new BL()
+                                {
+                                    NumBl = bl,
+                                    Lib = "1",
+                                    FinFranchise = con.VEHICULEs.ToList<VEHICULE>()[0].FFVeh.Value.ToShortDateString(),
+                                    Vehicules = new List<Cars>()
+                                };
+
+                                foreach (VEHICULE _veh in con.VEHICULEs)
+                                {
+                                    if (veh.IdVehAP == null && veh.StatVeh != "Livré")
+                                    {
+                                        blview.Vehicules.Add(new Cars
+                                        {
+                                            Chassis = _veh.NumChassis,
+                                            Description = _veh.DescVeh,
+                                            Vol = _veh.VolCVeh.Value,
+                                            Porte = _veh.VehPorte,
+                                            Attelle = _veh.VehAttelle,
+                                            Statut = _veh.StatVeh,
+                                            Longueur = _veh.LongCVeh.Value,
+                                            Largueur = _veh.LargCVeh.Value,
+                                            Charge = _veh.VehChargé,
+                                            FinFranchise = _veh.FFVeh.Value
+                                            //FinSejour = veh.FSVeh.Value,
+                                            //SortiePrevu = veh.DSPVeh.Value
+                                        });
+                                    }
+                                }
                             }
                         }
 

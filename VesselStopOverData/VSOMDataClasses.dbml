@@ -1430,6 +1430,8 @@
       <Column Name="IdEsc" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="IdU" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="IdDocSAP" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Statut" Type="System.String" DbType="varchar(10)" CanBeNull="true" />
+      <Column Name="DComptFact" Type="System.DateTime" DbType="datetime" CanBeNull="true" />
       <Association Name="FACTURE_ARMATEUR_LIGNE_FACTURE_ARMATEUR" Member="LIGNE_FACTURE_ARMATEUR" ThisKey="IdFArm" OtherKey="IdFArm" Type="LIGNE_FACTURE_ARMATEUR" Cardinality="One" />
       <Association Name="ESCALE_FACTURE_ARMATEUR" Member="ESCALE" ThisKey="IdEsc" OtherKey="IdEsc" Type="ESCALE" IsForeignKey="true" />
     </Type>

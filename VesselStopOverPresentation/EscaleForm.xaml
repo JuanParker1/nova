@@ -827,6 +827,8 @@
                                         <DataGridTextColumn Header="Escale" Width="Auto" Binding="{Binding ESCALE.NumEsc}"></DataGridTextColumn>
                                         <DataGridTextColumn Header="Armateur" Width="Auto" Binding="{Binding ESCALE.ARMATEUR.NomArm}"></DataGridTextColumn>
                                         <DataGridTextColumn Header="Date de facturation" Width="Auto" Binding="{Binding DCFArm, StringFormat='{}{0:dd/MM/yyyy HH:mm:ss}'}"></DataGridTextColumn>
+                                        <DataGridTextColumn Header="Date Comptable" Width="Auto" Binding="{Binding DComptFact, StringFormat='{}{0:dd/MM/yyyy HH:mm:ss}'}"></DataGridTextColumn>
+
                                         <DataGridTextColumn Header="Total HT" Width="Auto" Binding="{Binding MHT, ConverterCulture=fr-FR, StringFormat={}{0:N0} XAF}">
                                             <DataGridTextColumn.ElementStyle>
                                                 <Style TargetType="TextBlock">
@@ -848,6 +850,7 @@
                                                 </Style>
                                             </DataGridTextColumn.ElementStyle>
                                         </DataGridTextColumn>
+                                        <DataGridTextColumn Header="Statut" Width="50" Binding="{Binding Statut}"></DataGridTextColumn>
                                         <DataGridTextColumn Header="Remarques" Width="150" Binding="{Binding AIFP}"></DataGridTextColumn>
                                     </DataGrid.Columns>
                                 </DataGrid>

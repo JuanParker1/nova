@@ -1103,7 +1103,7 @@ namespace VesselStopOverData
         /// <param name="autresInfos"></param>
         /// <param name="idUser"></param>
         /// <returns></returns>
-        public ESCALE FacturerArmateur(int idEsc, List<ElementFacturation> eltFactureArmateur, string autresInfos, int idUser)
+        public ESCALE FacturerArmateur(int idEsc, List<ElementFacturation> eltFactureArmateur, string autresInfos, int idUser,DateTime _datecomptable)
         {
             using (var transaction = new System.Transactions.TransactionScope())
             {
@@ -1146,14 +1146,15 @@ namespace VesselStopOverData
                 matchedEscale.DateFArm = datetime;
 
                 FACTURE_ARMATEUR factArm = new FACTURE_ARMATEUR();
-                factArm.DCFArm = datetime;
+                factArm.DCFArm = DateTime.Now;
                 factArm.AIFArm = autresInfos;
                 factArm.IdEsc = idEsc;
                 factArm.IdU = idUser;
                 factArm.MHT = Convert.ToInt32(eltFactureArmateur.Sum(elt => elt.MontantHT));
                 factArm.MTVA = Convert.ToInt32(eltFactureArmateur.Sum(elt => elt.MontantTVA));
                 factArm.MTTC = factArm.MHT + factArm.MTVA;
-
+                factArm.DComptFact = _datecomptable;
+                factArm.Statut = "En Cours";
                 dcAcc.GetTable<FACTURE_ARMATEUR>().InsertOnSubmit(factArm);
 
                 dcAcc.SubmitChanges();
@@ -1238,8 +1239,8 @@ namespace VesselStopOverData
                         CMPTGEN = le.AccountCode,
                         CMPTTYP = "G",
                         CODE_TVA = le.CodeTVA ,
-                        DATECH = string.Format("{0:ddMMyy}", datetime.AddDays(30)),
-                        DPIECE = string.Format("{0:ddMMyy}", datetime),
+                        DATECH = string.Format("{0:ddMMyy}", _datecomptable.AddDays(30)),
+                        DPIECE = string.Format("{0:ddMMyy}", _datecomptable),
                         LIB = "Arm-" + matchedEscale.NumEsc+"-"+le.CodeArticle,
                         MONTANT = (le.PrixUnitaire * le.Qte).ToString(),
                         PAYMOD = "S",
@@ -1258,8 +1259,8 @@ namespace VesselStopOverData
                     CMPTGEN = "4111104", 
                     CMPTTYP = "X",
                     CODE_TVA = null,
-                    DATECH = string.Format("{0:ddMMyy}", datetime.AddDays(30)),
-                    DPIECE = string.Format("{0:ddMMyy}", datetime),
+                    DATECH = string.Format("{0:ddMMyy}", _datecomptable.AddDays(30)),
+                    DPIECE = string.Format("{0:ddMMyy}", _datecomptable),
                     LIB = "Arm-" + matchedEscale.NumEsc ,
                     MONTANT = factArm.MTTC.ToString(),
                     PAYMOD = "S",
@@ -7949,11 +7950,11 @@ namespace VesselStopOverData
                         {
                             // Gestion pour les véhicules vendus aux enchères
                             #region vae
-                            double derogation = (matchedVehicule.CONNAISSEMENT.BLIL == "Y" || matchedVehicule.CONNAISSEMENT.BLGN == "Y") ? 0.75 : 0;
+                            double derogation = 0;// (matchedVehicule.CONNAISSEMENT.BLIL == "Y" || matchedVehicule.CONNAISSEMENT.BLGN == "Y") ? 0.75 : 0;
                             ELEMENT_FACTURATION eltFactSejourParcAuto = new ELEMENT_FACTURATION();
 
-                            eltFactSejourParcAuto.PUEF = lpSejourParcAuto.PU4LP - lpSejourParcAuto.PU4LP * derogation;
-                            eltFactSejourParcAuto.PUEFBase = lpSejourParcAuto.PU4LP - lpSejourParcAuto.PU4LP * derogation;
+                            eltFactSejourParcAuto.PUEF = lpSejourParcAuto.PU4LP * 2; /*lpSejourParcAuto.PU4LP - lpSejourParcAuto.PU4LP * derogation;*/
+                            eltFactSejourParcAuto.PUEFBase = lpSejourParcAuto.PU4LP * 2; /*lpSejourParcAuto.PU4LP - lpSejourParcAuto.PU4LP * derogation;*/
                             eltFactSejourParcAuto.CodeTVA = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (matchedVehicule.CONNAISSEMENT.CODE_TVA.CodeTVA == "TVAEX" ? "TVAEX" : matchedVehicule.CONNAISSEMENT.CLIENT.CodeTVA);
                             eltFactSejourParcAuto.TauxTVA = eltFactSejourParcAuto.CodeTVA == "TVAEX" ? 0 : matchedVehicule.CONNAISSEMENT.CODE_TVA.TauxTVA == 0 ? 0 : matchedVehicule.CONNAISSEMENT.CLIENT.CODE_TVA.TauxTVA;
                             eltFactSejourParcAuto.CCArticle = eltFactSejourParcAuto.CodeTVA == "TVAEX" ? articleSejourParcAuto.CCArticleEx : articleSejourParcAuto.CCArticle;
@@ -7961,7 +7962,9 @@ namespace VesselStopOverData
                             eltFactSejourParcAuto.EltFacture = "Veh";
                             eltFactSejourParcAuto.DateJEF = DateTime.Now;
                             eltFactSejourParcAuto.IdLP = lpSejourParcAuto.IdLP;
-                            eltFactSejourParcAuto.QTEEF = dateFin.Date < finAncienSejour ? 0 : (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU4LP * (1 - derogation)).Sum(el => el.QTEEF) <= 9) ? (dateFin - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU4LP * (1 - derogation)).Sum(el => el.QTEEF) : 0;
+                           // eltFactSejourParcAuto.QTEEF = dateFin.Date < finAncienSejour ? 0 : (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU4LP * (1 - derogation)).Sum(el => el.QTEEF) <= 9) ? (dateFin - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU4LP * (1 - derogation)).Sum(el => el.QTEEF) : 0;
+                            eltFactSejourParcAuto.QTEEF = dateFin.Date < finAncienSejour ? 0 :  ((dateFin - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU4LP * (1 - derogation)).Sum(el => el.QTEEF));
+                            
                             //AH  "Pénalité de stationnement
                             eltFactSejourParcAuto.LibEF = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAuto.QTEEF)).ToShortDateString();
                             eltFactSejourParcAuto.UnitEF = lpSejourParcAuto.UniteLP;

@@ -21,7 +21,12 @@
         <StatusBar DockPanel.Dock="Bottom" Height="30" FlowDirection="RightToLeft">
             <Label Name="lblStatut" FlowDirection="LeftToRight" FontWeight="SemiBold" FontFamily="Segoe UI" FontSize="11" />
         </StatusBar>
+        <DockPanel DockPanel.Dock="Top" FlowDirection="LeftToRight" HorizontalAlignment="Left">
+            <Label Margin="0,0,10,0">Date comptable facture</Label>
+            <DatePicker Name="txtDateCreation" Width="130" Margin="0,2,0,2" SelectedDate="{x:Static sys:DateTime.Now}"  />
+        </DockPanel>
         <DockPanel>
+            
             <GroupBox Header="Elements de facture armateur" BorderThickness="2" Height="Auto">
                 <DataGrid Name="dataGridEltsFact" IsReadOnly="True" ItemsSource="{Binding elementFactureArmateur}" AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader">
                     <DataGrid.RowHeaderTemplate>

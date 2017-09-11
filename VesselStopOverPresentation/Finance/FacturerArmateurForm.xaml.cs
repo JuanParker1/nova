@@ -68,9 +68,10 @@ namespace VesselStopOverPresentation
                 {
                     MessageBox.Show("Vous devez renseigner au moins une ligne à facturer à l'armateur", "Eléments de facturation ?", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 }
+                
                 else if (MessageBox.Show("Cette opération entraine une comptabilisation définitive de la facture armateur, voulez-vous vraiment lancer cette clôture maintenant ?", "Facturation de l'armateur !", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes)
                 {
-                    ESCALE esc = vsomAcc.FacturerArmateur(Convert.ToInt32(escForm.txtEscaleSysID.Text), dataGridEltsFact.SelectedItems.OfType<ElementFacturation>().ToList<ElementFacturation>(), "", utilisateur.IdU);
+                    ESCALE esc = vsomAcc.FacturerArmateur(Convert.ToInt32(escForm.txtEscaleSysID.Text), dataGridEltsFact.SelectedItems.OfType<ElementFacturation>().ToList<ElementFacturation>(), "", utilisateur.IdU,txtDateCreation.SelectedDate.Value);
 
                     formLoader.LoadEscaleForm(escForm, esc);
 

@@ -34719,6 +34719,10 @@ namespace VesselStopOverData
 		
 		private System.Nullable<int> _IdDocSAP;
 		
+		private string _Statut;
+		
+		private System.Nullable<System.DateTime> _DComptFact;
+		
 		private EntityRef<LIGNE_FACTURE_ARMATEUR> _LIGNE_FACTURE_ARMATEUR;
 		
 		private EntityRef<ESCALE> _ESCALE;
@@ -34745,6 +34749,10 @@ namespace VesselStopOverData
     partial void OnIdUChanged();
     partial void OnIdDocSAPChanging(System.Nullable<int> value);
     partial void OnIdDocSAPChanged();
+    partial void OnStatutChanging(string value);
+    partial void OnStatutChanged();
+    partial void OnDComptFactChanging(System.Nullable<System.DateTime> value);
+    partial void OnDComptFactChanged();
     #endregion
 		
 		public FACTURE_ARMATEUR()
@@ -34934,6 +34942,46 @@ namespace VesselStopOverData
 					this._IdDocSAP = value;
 					this.SendPropertyChanged("IdDocSAP");
 					this.OnIdDocSAPChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Statut", DbType="varchar(10)")]
+		public string Statut
+		{
+			get
+			{
+				return this._Statut;
+			}
+			set
+			{
+				if ((this._Statut != value))
+				{
+					this.OnStatutChanging(value);
+					this.SendPropertyChanging();
+					this._Statut = value;
+					this.SendPropertyChanged("Statut");
+					this.OnStatutChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DComptFact", DbType="datetime")]
+		public System.Nullable<System.DateTime> DComptFact
+		{
+			get
+			{
+				return this._DComptFact;
+			}
+			set
+			{
+				if ((this._DComptFact != value))
+				{
+					this.OnDComptFactChanging(value);
+					this.SendPropertyChanging();
+					this._DComptFact = value;
+					this.SendPropertyChanged("DComptFact");
+					this.OnDComptFactChanged();
 				}
 			}
 		}
