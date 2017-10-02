@@ -188,12 +188,14 @@ namespace VSOM_API.Controllers
         /// <param name="chassis"></param>
         /// <param name="date"></param>
         /// <param name="type">quote,valide</param>
-        /// <param name="tok"></param>
+        /// <param name="tok">idclient si quotation et numero quotation si demande de facture</param>
+        /// <param name="owner">type de client : entreprise (2) ou particulier(1)</param>
+        /// <param name="tkusr">id du compte effectuant loperation (9999) pour le particulier</param>
         /// <returns></returns>
         
         [Authorize]
         [HttpGet]
-        public IHttpActionResult GetQuotation(string bl, string chassis, string date, string type , string tok, int owner )
+        public IHttpActionResult GetQuotation(string bl, string chassis, string date, string type , string tok, int owner, int tkusr )
         {
             //if (!ModelState.IsValid)  return BadRequest("Invalid data.");
             List<InvoiceDetails> details = null; List<InvoiceDetails> pendingElmt = null; StringBuilder sb = new StringBuilder();
@@ -1924,6 +1926,7 @@ namespace VSOM_API.Controllers
                 if (type == "inv")
                 {
 
+                    #region enregistrement quodation valide et envoie de mail team socomar
                     //verifie si la validation correspond a l'existant
 
                     var req = new requetes
@@ -1969,7 +1972,7 @@ namespace VSOM_API.Controllers
                         mail.CC.Add("support@socomar-cameroun.com");
                         mail.Subject = "Quotation numéro " + tok + " sur BL numero " + bl;
                         //mail.Body = "Merci. Votre quotation numéro  " + req.ID_QUOTATION.Value + "  est en cours de traitement. Vous recevrez votre facture par mail très bientôt";
-                       mail.Body="Une nouvelle quotation est validée. Veuillez proceder a son traitement";
+                        mail.Body = "Une nouvelle quotation est validée. Veuillez proceder a son traitement";
                         SmtpServer.Credentials = new System.Net.NetworkCredential("automate@socomar-cameroun.com", "Socom@r17!");
                         SmtpServer.Send(mail);
 
@@ -1978,7 +1981,8 @@ namespace VSOM_API.Controllers
                             sw.WriteLine("ok validation : " + req.ID + " quotation : " + req.ID_QUOTATION);
                         }
                         return Ok(req.ID_QUOTATION);
-                    }
+                    } 
+                    #endregion
                 }
                 else
                 {
@@ -2008,7 +2012,7 @@ namespace VSOM_API.Controllers
                                HT = int.Parse(qi.HT.ToString()),
                                TVA = int.Parse(qi.TVA.ToString()),
                                TTC = int.Parse(qi.MT.ToString())
-
+                               , USERS_ID=tkusr, CLIENTS_ID=idclient
                            };
                         using (var ctx = new RM_VSOMEntities1())
                         {
@@ -2019,7 +2023,7 @@ namespace VSOM_API.Controllers
                         }
 
                         //string str = qi.ToXML();
-                        using (System.IO.StreamWriter sw = new System.IO.StreamWriter(String.Format("E:\\enavy\\quotation_{0}_{1}.xml", qi.Ref, bl)))
+                        using (System.IO.StreamWriter sw = new System.IO.StreamWriter(String.Format("E:\\enavy\\quotation_{0}_{1}_{2}.xml", qi.Ref, bl,tkusr)))
                         {
                             sw.WriteLine(qi.ToXML());
                         }
@@ -2093,8 +2097,8 @@ namespace VSOM_API.Controllers
 
                         if (type == "ovin") //controle de chassis
                         {
-                            List<VEHICULE> lveh = con.VEHICULEs.ToList<VEHICULE>();
-                            VEHICULE veh = lveh.SingleOrDefault(s => s.NumChassis == vin);
+                            List<VEHICULE> lveh = con.VEHICULEs.ToList<VEHICULE>(); string _vin = vin.ToUpper();
+                            VEHICULE veh = lveh.SingleOrDefault(s => s.NumChassis == _vin);
                             if (veh == null)
                             {
                                 blview = new BL() { NumBl = bl, Lib = "0" };
@@ -2105,6 +2109,8 @@ namespace VSOM_API.Controllers
                                 {
                                     NumBl = bl,
                                     Lib = "1",
+                                    Consignee = con.ConsigneeBL,
+                                    Notify = con.NotifyBL,
                                     FinFranchise = con.VEHICULEs.ToList<VEHICULE>()[0].FFVeh.Value.ToShortDateString(),
                                     Vehicules = new List<Cars>()
                                 };

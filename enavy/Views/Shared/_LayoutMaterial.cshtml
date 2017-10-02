@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+ 
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="msapplication-tap-highlight" content="no">
+  <meta name="description" content="">
+  
+  <title>@ViewBag.Title</title>
+   @Styles.Render("~/Content/materialstyl")
+   
+</head>
+
+<body> 
+  <header id="header" class="page-topbar"> 
+        <div class="navbar-fixed">
+            <nav class="navbar-color indigo darken-4">
+                <div class="nav-wrapper">
+                    <ul class="left">                      
+                      <li><h1 class="logo-wrapper"> <span class="logo-text">&nbsp;</span></h1></li>
+                    </ul>
+                    <!--<div class="header-search-wrapper hide-on-med-and-down_">
+                        <i class="mdi-action-search"></i>
+                        <input type="text" name="Search" class="header-search-input z-depth-2 hidden" ng-model="md.searchbl" ng-enter="search();" placeholder="Numéro de connaissement"/>
+                    </div>-->
+                     
+                </div>
+            </nav>
+            
+             <nav id="horizontal-nav" class="white hide-on-med-and-down">
+                <div class="nav-wrapper" >            
+                	<ul id="nav-mobile" class="left hide-on-med-and-down">
+                		<li><a href="#" class="indigo-text"> <span>SOLINE / </span></a></li>
+                		 
+                    <li><a href="#" class="indigo-text"><span>Solution / User / Action</span></a></li>
+                     
+                	</ul>  
+                	    
+                  <ul id="nav-pc" class="right hide-on-med-and-down">
+                  
+		             <li>
+                        <a href="" class="red-text"><i class="mdi-navigation-close"></i> <span>Fermer la sessions</span></a>
+                    </li> 
+                    
+                  </ul>
+                </div>
+              </nav>
+        </div> 
+  </header>
+  
+ <div id="main"> 
+    <div class="wrapper">
+      @RenderSection("featured", required: false)
+      <section id="content"> 
+        <div class="container">    
+        	<div class="row" ><div class="progress"> <div class="indeterminate"></div> </div></div> 
+              @RenderBody()
+        </div>
+      </section>  
+    </div>
+</div>
+     
+    @Scripts.Render("~/bundles/materialjs")
+</body>
+</html>

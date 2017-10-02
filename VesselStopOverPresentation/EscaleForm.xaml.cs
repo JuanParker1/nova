@@ -1487,7 +1487,7 @@ namespace VesselStopOverPresentation
             }
             catch (Exception ex)
             {
-
+                MessageBox.Show(ex.Message, "Echec de l'opération !", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -1648,6 +1648,24 @@ namespace VesselStopOverPresentation
         private void btnTestAvoir_Click_1(object sender, RoutedEventArgs e)
         {
            
+        }
+
+        private void dataGridFactSoc_MouseDoubleClick_1(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+                FactureArmateurReport factArmateurReport = new FactureArmateurReport(this,(FACTURE_SOCOMAR)dataGridFactSoc.SelectedItem);
+                factArmateurReport.Title = "Impression de la facture" ;
+                factArmateurReport.Show();
+            }
+            catch (ApplicationException ex)
+            {
+                MessageBox.Show(ex.Message, "Echec de l'opération !", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Echec de l'opération !", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

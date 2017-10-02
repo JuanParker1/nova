@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="RM_VSOMModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="RM_VSOMModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityContainer Name="RM_VSOMModelStoreContainer">
           <EntitySet Name="acces" EntityType="RM_VSOMModel.Store.acces" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="compte_rule" EntityType="RM_VSOMModel.Store.compte_rule" store:Type="Tables" Schema="dbo" />
@@ -14,6 +14,10 @@
           <EntitySet Name="quotation" EntityType="RM_VSOMModel.Store.quotation" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="requetes" EntityType="RM_VSOMModel.Store.requetes" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="rules" EntityType="RM_VSOMModel.Store.rules" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_requetes_quotation" Association="RM_VSOMModel.Store.FK_requetes_quotation">
+            <End Role="quotation" EntitySet="quotation" />
+            <End Role="requetes" EntitySet="requetes" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="acces">
           <Key>
@@ -86,6 +90,9 @@
           <Property Name="TVA" Type="int" />
           <Property Name="TTC" Type="int" />
           <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="IDFD" Type="int" />
+          <Property Name="USERS_ID" Type="int" />
+          <Property Name="CLIENTS_ID" Type="int" />
         </EntityType>
         <EntityType Name="requetes">
           <Key>
@@ -95,8 +102,9 @@
           <Property Name="REC_TIME" Type="datetime2" Precision="0" />
           <Property Name="IDCOMPTES" Type="int" />
           <Property Name="ETAT" Type="varchar" MaxLength="25" />
-          <Property Name="ID_QUOTATION" Type="int" />
+          <Property Name="ID_QUOTATION" Type="int" Nullable="false" />
           <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="IDFACTURE" Type="int" />
         </EntityType>
         <EntityType Name="rules">
           <Key>
@@ -105,8 +113,19 @@
           <Property Name="ID" Type="int" Nullable="false" />
           <Property Name="LIBELLE" Type="varchar" MaxLength="45" />
         </EntityType>
-      </Schema>
-    </edmx:StorageModels>
+        <Association Name="FK_requetes_quotation">
+          <End Role="quotation" Type="RM_VSOMModel.Store.quotation" Multiplicity="1" />
+          <End Role="requetes" Type="RM_VSOMModel.Store.requetes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="quotation">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="requetes">
+              <PropertyRef Name="ID_QUOTATION" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="RM_VSOMModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -119,6 +138,10 @@
           <EntitySet Name="quotation" EntityType="RM_VSOMModel.quotation" />
           <EntitySet Name="requetes" EntityType="RM_VSOMModel.requetes" />
           <EntitySet Name="rules" EntityType="RM_VSOMModel.rules" />
+          <AssociationSet Name="FK_requetes_quotation" Association="RM_VSOMModel.FK_requetes_quotation">
+            <End Role="quotation" EntitySet="quotation" />
+            <End Role="requetes" EntitySet="requetes" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="acces">
           <Key>
@@ -191,6 +214,10 @@
           <Property Name="TVA" Type="Int32" />
           <Property Name="TTC" Type="Int32" />
           <Property Name="ID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="IDFD" />
+          <Property Type="Int32" Name="USERS_ID" />
+          <Property Type="Int32" Name="CLIENTS_ID" />
+          <NavigationProperty Name="requetes" Relationship="RM_VSOMModel.FK_requetes_quotation" FromRole="quotation" ToRole="requetes" />
         </EntityType>
         <EntityType Name="requetes">
           <Key>
@@ -200,8 +227,10 @@
           <Property Name="REC_TIME" Type="DateTime" Precision="0" />
           <Property Name="IDCOMPTES" Type="Int32" />
           <Property Name="ETAT" Type="String" MaxLength="25" Unicode="false" FixedLength="false" />
-          <Property Name="ID_QUOTATION" Type="Int32" />
+          <Property Name="ID_QUOTATION" Type="Int32" Nullable="false" />
           <Property Name="ID" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="IDFACTURE" />
+          <NavigationProperty Name="quotation" Relationship="RM_VSOMModel.FK_requetes_quotation" FromRole="requetes" ToRole="quotation" />
         </EntityType>
         <EntityType Name="rules">
           <Key>
@@ -210,6 +239,18 @@
           <Property Name="ID" Type="Int32" Nullable="false" />
           <Property Name="LIBELLE" Type="String" MaxLength="45" Unicode="false" FixedLength="false" />
         </EntityType>
+        <Association Name="FK_requetes_quotation">
+          <End Type="RM_VSOMModel.quotation" Role="quotation" Multiplicity="1" />
+          <End Type="RM_VSOMModel.requetes" Role="requetes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="quotation">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="requetes">
+              <PropertyRef Name="ID_QUOTATION" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -278,6 +319,9 @@
           <EntitySetMapping Name="quotation">
             <EntityTypeMapping TypeName="RM_VSOMModel.quotation">
               <MappingFragment StoreEntitySet="quotation">
+                <ScalarProperty Name="CLIENTS_ID" ColumnName="CLIENTS_ID" />
+                <ScalarProperty Name="USERS_ID" ColumnName="USERS_ID" />
+                <ScalarProperty Name="IDFD" ColumnName="IDFD" />
                 <ScalarProperty Name="STARTDATE" ColumnName="STARTDATE" />
                 <ScalarProperty Name="ENDDATE" ColumnName="ENDDATE" />
                 <ScalarProperty Name="LEVEL" ColumnName="LEVEL" />
@@ -296,6 +340,7 @@
           <EntitySetMapping Name="requetes">
             <EntityTypeMapping TypeName="RM_VSOMModel.requetes">
               <MappingFragment StoreEntitySet="requetes">
+                <ScalarProperty Name="IDFACTURE" ColumnName="IDFACTURE" />
                 <ScalarProperty Name="LIBELLE" ColumnName="LIBELLE" />
                 <ScalarProperty Name="REC_TIME" ColumnName="REC_TIME" />
                 <ScalarProperty Name="IDCOMPTES" ColumnName="IDCOMPTES" />
@@ -327,7 +372,7 @@
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="Aucun" />
       </DesignerInfoPropertySet>

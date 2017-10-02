@@ -14,6 +14,11 @@ namespace VSOM_API
     
     public partial class quotation
     {
+        public quotation()
+        {
+            this.requetes = new HashSet<requetes>();
+        }
+    
         public Nullable<System.DateTime> STARTDATE { get; set; }
         public Nullable<System.DateTime> ENDDATE { get; set; }
         public string LEVEL { get; set; }
@@ -26,5 +31,10 @@ namespace VSOM_API
         public Nullable<int> TVA { get; set; }
         public Nullable<int> TTC { get; set; }
         public int ID { get; set; }
+        public Nullable<int> IDFD { get; set; }
+        public Nullable<int> USERS_ID { get; set; }
+        public Nullable<int> CLIENTS_ID { get; set; }
+    
+        public virtual ICollection<requetes> requetes { get; set; }
     }
 }

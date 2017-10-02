@@ -31,7 +31,7 @@
     <UpdateUrl>http://localhost/VesselStopOverPresentation/</UpdateUrl>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>112</ApplicationRevision>
+    <ApplicationRevision>113</ApplicationRevision>
     <ApplicationVersion>2.2.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -117,6 +117,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="common\AtlasXmlEditor.xaml.cs">
+      <DependentUpon>AtlasXmlEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="conteneur\2015UpdateOperationTracking.xaml.cs">
       <DependentUpon>2015UpdateOperationTracking.xaml</DependentUpon>
     </Compile>
@@ -925,6 +928,10 @@
     <Compile Include="VehiculePanel.xaml.cs">
       <DependentUpon>VehiculePanel.xaml</DependentUpon>
     </Compile>
+    <Page Include="common\AtlasXmlEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="conteneur\2015UpdateOperationTracking.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -2384,9 +2391,7 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="common\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

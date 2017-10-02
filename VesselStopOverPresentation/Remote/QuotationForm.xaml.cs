@@ -108,7 +108,7 @@ namespace VesselStopOverPresentation.Remote
                         //using (var ctx = new VSOMClassesDataContext())
                         //{
                             VSOMAccessors vs = new VSOMAccessors();
-                            fac= vs.FacturerQuotation(_view.IdBL, "", _usr.IdU, txtClientFature.Text);
+                            fac= vs.FacturerQuotation(_view.IdBL, "", _usr.IdU, txtClientFature.Text,_view.HT);
                         //}
 
                         if (fac != null)

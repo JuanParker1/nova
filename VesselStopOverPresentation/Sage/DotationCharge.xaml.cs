@@ -33,7 +33,7 @@ namespace VesselStopOverPresentation.Sage
 
         private void btnValider_Click_1(object sender, RoutedEventArgs e)
         {
-            if (txtDateDebut.SelectedDate.HasValue == false )
+            if (txtDateDebut.SelectedDate.HasValue == false || txtRef.Text.Trim().Length == 0)
             {
                 MessageBox.Show("Selectionner une date ", "Appointement paie",
                   MessageBoxButton.OK, MessageBoxImage.Information); return;
@@ -95,11 +95,11 @@ namespace VesselStopOverPresentation.Sage
                                 CustomerCode = custcode,
                                 DatePay = string.Format("{0:ddMMyy}", date),
                                 DebitCredit = "D",
-                                Description = lib.Length > 25 ? lib.Substring(0, 25) : lib,
+                                Description = lib.Length > 25 ? cf+'-'+lib.Substring(0, 20) : cf+'-'+lib,
                                 FC = "OD",
                                 GrossAmount = Math.Round(Convert.ToDouble(d), 0, MidpointRounding.AwayFromZero).ToString(),
                                 InvoiceDate = string.Format("{0:ddMMyy}", date),
-                                InvoiceNumber = cf,
+                                InvoiceNumber = txtRef.Text.Trim(),
                                 N = "N",
                                 PayType = "S",
                                 X = custcode == "" ? "G" : "X"
@@ -117,11 +117,11 @@ namespace VesselStopOverPresentation.Sage
                                 CustomerCode = custcode,
                                 DatePay = string.Format("{0:ddMMyy}", date),
                                 DebitCredit = "C",
-                                Description = lib.Length > 25 ? lib.Substring(0, 25) : lib,
+                                Description = lib.Length > 25 ? cf + '-' + lib.Substring(0, 20) : cf + '-' + lib,
                                 FC = "OD",
                                 GrossAmount = Math.Round(Convert.ToDouble(c), 0, MidpointRounding.AwayFromZero).ToString(),
                                 InvoiceDate = string.Format("{0:ddMMyy}", date),
-                                InvoiceNumber = cf,
+                                InvoiceNumber = txtRef.Text.Trim(),
                                 N = "N",
                                 PayType = "S",
                                 X = custcode == "" ? "G" : "X"

@@ -37,6 +37,9 @@ namespace VSOM_API.Controllers
                         diff = heurNormal = t120 = t130 = t140 = t150 = t200 = thm = 0; estferie = false; abateau = false;
 
                         dayname = pt.JOUR.DayOfWeek.ToString();
+                        if(pt.JOUR==DateTime.Parse("26/08/2017"))
+                        {
+                        }
                         //recupère le statut de la semaine
                         #region statut jour
                         PRM_PROGRAM prog = ctx.PRM_PROGRAM.Where(s => s.JOUR == pt.JOUR).FirstOrDefault();

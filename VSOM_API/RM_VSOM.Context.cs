@@ -27,7 +27,7 @@ namespace VSOM_API
     
         public DbSet<acces> acces { get; set; }
         public DbSet<compte_rule> compte_rule { get; set; }
-        
+        public DbSet<comptes> comptes { get; set; }
         public DbSet<entreprises> entreprises { get; set; }
         public DbSet<log> log { get; set; }
         public DbSet<quotation> quotation { get; set; }

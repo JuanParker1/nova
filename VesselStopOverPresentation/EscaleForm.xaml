@@ -775,7 +775,8 @@
                                 </DataGrid>
                             </TabItem>
                             <TabItem Header="Factures SOCOMAR">
-                                <DataGrid Name="dataGridFactSoc" IsReadOnly="True" ItemsSource="{Binding facturesSocomar}" AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader" MouseDoubleClick="dataGridFactArm_MouseDoubleClick">
+                                <DataGrid Name="dataGridFactSoc" IsReadOnly="True" ItemsSource="{Binding facturesSocomar}" AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" 
+                                          VerticalGridLinesBrush="Silver" RowHeight="20" SelectionMode="Single" BorderThickness="2" ClipboardCopyMode="IncludeHeader" MouseDoubleClick="dataGridFactSoc_MouseDoubleClick_1">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header=" "></DataGridTextColumn>
                                         <DataGridTextColumn Header="N° Facture" Width="Auto" Binding="{Binding IdDocSAP}">

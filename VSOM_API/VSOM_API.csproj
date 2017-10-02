@@ -184,6 +184,9 @@
     <Compile Include="CLIENT.cs">
       <DependentUpon>VsomEntty.tt</DependentUpon>
     </Compile>
+    <Compile Include="comptes.cs">
+      <DependentUpon>RM_VSOM.tt</DependentUpon>
+    </Compile>
     <Compile Include="compte_rule.cs">
       <DependentUpon>RM_VSOM.tt</DependentUpon>
     </Compile>

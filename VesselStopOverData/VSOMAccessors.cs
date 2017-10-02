@@ -1423,6 +1423,7 @@ namespace VesselStopOverData
                                       select e).SingleOrDefault<ELEMENT_FACTURATION>();
 
                     matchedElt.StatutEF = "Facturé";
+
                     #endregion
 
                     dcAcc.GetTable<LIGNE_FACTURE_SOCOMAR>().InsertOnSubmit(ligne);
@@ -5290,7 +5291,7 @@ namespace VesselStopOverData
                 if (matchedVehicule.CONNAISSEMENT.IdClient == 13)
                 {
                      List<FACTURE> lfact = (from m in dcAcc.GetTable<FACTURE>() 
-                                   where m.IdFP.HasValue == true && m.IdClient==13 && m.DCFD.Value >= DateTime.Parse("01/07/2017") && m.StatutFD=="O" && (DateTime.Today - m.DCFD.Value).Days >=10
+                                   where m.IdFP.HasValue == true && m.IdClient==13 && m.DCFD.Value >= DateTime.Parse("01/07/2017") && m.StatutFD=="O" && (DateTime.Today - m.DCFD.Value).Days >=10 && m.MTTC>0
                                    select m).ToList<FACTURE>();
 
                      List<FACTURE_CTRL> lfac_ctrl = (from m in dcAcc.GetTable<FACTURE_CTRL>() where m.STATUT == "Actif" && m.IDCli == 13 select m).ToList<FACTURE_CTRL>();
@@ -10129,7 +10130,7 @@ namespace VesselStopOverData
         /// </summary>
         /// <param name="idbl"></param>
         /// <returns></returns>
-        public FACTURE FacturerQuotation(int idbl, string autresInfos, int idUser, string clientAFacturer)
+        public FACTURE FacturerQuotation(int idbl, string autresInfos, int idUser, string clientAFacturer,int htquotation)
         {
             using (var transaction = new System.Transactions.TransactionScope())
             {
@@ -10162,6 +10163,10 @@ namespace VesselStopOverData
                 proforma.MTVA = Convert.ToInt32(eltFact.Sum(elt => Math.Abs(elt.MontantTVA)));
                 proforma.MTTC = proforma.MHT + proforma.MTVA;
 
+                if(proforma.MHT != htquotation)
+                {
+                throw new ApplicationException("Le montant en facturation ("+proforma.MHT+") diffère du montant de la quotation ("+htquotation+"). Effectuer un contrôle");
+                }
                 List<Int32> idJEFs = new List<int>();
                 foreach (ElementFacturation e in eltFact)
                 {

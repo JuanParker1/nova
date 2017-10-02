@@ -32,8 +32,8 @@ namespace VesselStopOverPresentation.Sage
 
         private void btnValider_Click_1(object sender, RoutedEventArgs e)
         {
-            if (txtDateDebut.SelectedDate.HasValue == false || txtlib.Text.Trim().Length==0) 
-            { MessageBox.Show("Selectionner une date et indiqué le libelle de l'ecriture", "Appointement paie", 
+            if (txtDateDebut.SelectedDate.HasValue == false || txtlib.Text.Trim().Length==0 || txtRef.Text.Trim().Length==0) 
+            { MessageBox.Show("Les champs date, libelle, reference sont obligatoires", "Appointement paie", 
                 MessageBoxButton.OK, MessageBoxImage.Information); return; }
             try
             {
@@ -84,11 +84,11 @@ namespace VesselStopOverPresentation.Sage
                                 CustomerCode = b,
                                 DatePay = string.Format("{0:ddMMyy}", txtDateDebut.SelectedDate.Value),
                                 DebitCredit = "D",
-                                Description = txtlib.Text.Trim(),
+                                Description = txtlib.Text.Trim()+'-'+b,
                                 FC = "OD",
                                 GrossAmount = Math.Round(Convert.ToDouble(d), 0, MidpointRounding.AwayFromZero).ToString(),
                                 InvoiceDate = string.Format("{0:ddMMyy}", txtDateDebut.SelectedDate.Value),
-                                InvoiceNumber = b,
+                                InvoiceNumber = txtRef.Text.Trim(),
                                 N = "N",
                                 PayType = "S",
                                 X = "X"
@@ -106,11 +106,11 @@ namespace VesselStopOverPresentation.Sage
                                 CustomerCode = b,
                                 DatePay = string.Format("{0:ddMMyy}", txtDateDebut.SelectedDate.Value),
                                 DebitCredit = "C",
-                                Description = txtlib.Text.Trim(),
+                                Description = txtlib.Text.Trim() + '-' + b,
                                 FC = "OD",
                                 GrossAmount = Math.Round(Convert.ToDouble(c), 0, MidpointRounding.AwayFromZero).ToString(),
                                 InvoiceDate = string.Format("{0:ddMMyy}", txtDateDebut.SelectedDate.Value),
-                                InvoiceNumber = b,
+                                InvoiceNumber = txtRef.Text.Trim(),
                                 N = "N",
                                 PayType = "S",
                                 X = "G"

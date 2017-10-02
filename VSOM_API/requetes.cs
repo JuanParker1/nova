@@ -18,7 +18,10 @@ namespace VSOM_API
         public Nullable<System.DateTime> REC_TIME { get; set; }
         public Nullable<int> IDCOMPTES { get; set; }
         public string ETAT { get; set; }
-        public Nullable<int> ID_QUOTATION { get; set; }
+        public int ID_QUOTATION { get; set; }
         public int ID { get; set; }
+        public Nullable<int> IDFACTURE { get; set; }
+    
+        public virtual quotation quotation { get; set; }
     }
 }

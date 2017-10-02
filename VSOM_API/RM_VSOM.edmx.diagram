@@ -13,6 +13,7 @@
         <EntityTypeShape EntityType="RM_VSOMModel.quotation" Width="1.5" PointX="4.75" PointY="4.75" IsExpanded="true" />
         <EntityTypeShape EntityType="RM_VSOMModel.requetes" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="RM_VSOMModel.rules" Width="1.5" PointX="6.75" PointY="3.75" IsExpanded="true" />
+        <AssociationConnector Association="RM_VSOMModel.FK_requetes_quotation" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         Title="ValiderManifesteForm" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Height="295" Width="300" WindowStartupLocation="CenterScreen" FontFamily="Segoe UI" FontSize="11" Icon="/VesselStopOverPresentation;component/Icons/LogoApp.png" ResizeMode="NoResize">
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Height="330" Width="300" WindowStartupLocation="CenterScreen" FontFamily="Segoe UI" FontSize="11" Icon="/VesselStopOverPresentation;component/Icons/LogoApp.png" ResizeMode="NoResize">
     <DockPanel>
         <StackPanel Name="stackPanelCommands" DockPanel.Dock="Top" Orientation="Horizontal" Background="#3F51B5">
             <GridSplitter Width="1.5" Background="Transparent"/>
@@ -30,6 +30,7 @@
                         <RowDefinition Height="27"/>
                         <RowDefinition Height="27"/>
                         <RowDefinition Height="27"/>
+                        <RowDefinition Height="27"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -38,10 +39,12 @@
                     <Button Name="txtfile" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Click="txtfile_Click_1">Selectionner le fichier</Button>
                     <Label Grid.Row="1" Grid.Column="0">Date ecriture</Label>
                     <DatePicker Grid.Row="1" Grid.Column="1" Name="txtDateDebut" HorizontalAlignment="Left" Margin="0,2,0,2"/>
-                    <Label Grid.Row="2" Grid.Column="0">Débit</Label>
-                    <TextBox Grid.Row="2" Grid.Column="1" IsReadOnly="True"  Name="txtDebit" ></TextBox>
-                    <Label Grid.Row="3" Grid.Column="0">Crédit</Label>
-                    <TextBox Grid.Row="3" Grid.Column="1" IsReadOnly="True" Name="txtcredit" ></TextBox>
+                    <Label Grid.Row="2" Grid.Column="0">Reference</Label>
+                    <TextBox Grid.Row="2" Grid.Column="1"   Name="txtRef" MaxLength="23" ></TextBox>
+                    <Label Grid.Row="3" Grid.Column="0">Débit</Label>
+                    <TextBox Grid.Row="3" Grid.Column="1" IsReadOnly="True"  Name="txtDebit" ></TextBox>
+                    <Label Grid.Row="4" Grid.Column="0">Crédit</Label>
+                    <TextBox Grid.Row="4" Grid.Column="1" IsReadOnly="True" Name="txtcredit" ></TextBox>
 
                 </Grid>
             </GroupBox>

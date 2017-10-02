@@ -53,5 +53,40 @@ namespace VesselStopOverPresentation
 
             }
         }
+        /// <summary>
+        /// affichage report facture socomar
+        /// </summary>
+        /// <param name="form"></param>
+        /// <param name="fact"></param>
+        public FactureArmateurReport(EscaleForm form, FACTURE_SOCOMAR fact)
+        {
+            try
+            {
+                InitializeComponent();
+                escForm = form;
+
+                repViewer.ProcessingMode = Microsoft.Reporting.WinForms.ProcessingMode.Remote;
+                repViewer.ServerReport.ReportServerUrl = new Uri("http://192.168.0.28/ReportServer");
+                repViewer.ShowParameterPrompts = false;
+                repViewer.ServerReport.ReportPath = "/VSOMReports/FactureSocomar";
+
+                NetworkCredential myCred = new NetworkCredential("novareports", "novareports", "siege.local");
+                repViewer.ServerReport.ReportServerCredentials.NetworkCredentials = myCred;
+
+                ReportParameter[] parameters = new ReportParameter[1];
+                parameters[0] = new ReportParameter("Reffact", fact.IdDocSAP.ToString());
+                repViewer.ServerReport.SetParameters(parameters);
+                repViewer.ServerReport.Refresh();
+                repViewer.RefreshReport();
+            }
+            catch (ApplicationException ex)
+            {
+                MessageBox.Show(ex.Message, "Echec de l'opération !", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
     }
 }
