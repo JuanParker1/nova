@@ -588,6 +588,7 @@ namespace VesselStopOverPresentation
                     if (cbFormat.SelectedIndex == 0)
                     {
                         // vider les listes
+                        #region extract All
                         dataGridConnaissement.ItemsSource = null;
                         dataGridVehicules.ItemsSource = null;
                         dataGridCont.ItemsSource = null;
@@ -610,6 +611,7 @@ namespace VesselStopOverPresentation
                             // ajout du connaissement
                             if (line.Substring(19, 17).Trim() != "")
                             {
+                                #region BL
                                 CONNAISSEMENT bl = new CONNAISSEMENT();
                                 bl.NumBL = line.Substring(19, 17).Trim();
                                 if (line.Substring(630, 2).Trim() == "TR")
@@ -654,10 +656,12 @@ namespace VesselStopOverPresentation
                                     connaissements.Add(bl);
                                 }
 
+                                #endregion
                                 // ajout de marchandises
                                 if (line.Substring(327, 1).Equals("C"))
                                 {
                                     // ajout conteneur
+                                    #region conteneur
                                     CONTENEUR ctr = new CONTENEUR();
                                     ctr.CONNAISSEMENT = connaissements.FirstOrDefault<CONNAISSEMENT>(con => con.NumBL == line.Substring(19, 17).Trim());
                                     ctr.IdBL = connaissements.FirstOrDefault<CONNAISSEMENT>(con => con.NumBL == line.Substring(19, 17).Trim()).IdBL;
@@ -684,10 +688,12 @@ namespace VesselStopOverPresentation
                                     ctr.SensCtr = "I";
 
                                     conteneurs.Add(ctr);
+                                    #endregion
                                 }
                                 else if (line.Substring(327, 1).Equals("B"))
                                 {
                                     // ajout Mafi
+                                    #region mafi
                                     MAFI mafi = new MAFI();
                                     mafi.CONNAISSEMENT = connaissements.FirstOrDefault<CONNAISSEMENT>(con => con.NumBL == line.Substring(19, 17).Trim());
                                     mafi.IdBL = connaissements.FirstOrDefault<CONNAISSEMENT>(con => con.NumBL == line.Substring(19, 17).Trim()).IdBL;
@@ -712,10 +718,12 @@ namespace VesselStopOverPresentation
                                     mafi.SensMafi = "I";
 
                                     mafis.Add(mafi);
+                                    #endregion
                                 }
                                 else if (line.Substring(42, 17).Trim() != "" && line.Substring(791, 1).Trim() != "")
                                 {
                                     // ajout de véhicule
+                                    #region vehicule
                                     VEHICULE veh = new VEHICULE();
                                     veh.CONNAISSEMENT = connaissements.FirstOrDefault<CONNAISSEMENT>(con => con.NumBL == line.Substring(19, 17).Trim());
                                     veh.IdBL = connaissements.FirstOrDefault<CONNAISSEMENT>(con => con.NumBL == line.Substring(19, 17).Trim()).IdBL;
@@ -744,10 +752,12 @@ namespace VesselStopOverPresentation
                                     veh.IdAcc = escales.ElementAt<ESCALE>(cbNumEscale.SelectedIndex).ACCONIER.IdAcc;
 
                                     vehicules.Add(veh);
+                                    #endregion
                                 }
                                 else
                                 {
                                     // ajout general cargo
+                                    #region conventionel
                                     CONVENTIONNEL conv = new CONVENTIONNEL();
                                     conv.CONNAISSEMENT = connaissements.FirstOrDefault<CONNAISSEMENT>(con => con.NumBL == line.Substring(19, 17).Trim());
                                     conv.IdBL = connaissements.FirstOrDefault<CONNAISSEMENT>(con => con.NumBL == line.Substring(19, 17).Trim()).IdBL;
@@ -772,6 +782,7 @@ namespace VesselStopOverPresentation
                                     conv.SensGC = "I";
 
                                     conventionnels.Add(conv);
+                                    #endregion
                                 }
                             }
                             line = file.ReadLine();
@@ -792,11 +803,13 @@ namespace VesselStopOverPresentation
                         txtNbEffMafi.Text = mafis.Count.ToString();
 
                         dataGridGC.ItemsSource = conventionnels;
-                        txtNbEffGC.Text = conventionnels.Count.ToString();
+                        txtNbEffGC.Text = conventionnels.Count.ToString(); 
+                        #endregion
                     }
                     else if (cbFormat.SelectedIndex == 1)
                     {
                         // vider les listes
+                        #region EXTRACT ALL Files Extended
                         dataGridConnaissement.ItemsSource = null;
                         dataGridVehicules.ItemsSource = null;
                         dataGridCont.ItemsSource = null;
@@ -819,6 +832,7 @@ namespace VesselStopOverPresentation
                             // ajout du connaissement
                             if (line.Substring(19, 17).Trim() != "")
                             {
+                                #region BL
                                 CONNAISSEMENT bl = new CONNAISSEMENT();
                                 bl.NumBL = line.Substring(19, 17).Trim();
                                 if (line.Substring(630, 2).Trim() == "TR")
@@ -863,10 +877,12 @@ namespace VesselStopOverPresentation
                                     connaissements.Add(bl);
                                 }
 
+                                #endregion
                                 // ajout de marchandises
                                 if (line.Substring(327, 1).Equals("C"))
                                 {
                                     // ajout conteneur
+                                    #region conteneur
                                     CONTENEUR ctr = new CONTENEUR();
                                     ctr.CONNAISSEMENT = connaissements.FirstOrDefault<CONNAISSEMENT>(con => con.NumBL == line.Substring(19, 17).Trim());
                                     ctr.IdBL = connaissements.FirstOrDefault<CONNAISSEMENT>(con => con.NumBL == line.Substring(19, 17).Trim()).IdBL;
@@ -893,10 +909,12 @@ namespace VesselStopOverPresentation
                                     ctr.SensCtr = "I";
 
                                     conteneurs.Add(ctr);
+                                    #endregion
                                 }
                                 else if (line.Substring(327, 1).Equals("B"))
                                 {
                                     // ajout Mafi
+                                    #region mafi
                                     MAFI mafi = new MAFI();
                                     mafi.CONNAISSEMENT = connaissements.FirstOrDefault<CONNAISSEMENT>(con => con.NumBL == line.Substring(19, 17).Trim());
                                     mafi.IdBL = connaissements.FirstOrDefault<CONNAISSEMENT>(con => con.NumBL == line.Substring(19, 17).Trim()).IdBL;
@@ -921,10 +939,12 @@ namespace VesselStopOverPresentation
                                     mafi.SensMafi = "I";
 
                                     mafis.Add(mafi);
+                                    #endregion
                                 }
                                 else if (line.Substring(42, 17).Trim() != "" && line.Substring(791, 1).Trim() != "")
                                 {
                                     // ajout de véhicule
+                                    #region vehicule
                                     VEHICULE veh = new VEHICULE();
                                     veh.CONNAISSEMENT = connaissements.FirstOrDefault<CONNAISSEMENT>(con => con.NumBL == line.Substring(19, 17).Trim());
                                     veh.IdBL = connaissements.FirstOrDefault<CONNAISSEMENT>(con => con.NumBL == line.Substring(19, 17).Trim()).IdBL;
@@ -953,10 +973,12 @@ namespace VesselStopOverPresentation
                                     veh.IdAcc = escales.ElementAt<ESCALE>(cbNumEscale.SelectedIndex).ACCONIER.IdAcc;
 
                                     vehicules.Add(veh);
+                                    #endregion
                                 }
                                 else
                                 {
                                     // ajout general cargo
+                                    #region conventionel
                                     CONVENTIONNEL conv = new CONVENTIONNEL();
                                     conv.CONNAISSEMENT = connaissements.FirstOrDefault<CONNAISSEMENT>(con => con.NumBL == line.Substring(19, 17).Trim());
                                     conv.IdBL = connaissements.FirstOrDefault<CONNAISSEMENT>(con => con.NumBL == line.Substring(19, 17).Trim()).IdBL;
@@ -981,6 +1003,7 @@ namespace VesselStopOverPresentation
                                     conv.SensGC = "I";
 
                                     conventionnels.Add(conv);
+                                    #endregion
                                 }
                             }
                             line = file.ReadLine();
@@ -1001,11 +1024,13 @@ namespace VesselStopOverPresentation
                         txtNbEffMafi.Text = mafis.Count.ToString();
 
                         dataGridGC.ItemsSource = conventionnels;
-                        txtNbEffGC.Text = conventionnels.Count.ToString();
+                        txtNbEffGC.Text = conventionnels.Count.ToString(); 
+                        #endregion
                     }
                     else if (cbFormat.SelectedIndex == 2)
                     {
                         // vider les listes
+                        #region Excel Véhicules Autres Acconiers (Excel xls)
                         dataGridConnaissement.ItemsSource = null;
                         dataGridVehicules.ItemsSource = null;
                         dataGridCont.ItemsSource = null;
@@ -1033,11 +1058,13 @@ namespace VesselStopOverPresentation
                         txtNbEffMafi.Text = mafis.Count.ToString();
 
                         dataGridGC.ItemsSource = conventionnels;
-                        txtNbEffGC.Text = conventionnels.Count.ToString();
+                        txtNbEffGC.Text = conventionnels.Count.ToString(); 
+                        #endregion
                     }
                     else if (cbFormat.SelectedIndex == 3)
                     {
                         // vider les listes
+                        #region Excel Véhicules Autres Acconiers (Excel xlsx)
                         dataGridConnaissement.ItemsSource = null;
                         dataGridVehicules.ItemsSource = null;
                         dataGridCont.ItemsSource = null;
@@ -1065,11 +1092,13 @@ namespace VesselStopOverPresentation
                         txtNbEffMafi.Text = mafis.Count.ToString();
 
                         dataGridGC.ItemsSource = conventionnels;
-                        txtNbEffGC.Text = conventionnels.Count.ToString();
+                        txtNbEffGC.Text = conventionnels.Count.ToString(); 
+                        #endregion
                     }
                     else if (cbFormat.SelectedIndex == 4)
                     {
                         // vider les listes
+                        #region Excel Manifeste Conteneurs NDS (Excel xlsx)
                         dataGridConnaissement.ItemsSource = null;
                         dataGridVehicules.ItemsSource = null;
                         dataGridCont.ItemsSource = null;
@@ -1097,7 +1126,8 @@ namespace VesselStopOverPresentation
                         txtNbEffMafi.Text = mafis.Count.ToString();
 
                         dataGridGC.ItemsSource = conventionnels;
-                        txtNbEffGC.Text = conventionnels.Count.ToString();
+                        txtNbEffGC.Text = conventionnels.Count.ToString(); 
+                        #endregion
                     }
                 }
             }

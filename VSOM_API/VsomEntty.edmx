@@ -236,6 +236,9 @@
           <Property Name="IdFSoc" Type="int" />
           <Property Name="CCARTICLE1" Type="nvarchar" MaxLength="10" />
           <Property Name="REF_IDJEF" Type="int" />
+          <Property Name="ID_QUOTATION" Type="int" />
+          <Property Name="JrVeh" Type="float" />
+          <Property Name="PoidsVeh" Type="int" />
         </EntityType>
         <EntityType Name="ESCALE">
           <Key>
@@ -833,6 +836,9 @@
           <NavigationProperty Name="LIGNE_PROFORMA" Relationship="VSOMModel.LIGNE_PROFORMA_FK00" FromRole="ELEMENT_FACTURATION" ToRole="LIGNE_PROFORMA" />
           <Property Type="String" Name="CCARTICLE1" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="REF_IDJEF" />
+          <Property Type="Int32" Name="ID_QUOTATION" />
+          <Property Type="Int32" Name="JrVeh" />
+          <Property Type="Int32" Name="PoidsVeh" />
         </EntityType>
         <EntityType Name="ESCALE">
           <Key>
@@ -1339,6 +1345,9 @@
           <EntitySetMapping Name="ELEMENT_FACTURATION">
             <EntityTypeMapping TypeName="VSOMModel.ELEMENT_FACTURATION">
               <MappingFragment StoreEntitySet="ELEMENT_FACTURATION">
+                <ScalarProperty Name="PoidsVeh" ColumnName="PoidsVeh" />
+                <ScalarProperty Name="JrVeh" ColumnName="JrVeh" />
+                <ScalarProperty Name="ID_QUOTATION" ColumnName="ID_QUOTATION" />
                 <ScalarProperty Name="REF_IDJEF" ColumnName="REF_IDJEF" />
                 <ScalarProperty Name="CCARTICLE1" ColumnName="CCARTICLE1" />
                 <ScalarProperty Name="IdJEF" ColumnName="IdJEF" />

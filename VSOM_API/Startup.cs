@@ -23,7 +23,7 @@ namespace VSOM_API
             {
                 AllowInsecureHttp = true,
                 TokenEndpointPath = new PathString("/token"),
-                AccessTokenExpireTimeSpan = TimeSpan.FromMinutes(30),
+                AccessTokenExpireTimeSpan = TimeSpan.FromMinutes(45),
                 Provider = myProvider
             };
             app.UseOAuthAuthorizationServer(options);

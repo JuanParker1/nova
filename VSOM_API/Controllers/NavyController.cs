@@ -48,7 +48,7 @@ namespace VSOM_API.Controllers
                     if (type == "quote" || type == "inv" || type == "obl" || type == "ovin")
                     {
                         //if (!tok.Equals("1"))
-                            con = ctx.CONNAISSEMENTs.Include("VEHICULEs").Where(s => s.IdClient.Value == idclient&& s.DCBL.Value>=startdate && s.NumBL == bl && s.StatutBL != "Initié" && s.StatutBL != "Cloturé" && s.TypeBL == "R")
+                        con = ctx.CONNAISSEMENTs.Include("VEHICULEs").Where(s => s.IdClient.Value == idclient && s.DCBL.Value >= startdate && s.NumBL == bl && s.StatutBL != "Initié" && s.StatutBL != "Cloturé" && s.StatutBL != "Traité" && s.TypeBL == "R")
                                                 .FirstOrDefault<CONNAISSEMENT>();
                         /*if (tok.Equals("1"))
                             con = ctx.CONNAISSEMENTs.Include("VEHICULEs").Where(s => s.NumBL == bl && s.StatutBL != "Initié" && s.StatutBL != "Cloturé" && s.TypeBL == "R")
@@ -89,7 +89,7 @@ namespace VSOM_API.Controllers
                                 Consignee = con.ConsigneeBL,
                                 Notify = con.NotifyBL,
                                 NumBl = con.NumBL,
-                                Statut = con.StatutBL,
+                                Statut = con.StatutBL ,
                                 FinFranchise = con.VEHICULEs.ToList<VEHICULE>()[0].FFVeh.Value.ToShortDateString(),
                                 Vehicules = new List<Cars>()
                             };
@@ -194,6 +194,7 @@ namespace VSOM_API.Controllers
         /// <returns></returns>
         
         [Authorize]
+       //[AllowAnonymous]
         [HttpGet]
         public IHttpActionResult GetQuotation(string bl, string chassis, string date, string type , string tok, int owner, int tkusr )
         {
@@ -206,8 +207,8 @@ namespace VSOM_API.Controllers
                 CONNAISSEMENT con = null;
                 using (var ctx = new VSOMEntities())
                 {
-
-                    con = ctx.CONNAISSEMENTs.Include("VEHICULEs").Where(s => s.NumBL == bl && s.DCBL.Value >= startdate && s.IdClient == idclient && s.StatutBL != "Initié" && s.StatutBL != "Cloturé" && s.TypeBL == "R")
+                    
+                    con = ctx.CONNAISSEMENTs.Include("VEHICULEs").Where(s => s.NumBL == bl && s.DCBL.Value >= startdate && s.IdClient == idclient && s.StatutBL != "Initié" && s.StatutBL != "Cloturé" && s.StatutBL != "Traité" && s.TypeBL == "R")
                                             .FirstOrDefault<CONNAISSEMENT>();
                     
                     if (con != null)
@@ -231,7 +232,7 @@ namespace VSOM_API.Controllers
                             if (dateFin < _lst[0].FFVeh)
                             {
                                 //sb.AppendLine("Date quotation inferrieur date FFVEH");
-                                throw new ApplicationException("Veuillez entrer une date correcte");
+                                throw new ApplicationException("Veuillez entrer une date supérieur ou égale à la franchise. ");
                             }
 
                             //recupère les element non payés
@@ -240,7 +241,7 @@ namespace VSOM_API.Controllers
                             pendingElmt = new List<InvoiceDetails>();
                             foreach (ELEMENT_FACTURATION el in pendel)
                             {
-                                if (el.PUEF != 0 && el.QTEEF != 0)
+                                if (el.PUEF != 0 && el.JrVeh != 0)
                                 {
                                     InvoiceDetails id = new InvoiceDetails();
                                     id.Ref = el.IdJEF.ToString();
@@ -248,11 +249,12 @@ namespace VSOM_API.Controllers
                                     id.TvaCode = el.CodeTVA;
                                     id.TvaTaux = el.TauxTVA.Value;
                                     id.Libelle = el.LibEF;
-                                    id.Qte = el.QTEEF.Value;
+                                    id.Qte = Math.Round(el.QTEEF.Value,3, MidpointRounding.AwayFromZero);
                                     id.Unit = el.UnitEF;
                                     id.Ht = Math.Round((id.Prix * id.Qte),0, MidpointRounding.AwayFromZero);
                                     id.Tva = Math.Round((id.Ht * (id.TvaTaux/100)), 0, MidpointRounding.AwayFromZero); ;
                                     id.MT = id.Ht + id.Tva;
+                                    id.Code = el.CodeArticle;
                                     pendingElmt.Add(id);
                                 }
                             }
@@ -288,19 +290,64 @@ namespace VSOM_API.Controllers
                                         #region selection des articles et ligne de prix
                                         ARTICLE articleSejourParcAuto = (from art in articles where art.CodeArticle == 1801 select art).FirstOrDefault<ARTICLE>();
                                         LIGNE_PRIX lpSejourParcAuto = null;
+                                        LIGNE_PRIX lpSejourParcAuto_old = null;
 
                                         ARTICLE articleDeboursPADPenalite = (from art in articles where art.CodeArticle == 1815 select art).FirstOrDefault<ARTICLE>();
                                         LIGNE_PRIX lpDeboursPADPenalite = null;
-
+                                        LIGNE_PRIX lpDeboursPADPenalite_old = null;
+                                        double coefPoidsVeh = 1; 
+                                        #region old price
                                         if (matchedVehicule.StatutCVeh == "U")
                                         {
-                                            if (matchedVehicule.VolCVeh >= 50)
+                                            if (matchedVehicule.VolCVeh >= 50) 
+                                            {
+                                                lpSejourParcAuto_old = articleSejourParcAuto.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VU3" &&  lp.DFLP == DateTime.Parse("31/12/2017"));
+                                                lpDeboursPADPenalite_old = articleDeboursPADPenalite.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VU3" && lp.DFLP == DateTime.Parse("31/12/2017"));
+                                            }
+                                           else if (matchedVehicule.VolCVeh >= 16) 
+                                            {
+                                                lpSejourParcAuto_old = articleSejourParcAuto.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VU2" && lp.DFLP == DateTime.Parse("31/12/2017"));
+                                                lpDeboursPADPenalite_old = articleDeboursPADPenalite.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VU2" && lp.DFLP == DateTime.Parse("31/12/2017"));
+                                            }
+                                            else
+                                            {
+                                                lpSejourParcAuto_old = articleSejourParcAuto.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VU1" && lp.DFLP == DateTime.Parse("31/12/2017"));
+                                                lpDeboursPADPenalite_old = articleDeboursPADPenalite.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VU1" && lp.DFLP == DateTime.Parse("31/12/2017"));
+                                            }
+                                        }
+                                        else if (matchedVehicule.StatutCVeh == "N")
+                                        {
+                                           if (matchedVehicule.VolCVeh >= 50) 
+                                            {
+                                                lpSejourParcAuto_old = articleSejourParcAuto.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VN3" && lp.DFLP == DateTime.Parse("31/12/2017"));
+                                                lpDeboursPADPenalite_old = articleDeboursPADPenalite.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VN3" && lp.DFLP == DateTime.Parse("31/12/2017"));
+                                            }
+                                            else if (matchedVehicule.VolCVeh >= 16) 
+                                            {
+                                                lpSejourParcAuto_old = articleSejourParcAuto.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VN2" && lp.DFLP == DateTime.Parse("31/12/2017"));
+                                                lpDeboursPADPenalite_old = articleDeboursPADPenalite.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VN2" && lp.DFLP == DateTime.Parse("31/12/2017"));
+                                            }
+                                            else
+                                            {
+                                                lpSejourParcAuto_old = articleSejourParcAuto.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VN1" && lp.DFLP == DateTime.Parse("31/12/2017"));
+                                                lpDeboursPADPenalite_old = articleDeboursPADPenalite.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VN1" && lp.DFLP == DateTime.Parse("31/12/2017"));
+                                            }
+                                        } 
+                                        #endregion
+                                        #region new price
+                                        if (matchedVehicule.StatutCVeh == "U")
+                                        {
+                                            //AH2jan18 if (matchedVehicule.VolCVeh >= 50)
+                                            if (matchedVehicule.PoidsCVeh >= 10000)
                                             {
                                                 lpSejourParcAuto = articleSejourParcAuto.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VU3" && lp.DDLP <= dte && lp.DFLP >= dte);
                                                 lpDeboursPADPenalite = articleDeboursPADPenalite.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VU3" && lp.DDLP <= dte && lp.DFLP >= dte);
+                                                coefPoidsVeh =(double) matchedVehicule.PoidsCVeh.Value / 1000;
                                             }
-                                            else if (matchedVehicule.VolCVeh >= 16)
+                                            //AH2jan18 else if (matchedVehicule.VolCVeh >= 16)
+                                            else if (matchedVehicule.PoidsCVeh >= 2500)
                                             {
+                                                coefPoidsVeh = (double)matchedVehicule.PoidsCVeh.Value / 1000;
                                                 lpSejourParcAuto = articleSejourParcAuto.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VU2" && lp.DDLP <= dte && lp.DFLP >= dte);
                                                 lpDeboursPADPenalite = articleDeboursPADPenalite.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VU2" && lp.DDLP <= dte && lp.DFLP >= dte);
                                             }
@@ -312,22 +359,28 @@ namespace VSOM_API.Controllers
                                         }
                                         else if (matchedVehicule.StatutCVeh == "N")
                                         {
-                                            if (matchedVehicule.VolCVeh >= 50)
+                                            //AH2jan18 if (matchedVehicule.VolCVeh >= 50)
+                                            if (matchedVehicule.PoidsCVeh >= 10000)
                                             {
+                                                coefPoidsVeh = (double)matchedVehicule.PoidsCVeh.Value / 1000;
                                                 lpSejourParcAuto = articleSejourParcAuto.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VN3" && lp.DDLP <= dte && lp.DFLP >= dte);
                                                 lpDeboursPADPenalite = articleDeboursPADPenalite.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VN3" && lp.DDLP <= dte && lp.DFLP >= dte);
                                             }
-                                            else if (matchedVehicule.VolCVeh >= 16)
+                                            //AH2jan18 else if (matchedVehicule.VolCVeh >= 16)
+                                            else if (matchedVehicule.PoidsCVeh >= 2500)
                                             {
+                                                coefPoidsVeh = (double)matchedVehicule.PoidsCVeh.Value / 1000;
                                                 lpSejourParcAuto = articleSejourParcAuto.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VN2" && lp.DDLP <= dte && lp.DFLP >= dte);
                                                 lpDeboursPADPenalite = articleDeboursPADPenalite.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VN2" && lp.DDLP <= dte && lp.DFLP >= dte);
                                             }
                                             else
                                             {
+                                                coefPoidsVeh = (double)matchedVehicule.PoidsCVeh.Value / 1000;
                                                 lpSejourParcAuto = articleSejourParcAuto.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VN1" && lp.DDLP <= dte && lp.DFLP >= dte);
                                                 lpDeboursPADPenalite = articleDeboursPADPenalite.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VN1" && lp.DDLP <= dte && lp.DFLP >= dte);
                                             }
-                                        }
+                                        } 
+                                        #endregion
                                         sb.AppendLine("ligne de prix recupérées");
                                         #endregion
 
@@ -335,6 +388,7 @@ namespace VSOM_API.Controllers
                                                               .ToList<ELEMENT_FACTURATION>().Count != 0;
 
                                        // isEltsNotFree = false;
+                                       
                                         if (!isEltsNotFree)
                                         {
                                             sb.AppendLine("Bl");
@@ -351,7 +405,7 @@ namespace VSOM_API.Controllers
                                                 eltFactSejourParcAuto.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
                                                 eltFactSejourParcAuto.TvaTaux = eltFactSejourParcAuto.TvaCode == "TVAEX" ? 0 : 0.1925f;
                                                 eltFactSejourParcAuto.Libelle = articleSejourParcAuto.LibArticle + "Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays((dateFin - matchedVehicule.FFVeh.Value).Days).ToShortDateString();
-
+                                                eltFactSejourParcAuto.Code = articleSejourParcAuto.CodeArticle.ToString();
                                                 eltFactSejourParcAuto.Qte = dateFin.Date < matchedVehicule.FFVeh ? 0 : (dateFin.Date - matchedVehicule.FFVeh.Value).Days;
                                                 eltFactSejourParcAuto.Unit = lpSejourParcAuto.UniteLP;
                                                 eltFactSejourParcAuto.Ht = eltFactSejourParcAuto.Prix * eltFactSejourParcAuto.Qte;
@@ -378,22 +432,28 @@ namespace VSOM_API.Controllers
                                             }
                                             else
                                             {
-                                                double derogation = (con.BLIL == "Y" || con.BLGN == "Y") ? 0.75 : 0;
-                                                if ((dateFin - matchedVehicule.FFVeh.Value).Days <= 9)
+                                                //AH 5jan18 retrait des derogation sur le stationnement : 
+                                                double derogation =(con.BLIL == "Y" ) ? 0.75 : 0;
+                                                //control de quotation antérieur a la date de stationnement deja effectué
+
+                                                if ((dateFin - matchedVehicule.FFVeh.Value).Days <= 10)
                                                 {
                                                     #region niveau 9jours
                                                     InvoiceDetails eltFactSejourParcAuto = new InvoiceDetails();
 
                                                     eltFactSejourParcAuto.Prix = lpSejourParcAuto.PU1LP.Value - lpSejourParcAuto.PU1LP.Value * derogation;
+                                                   // eltFactSejourParcAuto.Prix = eltFactSejourParcAuto.Prix * (matchedVehicule.PoidsCVeh / 1000);
                                                     eltFactSejourParcAuto.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
                                                     eltFactSejourParcAuto.TvaTaux = eltFactSejourParcAuto.TvaCode == "TVAEX" ? 0 : 0.1925f;
                                                     eltFactSejourParcAuto.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays((dateFin - matchedVehicule.FFVeh.Value).Days).ToShortDateString();
-                                                    eltFactSejourParcAuto.Qte = dateFin.Date < matchedVehicule.FFVeh ? 0 : (dateFin.Date - matchedVehicule.FFVeh.Value).Days;
+                                                    eltFactSejourParcAuto.Qty = dateFin.Date < matchedVehicule.FFVeh ? 0 : (dateFin.Date - matchedVehicule.FFVeh.Value).Days;
+                                                    eltFactSejourParcAuto.Qte = eltFactSejourParcAuto.Qty * coefPoidsVeh;
                                                     eltFactSejourParcAuto.Unit = lpSejourParcAuto.UniteLP;
                                                     eltFactSejourParcAuto.Ht = eltFactSejourParcAuto.Prix * eltFactSejourParcAuto.Qte;
                                                     eltFactSejourParcAuto.Tva = Math.Round((eltFactSejourParcAuto.Ht * eltFactSejourParcAuto.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
                                                     eltFactSejourParcAuto.MT = eltFactSejourParcAuto.Ht + eltFactSejourParcAuto.Tva;
-                                                    details.Add(eltFactSejourParcAuto);
+                                                    eltFactSejourParcAuto.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                   if(eltFactSejourParcAuto.Qte!=0) details.Add(eltFactSejourParcAuto);
 
                                                     InvoiceDetails eltFactDeboursPADParcAuto = new InvoiceDetails();
 
@@ -402,17 +462,18 @@ namespace VSOM_API.Controllers
                                                     eltFactDeboursPADParcAuto.TvaTaux = eltFactDeboursPADParcAuto.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
 
                                                     eltFactDeboursPADParcAuto.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays((dateFin - matchedVehicule.FFVeh.Value).Days).ToShortDateString();
-
-                                                    eltFactDeboursPADParcAuto.Qte = dateFin.Date < matchedVehicule.FFVeh ? 0 : (dateFin.Date - matchedVehicule.FFVeh.Value).Days;
+                                                    eltFactDeboursPADParcAuto.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                    eltFactDeboursPADParcAuto.Qty = dateFin.Date < matchedVehicule.FFVeh ? 0 : (dateFin.Date - matchedVehicule.FFVeh.Value).Days;
+                                                    eltFactDeboursPADParcAuto.Qte = eltFactDeboursPADParcAuto.Qty * coefPoidsVeh;
                                                     eltFactDeboursPADParcAuto.Unit = lpDeboursPADPenalite.UniteLP;
                                                     eltFactDeboursPADParcAuto.Ht = eltFactDeboursPADParcAuto.Prix * eltFactDeboursPADParcAuto.Qte;
                                                     eltFactDeboursPADParcAuto.Tva = Math.Round((eltFactDeboursPADParcAuto.Ht * eltFactDeboursPADParcAuto.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
                                                     eltFactDeboursPADParcAuto.MT = eltFactDeboursPADParcAuto.Ht + eltFactDeboursPADParcAuto.Tva;
-                                                    details.Add(eltFactDeboursPADParcAuto);
+                                                    if(eltFactDeboursPADParcAuto.Qte!=0) details.Add(eltFactDeboursPADParcAuto);
 
                                                     #endregion
                                                 }
-                                                else if ((dateFin - matchedVehicule.FFVeh.Value).Days <= 9 + 20)
+                                                else if ((dateFin - matchedVehicule.FFVeh.Value).Days <= 10 + 20)
                                                 {
                                                     #region niveau 9 + 20 jours
 
@@ -422,14 +483,15 @@ namespace VSOM_API.Controllers
                                                     eltFactSejourParcAutoN1.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
                                                     eltFactSejourParcAutoN1.TvaTaux = eltFactSejourParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
 
-                                                    eltFactSejourParcAutoN1.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(9).ToShortDateString();
-
-                                                    eltFactSejourParcAutoN1.Qte = 9;
+                                                    eltFactSejourParcAutoN1.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(10).ToShortDateString();
+                                                    eltFactSejourParcAutoN1.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                    eltFactSejourParcAutoN1.Qte = 10 * coefPoidsVeh; 
+                                                    eltFactSejourParcAutoN1.Qty = 10;
                                                     eltFactSejourParcAutoN1.Unit = lpSejourParcAuto.UniteLP;
                                                     eltFactSejourParcAutoN1.Ht = eltFactSejourParcAutoN1.Prix * eltFactSejourParcAutoN1.Qte;
                                                     eltFactSejourParcAutoN1.Tva = Math.Round((eltFactSejourParcAutoN1.Ht * eltFactSejourParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
                                                     eltFactSejourParcAutoN1.MT = eltFactSejourParcAutoN1.Ht + eltFactSejourParcAutoN1.Tva;
-                                                    details.Add(eltFactSejourParcAutoN1);
+                                                    if(eltFactSejourParcAutoN1.Qte!=0) details.Add(eltFactSejourParcAutoN1);
 
                                                     InvoiceDetails eltFactDeboursPADParcAutoN1 = new InvoiceDetails();
 
@@ -437,28 +499,30 @@ namespace VSOM_API.Controllers
                                                     eltFactDeboursPADParcAutoN1.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA; //TVATI
                                                     // eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
                                                     eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
-
-                                                    eltFactDeboursPADParcAutoN1.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(9).ToShortDateString();
-                                                    eltFactDeboursPADParcAutoN1.Qte = 9;
+                                                    eltFactDeboursPADParcAutoN1.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                    eltFactDeboursPADParcAutoN1.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(10).ToShortDateString();
+                                                    eltFactDeboursPADParcAutoN1.Qte = 10*coefPoidsVeh; 
+                                                    eltFactDeboursPADParcAutoN1.Qty = 10;
                                                     eltFactDeboursPADParcAutoN1.Unit = lpDeboursPADPenalite.UniteLP;
                                                     eltFactDeboursPADParcAutoN1.Ht = eltFactDeboursPADParcAutoN1.Prix * eltFactDeboursPADParcAutoN1.Qte;
                                                     eltFactDeboursPADParcAutoN1.Tva = Math.Round((eltFactDeboursPADParcAutoN1.Ht * eltFactDeboursPADParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
                                                     eltFactDeboursPADParcAutoN1.MT = eltFactDeboursPADParcAutoN1.Ht + eltFactDeboursPADParcAutoN1.Tva;
-                                                    details.Add(eltFactDeboursPADParcAutoN1);
+                                                   if(eltFactSejourParcAutoN1.Qte!=0) details.Add(eltFactDeboursPADParcAutoN1);
 
                                                     InvoiceDetails eltFactSejourParcAutoN2 = new InvoiceDetails();
 
                                                     eltFactSejourParcAutoN2.Prix = lpSejourParcAuto.PU2LP.Value - lpSejourParcAuto.PU2LP.Value * derogation;
                                                     eltFactSejourParcAutoN2.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
                                                     eltFactSejourParcAutoN2.TvaTaux = eltFactSejourParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactSejourParcAutoN2.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 9).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays((dateFin - matchedVehicule.FFVeh.Value).Days).ToShortDateString();
-
-                                                    eltFactSejourParcAutoN2.Qte = (dateFin - matchedVehicule.FFVeh.Value).Days - 9;
+                                                    eltFactSejourParcAutoN2.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 10).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays((dateFin - matchedVehicule.FFVeh.Value).Days).ToShortDateString();
+                                                    eltFactSejourParcAutoN2.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                    eltFactSejourParcAutoN2.Qty = (dateFin - matchedVehicule.FFVeh.Value).Days - 10;
+                                                    eltFactSejourParcAutoN2.Qte = eltFactSejourParcAutoN2.Qty * coefPoidsVeh;
                                                     eltFactSejourParcAutoN2.Unit = lpSejourParcAuto.UniteLP;
                                                     eltFactSejourParcAutoN2.Ht = eltFactSejourParcAutoN2.Prix * eltFactSejourParcAutoN2.Qte;
                                                     eltFactSejourParcAutoN2.Tva = Math.Round((eltFactSejourParcAutoN2.Ht * eltFactSejourParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
                                                     eltFactSejourParcAutoN2.MT = eltFactSejourParcAutoN2.Ht + eltFactSejourParcAutoN2.Tva;
-                                                    details.Add(eltFactSejourParcAutoN2);
+                                                    if(eltFactSejourParcAutoN2.Qte!=0) details.Add(eltFactSejourParcAutoN2);
 
                                                     InvoiceDetails eltFactDeboursPADParcAutoN2 = new InvoiceDetails();
 
@@ -467,18 +531,19 @@ namespace VSOM_API.Controllers
                                                     // eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
                                                     eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
 
-                                                    eltFactDeboursPADParcAutoN2.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 9).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays((dateFin - matchedVehicule.FFVeh.Value).Days).ToShortDateString();
-
-                                                    eltFactDeboursPADParcAutoN2.Qte = (dateFin - matchedVehicule.FFVeh.Value).Days - 9;
+                                                    eltFactDeboursPADParcAutoN2.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 10).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays((dateFin - matchedVehicule.FFVeh.Value).Days).ToShortDateString();
+                                                    eltFactDeboursPADParcAutoN2.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                    eltFactDeboursPADParcAutoN2.Qty = (dateFin - matchedVehicule.FFVeh.Value).Days - 10;
+                                                    eltFactDeboursPADParcAutoN2.Qte = eltFactDeboursPADParcAutoN2.Qty * coefPoidsVeh;
                                                     eltFactDeboursPADParcAutoN2.Unit = lpDeboursPADPenalite.UniteLP;
                                                     eltFactDeboursPADParcAutoN2.Ht = eltFactDeboursPADParcAutoN2.Prix * eltFactDeboursPADParcAutoN2.Qte;
                                                     eltFactDeboursPADParcAutoN2.Tva = Math.Round((eltFactDeboursPADParcAutoN2.Ht * eltFactDeboursPADParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
                                                     eltFactDeboursPADParcAutoN2.MT = eltFactDeboursPADParcAutoN2.Ht + eltFactDeboursPADParcAutoN2.Tva;
-                                                    details.Add(eltFactDeboursPADParcAutoN2);
+                                                   if(eltFactDeboursPADParcAutoN2.Qte!=0) details.Add(eltFactDeboursPADParcAutoN2);
                                                     #endregion
 
                                                 }
-                                                else if ((dateFin - matchedVehicule.FFVeh.Value).Days <= 9 + 20 + 30)
+                                                else if ((dateFin - matchedVehicule.FFVeh.Value).Days <= 10 + 20 + 30)
                                                 {
                                                     #region 9 + 20 + 30
                                                     InvoiceDetails eltFactSejourParcAutoN1 = new InvoiceDetails();
@@ -487,14 +552,15 @@ namespace VSOM_API.Controllers
                                                     eltFactSejourParcAutoN1.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
                                                     eltFactSejourParcAutoN1.TvaTaux = eltFactSejourParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
 
-                                                    eltFactSejourParcAutoN1.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(9).ToShortDateString();
-
-                                                    eltFactSejourParcAutoN1.Qte = 9;
+                                                    eltFactSejourParcAutoN1.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(10).ToShortDateString();
+                                                    eltFactSejourParcAutoN1.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                    eltFactSejourParcAutoN1.Qty = 10;
+                                                    eltFactSejourParcAutoN1.Qte = eltFactSejourParcAutoN1.Qty * coefPoidsVeh;
                                                     eltFactSejourParcAutoN1.Unit = lpSejourParcAuto.UniteLP;
                                                     eltFactSejourParcAutoN1.Ht = eltFactSejourParcAutoN1.Prix * eltFactSejourParcAutoN1.Qte;
                                                     eltFactSejourParcAutoN1.Tva = Math.Round((eltFactSejourParcAutoN1.Ht * eltFactSejourParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
                                                     eltFactSejourParcAutoN1.MT = eltFactSejourParcAutoN1.Ht + eltFactSejourParcAutoN1.Tva;
-                                                    details.Add(eltFactSejourParcAutoN1);
+                                                   if(eltFactSejourParcAutoN1.Qte!=0) details.Add(eltFactSejourParcAutoN1);
 
                                                     InvoiceDetails eltFactDeboursPADParcAutoN1 = new InvoiceDetails();
 
@@ -502,29 +568,31 @@ namespace VSOM_API.Controllers
                                                     eltFactDeboursPADParcAutoN1.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA; //TVATI
                                                     //eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
                                                     eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
-
-                                                    eltFactDeboursPADParcAutoN1.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(9).ToShortDateString();
-                                                    eltFactDeboursPADParcAutoN1.Qte = 9;
+                                                    eltFactDeboursPADParcAutoN1.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                    eltFactDeboursPADParcAutoN1.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(10).ToShortDateString();
+                                                    eltFactDeboursPADParcAutoN1.Qty = 10;
+                                                    eltFactDeboursPADParcAutoN1.Qte = eltFactSejourParcAutoN1.Qty * coefPoidsVeh;
                                                     eltFactDeboursPADParcAutoN1.Unit = lpDeboursPADPenalite.UniteLP;
                                                     eltFactDeboursPADParcAutoN1.Ht = eltFactDeboursPADParcAutoN1.Prix * eltFactDeboursPADParcAutoN1.Qte;
                                                     eltFactDeboursPADParcAutoN1.Tva = Math.Round((eltFactDeboursPADParcAutoN1.Ht * eltFactDeboursPADParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
                                                     eltFactDeboursPADParcAutoN1.MT = eltFactDeboursPADParcAutoN1.Ht + eltFactDeboursPADParcAutoN1.Tva;
-                                                    details.Add(eltFactDeboursPADParcAutoN1);
+                                                   if(eltFactDeboursPADParcAutoN1.Qte!=0) details.Add(eltFactDeboursPADParcAutoN1);
 
                                                     InvoiceDetails eltFactSejourParcAutoN2 = new InvoiceDetails();
 
                                                     eltFactSejourParcAutoN2.Prix = lpSejourParcAuto.PU2LP.Value - lpSejourParcAuto.PU2LP.Value * derogation;
                                                     eltFactSejourParcAutoN2.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
                                                     eltFactSejourParcAutoN2.TvaTaux = eltFactSejourParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
-
-                                                    eltFactSejourParcAutoN2.Libelle = articleSejourParcAuto.LibArticle + "Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 9).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(9 + 20).ToShortDateString();
-
-                                                    eltFactSejourParcAutoN2.Qte = 20;
+                                                    eltFactSejourParcAutoN2.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                    eltFactSejourParcAutoN2.Libelle = articleSejourParcAuto.LibArticle + "Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 10).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(10 + 20).ToShortDateString();
+                                                    eltFactSejourParcAutoN2.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                    eltFactSejourParcAutoN2.Qty = 20;
+                                                    eltFactSejourParcAutoN2.Qte = eltFactSejourParcAutoN2.Qty * coefPoidsVeh;
                                                     eltFactSejourParcAutoN2.Unit = lpSejourParcAuto.UniteLP;
                                                     eltFactSejourParcAutoN2.Ht = eltFactSejourParcAutoN2.Prix * eltFactSejourParcAutoN2.Qte;
                                                     eltFactSejourParcAutoN2.Tva = Math.Round((eltFactSejourParcAutoN2.Ht * eltFactSejourParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
                                                     eltFactSejourParcAutoN2.MT = eltFactSejourParcAutoN2.Ht + eltFactSejourParcAutoN2.Tva;
-                                                    details.Add(eltFactSejourParcAutoN2);
+                                                    if(eltFactSejourParcAutoN2.Qte!=0) details.Add(eltFactSejourParcAutoN2);
 
                                                     InvoiceDetails eltFactDeboursPADParcAutoN2 = new InvoiceDetails();
 
@@ -533,28 +601,30 @@ namespace VSOM_API.Controllers
                                                     //eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
                                                     eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
 
-                                                    eltFactDeboursPADParcAutoN2.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 9).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(9 + 20).ToShortDateString();
-
-                                                    eltFactDeboursPADParcAutoN2.Qte = 20;
+                                                    eltFactDeboursPADParcAutoN2.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 10).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(10 + 20).ToShortDateString();
+                                                    eltFactDeboursPADParcAutoN2.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                    eltFactDeboursPADParcAutoN2.Qty = 20;
+                                                    eltFactDeboursPADParcAutoN2.Qte = eltFactDeboursPADParcAutoN2.Qty * coefPoidsVeh;
                                                     eltFactDeboursPADParcAutoN2.Unit = lpDeboursPADPenalite.UniteLP;
                                                     eltFactDeboursPADParcAutoN2.Ht = eltFactDeboursPADParcAutoN2.Prix * eltFactDeboursPADParcAutoN2.Qte;
                                                     eltFactDeboursPADParcAutoN2.Tva = Math.Round((eltFactDeboursPADParcAutoN2.Ht * eltFactDeboursPADParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
                                                     eltFactDeboursPADParcAutoN2.MT = eltFactDeboursPADParcAutoN2.Ht + eltFactDeboursPADParcAutoN2.Tva;
-                                                    details.Add(eltFactDeboursPADParcAutoN2);
+                                                    if(eltFactDeboursPADParcAutoN2.Qte!=0) details.Add(eltFactDeboursPADParcAutoN2);
 
                                                     InvoiceDetails eltFactSejourParcAutoN3 = new InvoiceDetails();
 
                                                     eltFactSejourParcAutoN3.Prix = lpSejourParcAuto.PU3LP.Value - lpSejourParcAuto.PU3LP.Value * derogation;
                                                     eltFactSejourParcAutoN3.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
                                                     eltFactSejourParcAutoN3.TvaTaux = eltFactSejourParcAutoN3.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactSejourParcAutoN3.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 9 + 20).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays((dateFin - matchedVehicule.FFVeh.Value).Days).ToShortDateString();
-
-                                                    eltFactSejourParcAutoN3.Qte = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - 9 - 20;
+                                                    eltFactSejourParcAutoN3.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 10 + 20).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays((dateFin - matchedVehicule.FFVeh.Value).Days).ToShortDateString();
+                                                    eltFactSejourParcAutoN3.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                    eltFactSejourParcAutoN3.Qty = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - 10 - 20;
+                                                    eltFactSejourParcAutoN3.Qte = eltFactSejourParcAutoN3.Qty * coefPoidsVeh;
                                                     eltFactSejourParcAutoN3.Unit = lpSejourParcAuto.UniteLP;
                                                     eltFactSejourParcAutoN3.Ht = eltFactSejourParcAutoN3.Prix * eltFactSejourParcAutoN3.Qte;
                                                     eltFactSejourParcAutoN3.Tva = Math.Round((eltFactSejourParcAutoN3.Ht * eltFactSejourParcAutoN3.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
                                                     eltFactSejourParcAutoN3.MT = eltFactSejourParcAutoN3.Ht + eltFactSejourParcAutoN3.Tva;
-                                                    details.Add(eltFactSejourParcAutoN3);
+                                                   if(eltFactSejourParcAutoN3.Qte!=0) details.Add(eltFactSejourParcAutoN3);
 
 
                                                     InvoiceDetails eltFactDeboursPADParcAutoN3 = new InvoiceDetails();
@@ -563,15 +633,16 @@ namespace VSOM_API.Controllers
                                                     eltFactDeboursPADParcAutoN3.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA; //TVAEX
                                                     // eltFactDeboursPADParcAutoN3.TvaTaux = eltFactDeboursPADParcAutoN3.TvaCode == "TVAEX" ? 0 : 0.1925f;
                                                     eltFactDeboursPADParcAutoN3.TvaTaux = eltFactDeboursPADParcAutoN3.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
+                                                    eltFactDeboursPADParcAutoN3.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                    eltFactDeboursPADParcAutoN3.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 10 + 20).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays((dateFin - matchedVehicule.FFVeh.Value).Days).ToShortDateString();
 
-                                                    eltFactDeboursPADParcAutoN3.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 9 + 20).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays((dateFin - matchedVehicule.FFVeh.Value).Days).ToShortDateString();
-
-                                                    eltFactDeboursPADParcAutoN3.Qte = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - 9 - 20;
+                                                    eltFactDeboursPADParcAutoN3.Qty = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - 10 - 20;
+                                                    eltFactDeboursPADParcAutoN3.Qte = eltFactDeboursPADParcAutoN3.Qty * coefPoidsVeh;
                                                     eltFactDeboursPADParcAutoN3.Unit = lpDeboursPADPenalite.UniteLP;
                                                     eltFactDeboursPADParcAutoN3.Ht = eltFactDeboursPADParcAutoN3.Prix * eltFactDeboursPADParcAutoN3.Qte;
                                                     eltFactDeboursPADParcAutoN3.Tva = Math.Round((eltFactDeboursPADParcAutoN3.Ht * eltFactDeboursPADParcAutoN3.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
                                                     eltFactDeboursPADParcAutoN3.MT = eltFactDeboursPADParcAutoN3.Ht + eltFactDeboursPADParcAutoN3.Tva;
-                                                    details.Add(eltFactDeboursPADParcAutoN3);
+                                                   if(eltFactDeboursPADParcAutoN3.Qte!=0) details.Add(eltFactDeboursPADParcAutoN3);
 
                                                     #endregion
                                                 }
@@ -584,24 +655,26 @@ namespace VSOM_API.Controllers
                                                     eltFactSejourParcAutoN1.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
                                                     eltFactSejourParcAutoN1.TvaTaux = eltFactSejourParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
 
-                                                    eltFactSejourParcAutoN1.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(9).ToShortDateString();
-
-                                                    eltFactSejourParcAutoN1.Qte = 9;
+                                                    eltFactSejourParcAutoN1.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(10).ToShortDateString();
+                                                    eltFactSejourParcAutoN1.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                    eltFactSejourParcAutoN1.Qty = 10;
+                                                    eltFactSejourParcAutoN1.Qte = eltFactSejourParcAutoN1.Qty * coefPoidsVeh;
                                                     eltFactSejourParcAutoN1.Unit = lpSejourParcAuto.UniteLP;
                                                     eltFactSejourParcAutoN1.Ht = eltFactSejourParcAutoN1.Prix * eltFactSejourParcAutoN1.Qte;
                                                     eltFactSejourParcAutoN1.Tva = Math.Round((eltFactSejourParcAutoN1.Ht * eltFactSejourParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
                                                     eltFactSejourParcAutoN1.MT = eltFactSejourParcAutoN1.Ht + eltFactSejourParcAutoN1.Tva;
-                                                    details.Add(eltFactSejourParcAutoN1);
+                                                   if(eltFactSejourParcAutoN1.Qte!=0) details.Add(eltFactSejourParcAutoN1);
 
                                                     InvoiceDetails eltFactDeboursPADParcAutoN1 = new InvoiceDetails();
 
                                                     eltFactDeboursPADParcAutoN1.Prix = lpDeboursPADPenalite.PU1LP.Value - lpDeboursPADPenalite.PU1LP.Value * derogation;
                                                     eltFactDeboursPADParcAutoN1.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA; //TVATI
-                                                    // eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                    //eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
                                                     eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
-
-                                                    eltFactDeboursPADParcAutoN1.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(9).ToShortDateString();
-                                                    eltFactDeboursPADParcAutoN1.Qte = 9;
+                                                    eltFactDeboursPADParcAutoN1.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                    eltFactDeboursPADParcAutoN1.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(10).ToShortDateString();
+                                                    eltFactDeboursPADParcAutoN1.Qty = 10;
+                                                    eltFactDeboursPADParcAutoN1.Qte = eltFactSejourParcAutoN1.Qty * coefPoidsVeh;
                                                     eltFactDeboursPADParcAutoN1.Unit = lpDeboursPADPenalite.UniteLP;
                                                     eltFactDeboursPADParcAutoN1.Ht = eltFactDeboursPADParcAutoN1.Prix * eltFactDeboursPADParcAutoN1.Qte;
                                                     eltFactDeboursPADParcAutoN1.Tva = Math.Round((eltFactDeboursPADParcAutoN1.Ht * eltFactDeboursPADParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
@@ -613,15 +686,16 @@ namespace VSOM_API.Controllers
                                                     eltFactSejourParcAutoN2.Prix = lpSejourParcAuto.PU2LP.Value - lpSejourParcAuto.PU2LP.Value * derogation;
                                                     eltFactSejourParcAutoN2.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
                                                     eltFactSejourParcAutoN2.TvaTaux = eltFactSejourParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
-
-                                                    eltFactSejourParcAutoN2.Libelle = articleSejourParcAuto.LibArticle + "Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 9).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(9 + 20).ToShortDateString();
-
-                                                    eltFactSejourParcAutoN2.Qte = 20;
+                                                    eltFactSejourParcAutoN2.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                    eltFactSejourParcAutoN2.Libelle = articleSejourParcAuto.LibArticle + "Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 10).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(10 + 20).ToShortDateString();
+                                                    eltFactSejourParcAutoN2.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                    eltFactSejourParcAutoN2.Qty = 20;
+                                                    eltFactSejourParcAutoN2.Qte = eltFactSejourParcAutoN2.Qty * coefPoidsVeh;
                                                     eltFactSejourParcAutoN2.Unit = lpSejourParcAuto.UniteLP;
                                                     eltFactSejourParcAutoN2.Ht = eltFactSejourParcAutoN2.Prix * eltFactSejourParcAutoN2.Qte;
                                                     eltFactSejourParcAutoN2.Tva = Math.Round((eltFactSejourParcAutoN2.Ht * eltFactSejourParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
                                                     eltFactSejourParcAutoN2.MT = eltFactSejourParcAutoN2.Ht + eltFactSejourParcAutoN2.Tva;
-                                                    details.Add(eltFactSejourParcAutoN2);
+                                                   if(eltFactSejourParcAutoN2.Qte!=0) details.Add(eltFactSejourParcAutoN2);
 
                                                     InvoiceDetails eltFactDeboursPADParcAutoN2 = new InvoiceDetails();
 
@@ -630,28 +704,30 @@ namespace VSOM_API.Controllers
                                                     //eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
                                                     eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
 
-                                                    eltFactDeboursPADParcAutoN2.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 9).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(9 + 20).ToShortDateString();
-
-                                                    eltFactDeboursPADParcAutoN2.Qte = 20;
+                                                    eltFactDeboursPADParcAutoN2.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 10).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(10 + 20).ToShortDateString();
+                                                    eltFactDeboursPADParcAutoN2.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                    eltFactDeboursPADParcAutoN2.Qty = 20;
+                                                    eltFactDeboursPADParcAutoN2.Qte = eltFactDeboursPADParcAutoN2.Qty * coefPoidsVeh;
                                                     eltFactDeboursPADParcAutoN2.Unit = lpDeboursPADPenalite.UniteLP;
                                                     eltFactDeboursPADParcAutoN2.Ht = eltFactDeboursPADParcAutoN2.Prix * eltFactDeboursPADParcAutoN2.Qte;
                                                     eltFactDeboursPADParcAutoN2.Tva = Math.Round((eltFactDeboursPADParcAutoN2.Ht * eltFactDeboursPADParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
                                                     eltFactDeboursPADParcAutoN2.MT = eltFactDeboursPADParcAutoN2.Ht + eltFactDeboursPADParcAutoN2.Tva;
-                                                    details.Add(eltFactDeboursPADParcAutoN2);
+                                                   if(eltFactDeboursPADParcAutoN2.Qte!=0) details.Add(eltFactDeboursPADParcAutoN2);
 
                                                     InvoiceDetails eltFactSejourParcAutoN3 = new InvoiceDetails();
 
                                                     eltFactSejourParcAutoN3.Prix = lpSejourParcAuto.PU3LP.Value - lpSejourParcAuto.PU3LP.Value * derogation;
                                                     eltFactSejourParcAutoN3.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
                                                     eltFactSejourParcAutoN3.TvaTaux = eltFactSejourParcAutoN3.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactSejourParcAutoN3.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 9 + 20).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(9 + 20 + 30).ToShortDateString();
-
-                                                    eltFactSejourParcAutoN3.Qte = 30;
+                                                    eltFactSejourParcAutoN3.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 10 + 20).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(10 + 20 + 30).ToShortDateString();
+                                                    eltFactSejourParcAutoN3.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                    eltFactSejourParcAutoN3.Qty = 30;
+                                                    eltFactSejourParcAutoN3.Qte = eltFactSejourParcAutoN3.Qty * coefPoidsVeh;
                                                     eltFactSejourParcAutoN3.Unit = lpSejourParcAuto.UniteLP;
                                                     eltFactSejourParcAutoN3.Ht = eltFactSejourParcAutoN3.Prix * eltFactSejourParcAutoN3.Qte;
                                                     eltFactSejourParcAutoN3.Tva = Math.Round((eltFactSejourParcAutoN3.Ht * eltFactSejourParcAutoN3.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
                                                     eltFactSejourParcAutoN3.MT = eltFactSejourParcAutoN3.Ht + eltFactSejourParcAutoN3.Tva;
-                                                    details.Add(eltFactSejourParcAutoN3);
+                                                   if(eltFactSejourParcAutoN3.Qte!=0) details.Add(eltFactSejourParcAutoN3);
 
                                                     InvoiceDetails eltFactDeboursPADParcAutoN3 = new InvoiceDetails();
 
@@ -659,29 +735,31 @@ namespace VSOM_API.Controllers
                                                     eltFactDeboursPADParcAutoN3.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA; //TVAEX
                                                     // eltFactDeboursPADParcAutoN3.TvaTaux = eltFactDeboursPADParcAutoN3.TvaCode == "TVAEX" ? 0 : 0.1925f;
                                                     eltFactDeboursPADParcAutoN3.TvaTaux = eltFactDeboursPADParcAutoN3.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
+                                                    eltFactDeboursPADParcAutoN3.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                    eltFactDeboursPADParcAutoN3.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 10 + 20).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(10 + 20 + 30).ToShortDateString();
 
-                                                    eltFactDeboursPADParcAutoN3.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 9 + 20).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(9 + 20 + 30).ToShortDateString();
-
-                                                    eltFactDeboursPADParcAutoN3.Qte = 30;
+                                                    eltFactDeboursPADParcAutoN3.Qty = 30;
+                                                    eltFactDeboursPADParcAutoN3.Qte = eltFactDeboursPADParcAutoN3.Qty * coefPoidsVeh;
                                                     eltFactDeboursPADParcAutoN3.Unit = lpDeboursPADPenalite.UniteLP;
                                                     eltFactDeboursPADParcAutoN3.Ht = eltFactDeboursPADParcAutoN3.Prix * eltFactDeboursPADParcAutoN3.Qte;
                                                     eltFactDeboursPADParcAutoN3.Tva = Math.Round((eltFactDeboursPADParcAutoN3.Ht * eltFactDeboursPADParcAutoN3.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
                                                     eltFactDeboursPADParcAutoN3.MT = eltFactDeboursPADParcAutoN3.Ht + eltFactDeboursPADParcAutoN3.Tva;
-                                                    details.Add(eltFactDeboursPADParcAutoN3);
+                                                   if(eltFactDeboursPADParcAutoN3.Qte!=0) details.Add(eltFactDeboursPADParcAutoN3);
 
                                                     InvoiceDetails eltFactSejourParcAutoN4 = new InvoiceDetails();
 
                                                     eltFactSejourParcAutoN4.Prix = lpSejourParcAuto.PU4LP.Value - lpSejourParcAuto.PU4LP.Value * derogation;
                                                     eltFactSejourParcAutoN4.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
                                                     eltFactSejourParcAutoN4.TvaTaux = eltFactSejourParcAutoN4.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactSejourParcAutoN4.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 9 + 20 + 30).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays((dateFin - matchedVehicule.FFVeh.Value).Days).ToShortDateString();
-
-                                                    eltFactSejourParcAutoN4.Qte = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - 9 - 20 - 30;
+                                                    eltFactSejourParcAutoN4.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 10 + 20 + 30).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays((dateFin - matchedVehicule.FFVeh.Value).Days).ToShortDateString();
+                                                    eltFactSejourParcAutoN4.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                    eltFactSejourParcAutoN4.Qty = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - 10 - 20 - 30;
+                                                    eltFactSejourParcAutoN4.Qte = eltFactSejourParcAutoN4.Qty * coefPoidsVeh;
                                                     eltFactSejourParcAutoN4.Unit = lpSejourParcAuto.UniteLP;
                                                     eltFactSejourParcAutoN4.Ht = eltFactSejourParcAutoN4.Prix * eltFactSejourParcAutoN4.Qte;
                                                     eltFactSejourParcAutoN4.Tva = Math.Round((eltFactSejourParcAutoN4.Ht * eltFactSejourParcAutoN4.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
                                                     eltFactSejourParcAutoN4.MT = eltFactSejourParcAutoN4.Ht + eltFactSejourParcAutoN4.Tva;
-                                                    details.Add(eltFactSejourParcAutoN4);
+                                                   if(eltFactSejourParcAutoN4.Qte!=0) details.Add(eltFactSejourParcAutoN4);
 
                                                     InvoiceDetails eltFactDeboursPADParcAutoN4 = new InvoiceDetails();
 
@@ -689,15 +767,16 @@ namespace VSOM_API.Controllers
                                                     eltFactDeboursPADParcAutoN4.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA; //TVAEX
                                                     // eltFactDeboursPADParcAutoN4.TvaTaux = eltFactDeboursPADParcAutoN4.TvaCode == "TVAEX" ? 0 : 0.1925f;
                                                     eltFactDeboursPADParcAutoN4.TvaTaux = eltFactDeboursPADParcAutoN4.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
+                                                    eltFactDeboursPADParcAutoN4.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                    eltFactDeboursPADParcAutoN4.Libelle = articleDeboursPADPenalite.LibArticle + "Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 10 + 20 + 30).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays((dateFin - matchedVehicule.FFVeh.Value).Days).ToShortDateString();
 
-                                                    eltFactDeboursPADParcAutoN4.Libelle = articleDeboursPADPenalite.LibArticle + "Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 9 + 20 + 30).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays((dateFin - matchedVehicule.FFVeh.Value).Days).ToShortDateString();
-
-                                                    eltFactDeboursPADParcAutoN4.Qte = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - 9 - 20 - 30;
+                                                    eltFactDeboursPADParcAutoN4.Qty = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - 10 - 20 - 30;
+                                                    eltFactDeboursPADParcAutoN4.Qte = eltFactDeboursPADParcAutoN4.Qty * coefPoidsVeh;
                                                     eltFactDeboursPADParcAutoN4.Unit = lpDeboursPADPenalite.UniteLP;
                                                     eltFactDeboursPADParcAutoN4.Ht = eltFactDeboursPADParcAutoN4.Prix * eltFactDeboursPADParcAutoN4.Qte;
                                                     eltFactDeboursPADParcAutoN4.Tva = Math.Round((eltFactDeboursPADParcAutoN4.Ht * eltFactDeboursPADParcAutoN4.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
                                                     eltFactDeboursPADParcAutoN4.MT = eltFactDeboursPADParcAutoN4.Ht + eltFactDeboursPADParcAutoN4.Tva;
-                                                    details.Add(eltFactDeboursPADParcAutoN4);
+                                                   if(eltFactDeboursPADParcAutoN4.Qte!=0) details.Add(eltFactDeboursPADParcAutoN4);
 
                                                     #endregion
                                                 }
@@ -722,8 +801,9 @@ namespace VSOM_API.Controllers
                                                 eltFactSejourParcAuto.Prix = lpSejourParcAuto.PU4LP.Value * 2; //lpSejourParcAuto.PU4LP.Value - lpSejourParcAuto.PU4LP.Value * derogation;
                                                 eltFactSejourParcAuto.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
                                                 eltFactSejourParcAuto.TvaTaux = eltFactSejourParcAuto.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                eltFactSejourParcAuto.Qte = dateFin.Date < finAncienSejour ? 0 : (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU4LP.Value * (1 - derogation)).Sum(el => el.QTEEF) <= 9) ? (dateFin - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU4LP.Value * (1 - derogation)).Sum(el => el.QTEEF.Value) : 0;
+                                                eltFactSejourParcAuto.Qte = dateFin.Date < finAncienSejour ? 0 : (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU4LP.Value * (1 - derogation)).Sum(el => el.JrVeh) <= 10) ? (dateFin - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU4LP.Value * (1 - derogation)).Sum(el => el.JrVeh.Value) : 0;
                                                 //AH  "Pénalité de stationnement
+                                                eltFactSejourParcAuto.Code = articleSejourParcAuto.CodeArticle.ToString();
                                                 eltFactSejourParcAuto.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAuto.Qte)).ToShortDateString();
                                                 eltFactSejourParcAuto.Unit = lpSejourParcAuto.UniteLP;
                                                 eltFactSejourParcAuto.Ht = eltFactSejourParcAuto.Prix * eltFactSejourParcAuto.Qte;
@@ -752,328 +832,394 @@ namespace VSOM_API.Controllers
                                             }
                                             else
                                             {
-
-                                                // Gestion pour les véhicules suivant le flux normal
-                                                double derogation = (con.BLIL == "Y" || con.BLGN == "Y") ? 0.75 : 0;
-                                                if ((dateFin - matchedVehicule.FFVeh.Value).Days <= 9)
+                                                //control de cotation antérieur a la date de stationnement deja effectué
+                                                if (dateFin < finAncienSejour)
                                                 {
-                                                    #region niveau 1
-                                                    InvoiceDetails eltFactSejourParcAuto = new InvoiceDetails();
-
-                                                    eltFactSejourParcAuto.Prix = lpSejourParcAuto.PU1LP.Value - lpSejourParcAuto.PU1LP.Value * derogation;
-                                                    eltFactSejourParcAuto.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
-                                                    eltFactSejourParcAuto.TvaTaux = eltFactSejourParcAuto.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactSejourParcAuto.Qte = dateFin.Date < finAncienSejour ? 0 : (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF) <= 9) ? (dateFin - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) : 0;
-                                                    //AH Pénalité de stationnement
-                                                    eltFactSejourParcAuto.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAuto.Qte)).ToShortDateString();
-                                                    eltFactSejourParcAuto.Unit = lpSejourParcAuto.UniteLP;
-                                                    eltFactSejourParcAuto.Ht = eltFactSejourParcAuto.Prix * eltFactSejourParcAuto.Qte;
-                                                    eltFactSejourParcAuto.Tva = Math.Round((eltFactSejourParcAuto.Ht * eltFactSejourParcAuto.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactSejourParcAuto.MT = eltFactSejourParcAuto.Ht + eltFactSejourParcAuto.Tva;
-                                                    details.Add(eltFactSejourParcAuto);
-
-                                                    InvoiceDetails eltFactDeboursPADParcAuto = new InvoiceDetails();
-
-                                                    eltFactDeboursPADParcAuto.Prix = lpDeboursPADPenalite.PU1LP.Value - lpDeboursPADPenalite.PU1LP.Value * derogation;
-                                                    eltFactDeboursPADParcAuto.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA; //TVAEX
-                                                    // eltFactDeboursPADParcAuto.TvaTaux = eltFactDeboursPADParcAuto.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactDeboursPADParcAuto.TvaTaux = eltFactDeboursPADParcAuto.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
-
-                                                    eltFactDeboursPADParcAuto.Qte = dateFin.Date < finAncienSejour ? 0 : (eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) <= 9) ? (dateFin - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) : 0;
-                                                    //AH Débours PAD : Pénalité de stationnement
-                                                    eltFactDeboursPADParcAuto.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAuto.Qte)).ToShortDateString();
-                                                    eltFactDeboursPADParcAuto.Unit = lpDeboursPADPenalite.UniteLP;
-                                                    eltFactDeboursPADParcAuto.Ht = eltFactDeboursPADParcAuto.Prix * eltFactDeboursPADParcAuto.Qte;
-                                                    eltFactDeboursPADParcAuto.Tva = Math.Round((eltFactDeboursPADParcAuto.Ht * eltFactDeboursPADParcAuto.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactDeboursPADParcAuto.MT = eltFactDeboursPADParcAuto.Ht + eltFactDeboursPADParcAuto.Tva;
-                                                    details.Add(eltFactDeboursPADParcAuto);
-                                                    #endregion
-                                                }
-                                                else if ((dateFin - matchedVehicule.FFVeh.Value).Days <= 9 + 20)
-                                                {
-                                                    #region niveau 2
-                                                    InvoiceDetails eltFactSejourParcAutoN1 = new InvoiceDetails();
-
-                                                    eltFactSejourParcAutoN1.Prix = lpSejourParcAuto.PU1LP.Value - lpSejourParcAuto.PU1LP.Value * derogation;
-                                                    eltFactSejourParcAutoN1.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
-                                                    eltFactSejourParcAutoN1.TvaTaux = eltFactSejourParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactSejourParcAutoN1.Qte = (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF) < 9) ? 9 - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) : 0;
-                                                    //AH "Pénalité de stationnement
-                                                    eltFactSejourParcAutoN1.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte)).ToShortDateString();
-                                                    eltFactSejourParcAutoN1.Unit = lpSejourParcAuto.UniteLP;
-                                                    eltFactSejourParcAutoN1.Ht = eltFactSejourParcAutoN1.Prix * eltFactSejourParcAutoN1.Qte;
-                                                    eltFactSejourParcAutoN1.Tva = Math.Round((eltFactSejourParcAutoN1.Ht * eltFactSejourParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactSejourParcAutoN1.MT = eltFactSejourParcAutoN1.Ht + eltFactSejourParcAutoN1.Tva;
-                                                    details.Add(eltFactSejourParcAutoN1);
-
-                                                    InvoiceDetails eltFactDeboursPADParcAutoN1 = new InvoiceDetails();
-
-                                                    eltFactDeboursPADParcAutoN1.Prix = lpDeboursPADPenalite.PU1LP.Value - lpDeboursPADPenalite.PU1LP.Value * derogation;
-                                                    eltFactDeboursPADParcAutoN1.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
-                                                    //eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
-
-                                                    eltFactDeboursPADParcAutoN1.Qte = (eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF) < 9) ? 9 - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) : 0;
-                                                    //AH Débours PAD : Pénalité de stationnement 
-                                                    eltFactDeboursPADParcAutoN1.Libelle = articleDeboursPADPenalite.LibArticle + "Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte)).ToShortDateString();
-                                                    eltFactDeboursPADParcAutoN1.Unit = lpDeboursPADPenalite.UniteLP;
-                                                    eltFactDeboursPADParcAutoN1.Ht = eltFactDeboursPADParcAutoN1.Prix * eltFactDeboursPADParcAutoN1.Qte;
-                                                    eltFactDeboursPADParcAutoN1.Tva = Math.Round((eltFactDeboursPADParcAutoN1.Ht * eltFactDeboursPADParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactDeboursPADParcAutoN1.MT = eltFactDeboursPADParcAutoN1.Ht + eltFactDeboursPADParcAutoN1.Tva;
-                                                    details.Add(eltFactDeboursPADParcAutoN1);
-
-                                                    InvoiceDetails eltFactSejourParcAutoN2 = new InvoiceDetails();
-
-                                                    eltFactSejourParcAutoN2.Prix = lpSejourParcAuto.PU2LP.Value - lpSejourParcAuto.PU2LP.Value * derogation;
-                                                    eltFactSejourParcAutoN2.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
-                                                    eltFactSejourParcAutoN2.TvaTaux = eltFactSejourParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactSejourParcAutoN2.Qte = (dateFin - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase.Value == lpSejourParcAuto.PU2LP.Value * (1 - derogation) || el.PUEFBase.Value == lpSejourParcAuto.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltFactSejourParcAutoN1.Qte;
-                                                    //AH Pénalité de stationnement
-                                                    eltFactSejourParcAutoN2.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactSejourParcAutoN1.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte)).ToShortDateString();
-                                                    eltFactSejourParcAutoN2.Unit = lpSejourParcAuto.UniteLP;
-                                                    eltFactSejourParcAutoN2.Ht = eltFactSejourParcAutoN2.Prix * eltFactSejourParcAutoN2.Qte;
-                                                    eltFactSejourParcAutoN2.Tva = Math.Round((eltFactSejourParcAutoN2.Ht * eltFactSejourParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactSejourParcAutoN2.MT = eltFactSejourParcAutoN2.Ht + eltFactSejourParcAutoN2.Tva;
-                                                    details.Add(eltFactSejourParcAutoN2);
-
-                                                    InvoiceDetails eltFactDeboursPADParcAutoN2 = new InvoiceDetails();
-
-                                                    eltFactDeboursPADParcAutoN2.Prix = lpDeboursPADPenalite.PU2LP.Value - lpDeboursPADPenalite.PU2LP.Value * derogation;
-                                                    eltFactDeboursPADParcAutoN2.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
-                                                    //eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
-
-                                                    eltFactDeboursPADParcAutoN2.Qte = (dateFin - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltFactDeboursPADParcAutoN1.Qte;
-                                                    //AH Débours PAD : Pénalité de stationnement
-                                                    eltFactDeboursPADParcAutoN2.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte)).ToShortDateString();
-                                                    eltFactDeboursPADParcAutoN2.Unit = lpDeboursPADPenalite.UniteLP;
-                                                    eltFactDeboursPADParcAutoN2.Ht = eltFactDeboursPADParcAutoN2.Prix * eltFactDeboursPADParcAutoN2.Qte;
-                                                    eltFactDeboursPADParcAutoN2.Tva = Math.Round((eltFactDeboursPADParcAutoN2.Ht * eltFactDeboursPADParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactDeboursPADParcAutoN2.MT = eltFactDeboursPADParcAutoN2.Ht + eltFactDeboursPADParcAutoN2.Tva;
-                                                    details.Add(eltFactDeboursPADParcAutoN2);
-                                                    #endregion
-                                                }
-                                                else if ((dateFin - matchedVehicule.FFVeh.Value).Days <= 9 + 20 + 30)
-                                                {
-                                                    #region niveau 3
-                                                    InvoiceDetails eltFactSejourParcAutoN1 = new InvoiceDetails();
-
-                                                    eltFactSejourParcAutoN1.Prix = lpSejourParcAuto.PU1LP.Value - lpSejourParcAuto.PU1LP.Value * derogation;
-                                                    eltFactSejourParcAutoN1.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
-                                                    eltFactSejourParcAutoN1.TvaTaux = eltFactSejourParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactSejourParcAutoN1.Qte = (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF) < 9) ? 9 - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) : 0;
-                                                    //AH "Pénalité de stationnement
-                                                    eltFactSejourParcAutoN1.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte)).ToShortDateString();
-                                                    eltFactSejourParcAutoN1.Unit = lpSejourParcAuto.UniteLP;
-                                                    eltFactSejourParcAutoN1.Ht = eltFactSejourParcAutoN1.Prix * eltFactSejourParcAutoN1.Qte;
-                                                    eltFactSejourParcAutoN1.Tva = Math.Round((eltFactSejourParcAutoN1.Ht * eltFactSejourParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactSejourParcAutoN1.MT = eltFactSejourParcAutoN1.Ht + eltFactSejourParcAutoN1.Tva;
-                                                    details.Add(eltFactSejourParcAutoN1);
-
-                                                    InvoiceDetails eltFactDeboursPADParcAutoN1 = new InvoiceDetails();
-
-                                                    eltFactDeboursPADParcAutoN1.Prix = lpDeboursPADPenalite.PU1LP.Value - lpDeboursPADPenalite.PU1LP.Value * derogation;
-                                                    eltFactDeboursPADParcAutoN1.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
-                                                    //eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
-
-                                                    eltFactDeboursPADParcAutoN1.Qte = (eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF) < 9) ? 9 - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) : 0;
-                                                    //AH Débours PAD : Pénalité de stationnement 
-                                                    eltFactDeboursPADParcAutoN1.Libelle = articleDeboursPADPenalite.LibArticle + "Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte)).ToShortDateString();
-                                                    eltFactDeboursPADParcAutoN1.Unit = lpDeboursPADPenalite.UniteLP;
-                                                    eltFactDeboursPADParcAutoN1.Ht = eltFactDeboursPADParcAutoN1.Prix * eltFactDeboursPADParcAutoN1.Qte;
-                                                    eltFactDeboursPADParcAutoN1.Tva = Math.Round((eltFactDeboursPADParcAutoN1.Ht * eltFactDeboursPADParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactDeboursPADParcAutoN1.MT = eltFactDeboursPADParcAutoN1.Ht + eltFactDeboursPADParcAutoN1.Tva;
-                                                    details.Add(eltFactDeboursPADParcAutoN1);
-
-                                                    InvoiceDetails eltFactSejourParcAutoN2 = new InvoiceDetails();
-
-                                                    eltFactSejourParcAutoN2.Prix = lpSejourParcAuto.PU2LP.Value - lpSejourParcAuto.PU2LP.Value * derogation;
-                                                    eltFactSejourParcAutoN2.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
-                                                    eltFactSejourParcAutoN2.TvaTaux = eltFactSejourParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactSejourParcAutoN2.Qte = (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) < 20) ? 20 - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU2LP * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) : 0;
-                                                    //AH Pénalité de stationnement
-                                                    eltFactSejourParcAutoN2.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactSejourParcAutoN1.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte)).ToShortDateString();
-                                                    eltFactSejourParcAutoN2.Unit = lpSejourParcAuto.UniteLP;
-                                                    eltFactSejourParcAutoN2.Ht = eltFactSejourParcAutoN2.Prix * eltFactSejourParcAutoN2.Qte;
-                                                    eltFactSejourParcAutoN2.Tva = Math.Round((eltFactSejourParcAutoN2.Ht * eltFactSejourParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactSejourParcAutoN2.MT = eltFactSejourParcAutoN2.Ht + eltFactSejourParcAutoN2.Tva;
-                                                    details.Add(eltFactSejourParcAutoN2);
-
-                                                    InvoiceDetails eltFactDeboursPADParcAutoN2 = new InvoiceDetails();
-
-                                                    eltFactDeboursPADParcAutoN2.Prix = lpDeboursPADPenalite.PU2LP.Value - lpDeboursPADPenalite.PU2LP.Value * derogation;
-                                                    eltFactDeboursPADParcAutoN2.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
-                                                    //eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
-
-                                                    eltFactDeboursPADParcAutoN2.Qte = (eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) < 20) ? 20 - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU2LP * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) : 0;
-                                                    //AH Débours PAD : Pénalité de stationnement
-                                                    eltFactDeboursPADParcAutoN2.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte)).ToShortDateString();
-                                                    eltFactDeboursPADParcAutoN2.Unit = lpDeboursPADPenalite.UniteLP;
-                                                    eltFactDeboursPADParcAutoN2.Ht = eltFactDeboursPADParcAutoN2.Prix * eltFactDeboursPADParcAutoN2.Qte;
-                                                    eltFactDeboursPADParcAutoN2.Tva = Math.Round((eltFactDeboursPADParcAutoN2.Ht * eltFactDeboursPADParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactDeboursPADParcAutoN2.MT = eltFactDeboursPADParcAutoN2.Ht + eltFactDeboursPADParcAutoN2.Tva;
-                                                    details.Add(eltFactDeboursPADParcAutoN2);
-
-                                                    InvoiceDetails eltFactSejourParcAutoN3 = new InvoiceDetails();
-
-                                                    eltFactSejourParcAutoN3.Prix = lpSejourParcAuto.PU3LP.Value - lpSejourParcAuto.PU3LP.Value * derogation;
-                                                    eltFactSejourParcAutoN3.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
-                                                    eltFactSejourParcAutoN3.TvaTaux = eltFactSejourParcAutoN3.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactSejourParcAutoN3.Qte = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU3LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU3LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltFactSejourParcAutoN1.Qte - eltFactSejourParcAutoN2.Qte;
-                                                    //AH Pénalité de stationnement
-                                                    eltFactSejourParcAutoN3.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte + eltFactSejourParcAutoN3.Qte)).ToShortDateString();
-                                                    eltFactSejourParcAutoN3.Unit = lpSejourParcAuto.UniteLP;
-                                                    eltFactSejourParcAutoN3.Ht = eltFactSejourParcAutoN3.Prix * eltFactSejourParcAutoN3.Qte;
-                                                    eltFactSejourParcAutoN3.Tva = Math.Round((eltFactSejourParcAutoN3.Ht * eltFactSejourParcAutoN3.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactSejourParcAutoN3.MT = eltFactSejourParcAutoN3.Ht + eltFactSejourParcAutoN3.Tva;
-                                                    details.Add(eltFactSejourParcAutoN3);
-
-                                                    InvoiceDetails eltFactDeboursPADParcAutoN3 = new InvoiceDetails();
-
-                                                    eltFactDeboursPADParcAutoN3.Prix = lpDeboursPADPenalite.PU3LP.Value - lpDeboursPADPenalite.PU3LP.Value * derogation;
-                                                    eltFactDeboursPADParcAutoN3.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
-                                                    // eltFactDeboursPADParcAutoN3.TvaTaux = eltFactDeboursPADParcAutoN3.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactDeboursPADParcAutoN3.TvaTaux = eltFactDeboursPADParcAutoN3.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
-
-                                                    eltFactDeboursPADParcAutoN3.Qte = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU3LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU3LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltFactDeboursPADParcAutoN1.Qte - eltFactDeboursPADParcAutoN2.Qte;
-                                                    //AH Débours PAD : Pénalité de stationnement 
-                                                    eltFactDeboursPADParcAutoN3.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte + eltFactDeboursPADParcAutoN3.Qte)).ToShortDateString();
-                                                    eltFactDeboursPADParcAutoN3.Unit = lpDeboursPADPenalite.UniteLP;
-                                                    eltFactDeboursPADParcAutoN3.Ht = eltFactDeboursPADParcAutoN3.Prix * eltFactDeboursPADParcAutoN3.Qte;
-                                                    eltFactDeboursPADParcAutoN3.Tva = Math.Round((eltFactDeboursPADParcAutoN3.Ht * eltFactDeboursPADParcAutoN3.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactDeboursPADParcAutoN3.MT = eltFactDeboursPADParcAutoN3.Ht + eltFactDeboursPADParcAutoN3.Tva;
-                                                    details.Add(eltFactDeboursPADParcAutoN3);
-
-                                                    #endregion
+                                                    throw new ApplicationException("Le stationnement  est deja calculé jusqu'au" + finAncienSejour.ToShortDateString());
                                                 }
                                                 else
                                                 {
-                                                    #region niveau 4
-                                                    InvoiceDetails eltFactSejourParcAutoN1 = new InvoiceDetails();
+                                                    // Gestion pour les véhicules suivant le flux normal
+                                                    double derogation_new =  (con.BLIL == "Y") ? 0.75 : 0;
+                                                    double derogation = (con.BLIL == "Y" || con.BLGN == "Y") ? 0.75 : 0;
+                                                    int jourpalier = 0; double oldsejour = 0;
+                                                    double nbroldsejour = eltSejourCalcules.Where(el => el.IdLP == 14 || el.IdLP == 47).Sum(el => el.JrVeh).Value;
+                                                   //8janv18 pour definir le temps de sejour du palier 1 est effectue avec le nouveau prix
+                                                    double nbrnewsejour = eltSejourCalcules.Where(el => el.IdLP == 668 || el.IdLP == 669).Sum(el => el.JrVeh).Value;
 
-                                                    eltFactSejourParcAutoN1.Prix = lpSejourParcAuto.PU1LP.Value - lpSejourParcAuto.PU1LP.Value * derogation;
-                                                    eltFactSejourParcAutoN1.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
-                                                    eltFactSejourParcAutoN1.TvaTaux = eltFactSejourParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactSejourParcAutoN1.Qte = (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF) < 9) ? 9 - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) : 0;
-                                                    //AH "Pénalité de stationnement
-                                                    eltFactSejourParcAutoN1.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte)).ToShortDateString();
-                                                    eltFactSejourParcAutoN1.Unit = lpSejourParcAuto.UniteLP;
-                                                    eltFactSejourParcAutoN1.Ht = eltFactSejourParcAutoN1.Prix * eltFactSejourParcAutoN1.Qte;
-                                                    eltFactSejourParcAutoN1.Tva = Math.Round((eltFactSejourParcAutoN1.Ht * eltFactSejourParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactSejourParcAutoN1.MT = eltFactSejourParcAutoN1.Ht + eltFactSejourParcAutoN1.Tva;
-                                                    details.Add(eltFactSejourParcAutoN1);
+                                                    if ((nbroldsejour+nbrnewsejour) >= 9) jourpalier = 9; else jourpalier = 10;
 
-                                                    InvoiceDetails eltFactDeboursPADParcAutoN1 = new InvoiceDetails();
+                                                    if ((dateFin - matchedVehicule.FFVeh.Value).Days <= jourpalier)
+                                                    {
+                                                        oldsejour = eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh).Value;
+                                                        #region niveau 1
+                                                        InvoiceDetails eltFactSejourParcAuto = new InvoiceDetails();
+                                                        
+                                                        eltFactSejourParcAuto.Prix = lpSejourParcAuto.PU1LP.Value - lpSejourParcAuto.PU1LP.Value * derogation_new;
+                                                        eltFactSejourParcAuto.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
+                                                        eltFactSejourParcAuto.TvaTaux = eltFactSejourParcAuto.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactSejourParcAuto.Qty = dateFin.Date < finAncienSejour ? 0 : ((eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh).Value + oldsejour) <= jourpalier) ? (dateFin - matchedVehicule.FFVeh.Value).Days - (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) + oldsejour) : 0;
+                                                        eltFactSejourParcAuto.Qte = eltFactSejourParcAuto.Qty * coefPoidsVeh;
+                                                        //AH Pénalité de stationnement
+                                                        eltFactSejourParcAuto.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                        eltFactSejourParcAuto.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAuto.Qty)).ToShortDateString();
+                                                        eltFactSejourParcAuto.Unit = lpSejourParcAuto.UniteLP;
+                                                        eltFactSejourParcAuto.Ht = eltFactSejourParcAuto.Prix * eltFactSejourParcAuto.Qte;
+                                                        eltFactSejourParcAuto.Tva = Math.Round((eltFactSejourParcAuto.Ht * eltFactSejourParcAuto.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactSejourParcAuto.MT = eltFactSejourParcAuto.Ht + eltFactSejourParcAuto.Tva;
+                                                        details.Add(eltFactSejourParcAuto);
 
-                                                    eltFactDeboursPADParcAutoN1.Prix = lpDeboursPADPenalite.PU1LP.Value - lpDeboursPADPenalite.PU1LP.Value * derogation;
-                                                    eltFactDeboursPADParcAutoN1.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
-                                                    // eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
+                                                        InvoiceDetails eltFactDeboursPADParcAuto = new InvoiceDetails();
 
-                                                    eltFactDeboursPADParcAutoN1.Qte = (eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF) < 9) ? 9 - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) : 0;
-                                                    //AH Débours PAD : Pénalité de stationnement 
-                                                    eltFactDeboursPADParcAutoN1.Libelle = articleDeboursPADPenalite.LibArticle + "Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte)).ToShortDateString();
-                                                    eltFactDeboursPADParcAutoN1.Unit = lpDeboursPADPenalite.UniteLP;
-                                                    eltFactDeboursPADParcAutoN1.Ht = eltFactDeboursPADParcAutoN1.Prix * eltFactDeboursPADParcAutoN1.Qte;
-                                                    eltFactDeboursPADParcAutoN1.Tva = Math.Round((eltFactDeboursPADParcAutoN1.Ht * eltFactDeboursPADParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactDeboursPADParcAutoN1.MT = eltFactDeboursPADParcAutoN1.Ht + eltFactDeboursPADParcAutoN1.Tva;
-                                                    details.Add(eltFactDeboursPADParcAutoN1);
+                                                        eltFactDeboursPADParcAuto.Prix = lpDeboursPADPenalite.PU1LP.Value - lpDeboursPADPenalite.PU1LP.Value * derogation_new;
+                                                        eltFactDeboursPADParcAuto.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA; //TVAEX
+                                                        // eltFactDeboursPADParcAuto.TvaTaux = eltFactDeboursPADParcAuto.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactDeboursPADParcAuto.TvaTaux = eltFactDeboursPADParcAuto.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
 
-                                                    InvoiceDetails eltFactSejourParcAutoN2 = new InvoiceDetails();
+                                                        eltFactDeboursPADParcAuto.Qty = dateFin.Date < finAncienSejour ? 0 : ((eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value) + oldsejour) <= jourpalier) ? (dateFin - matchedVehicule.FFVeh.Value).Days - (eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) + oldsejour) : 0;
+                                                        eltFactDeboursPADParcAuto.Qte = eltFactDeboursPADParcAuto.Qty * coefPoidsVeh;
+                                                        //AH Débours PAD : Pénalité de stationnement
+                                                        eltFactDeboursPADParcAuto.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                        eltFactDeboursPADParcAuto.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAuto.Qty)).ToShortDateString();
+                                                        eltFactDeboursPADParcAuto.Unit = lpDeboursPADPenalite.UniteLP;
+                                                        eltFactDeboursPADParcAuto.Ht = eltFactDeboursPADParcAuto.Prix * eltFactDeboursPADParcAuto.Qte;
+                                                        eltFactDeboursPADParcAuto.Tva = Math.Round((eltFactDeboursPADParcAuto.Ht * eltFactDeboursPADParcAuto.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactDeboursPADParcAuto.MT = eltFactDeboursPADParcAuto.Ht + eltFactDeboursPADParcAuto.Tva;
+                                                        details.Add(eltFactDeboursPADParcAuto);
+                                                        #endregion
+                                                    }
+                                                    else if ((dateFin - matchedVehicule.FFVeh.Value).Days <= jourpalier + 20)
+                                                    {
+                                                        oldsejour = eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh).Value;
+                                                        #region niveau 2
+                                                        InvoiceDetails eltFactSejourParcAutoN1 = new InvoiceDetails();
 
-                                                    eltFactSejourParcAutoN2.Prix = lpSejourParcAuto.PU2LP.Value - lpSejourParcAuto.PU2LP.Value * derogation;
-                                                    eltFactSejourParcAutoN2.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
-                                                    eltFactSejourParcAutoN2.TvaTaux = eltFactSejourParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactSejourParcAutoN2.Qte = (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) < 20) ? 20 - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU2LP * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) : 0;
-                                                    //AH Pénalité de stationnement
-                                                    eltFactSejourParcAutoN2.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactSejourParcAutoN1.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte)).ToShortDateString();
-                                                    eltFactSejourParcAutoN2.Unit = lpSejourParcAuto.UniteLP;
-                                                    eltFactSejourParcAutoN2.Ht = eltFactSejourParcAutoN2.Prix * eltFactSejourParcAutoN2.Qte;
-                                                    eltFactSejourParcAutoN2.Tva = Math.Round((eltFactSejourParcAutoN2.Ht * eltFactSejourParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactSejourParcAutoN2.MT = eltFactSejourParcAutoN2.Ht + eltFactSejourParcAutoN2.Tva;
-                                                    details.Add(eltFactSejourParcAutoN2);
+                                                        eltFactSejourParcAutoN1.Prix = lpSejourParcAuto.PU1LP.Value - lpSejourParcAuto.PU1LP.Value * derogation_new;
+                                                        eltFactSejourParcAutoN1.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
+                                                        eltFactSejourParcAutoN1.TvaTaux = eltFactSejourParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactSejourParcAutoN1.Qty = ((eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh) + oldsejour) < jourpalier) ? jourpalier - (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) + oldsejour) : 0;
+                                                        eltFactSejourParcAutoN1.Qte = eltFactSejourParcAutoN1.Qty * coefPoidsVeh;
+                                                        //AH "Pénalité de stationnement
+                                                        eltFactSejourParcAutoN1.Code = articleSejourParcAuto.CodeArticle.ToString();
 
-                                                    InvoiceDetails eltFactDeboursPADParcAutoN2 = new InvoiceDetails();
+                                                        eltFactSejourParcAutoN1.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte)).ToShortDateString();
+                                                        eltFactSejourParcAutoN1.Unit = lpSejourParcAuto.UniteLP;
+                                                        eltFactSejourParcAutoN1.Ht = eltFactSejourParcAutoN1.Prix * eltFactSejourParcAutoN1.Qte;
+                                                        eltFactSejourParcAutoN1.Tva = Math.Round((eltFactSejourParcAutoN1.Ht * eltFactSejourParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactSejourParcAutoN1.MT = eltFactSejourParcAutoN1.Ht + eltFactSejourParcAutoN1.Tva;
+                                                        details.Add(eltFactSejourParcAutoN1);
 
-                                                    eltFactDeboursPADParcAutoN2.Prix = lpDeboursPADPenalite.PU2LP.Value - lpDeboursPADPenalite.PU2LP.Value * derogation;
-                                                    eltFactDeboursPADParcAutoN2.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
-                                                    // eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
+                                                        InvoiceDetails eltFactDeboursPADParcAutoN1 = new InvoiceDetails();
 
-                                                    eltFactDeboursPADParcAutoN2.Qte = (eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) < 20) ? 20 - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU2LP * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) : 0;
-                                                    //AH Débours PAD : Pénalité de stationnement
-                                                    eltFactDeboursPADParcAutoN2.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte)).ToShortDateString();
-                                                    eltFactDeboursPADParcAutoN2.Unit = lpDeboursPADPenalite.UniteLP;
-                                                    eltFactDeboursPADParcAutoN2.Ht = eltFactDeboursPADParcAutoN2.Prix * eltFactDeboursPADParcAutoN2.Qte;
-                                                    eltFactDeboursPADParcAutoN2.Tva = Math.Round((eltFactDeboursPADParcAutoN2.Ht * eltFactDeboursPADParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactDeboursPADParcAutoN2.MT = eltFactDeboursPADParcAutoN2.Ht + eltFactDeboursPADParcAutoN2.Tva;
-                                                    details.Add(eltFactDeboursPADParcAutoN2);
+                                                        eltFactDeboursPADParcAutoN1.Prix = lpDeboursPADPenalite.PU1LP.Value - lpDeboursPADPenalite.PU1LP.Value * derogation_new;
+                                                        eltFactDeboursPADParcAutoN1.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
+                                                        //eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
+
+                                                        eltFactDeboursPADParcAutoN1.Qty = ((eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh) + oldsejour) < jourpalier) ? jourpalier - (eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) + oldsejour) : 0;
+                                                        eltFactDeboursPADParcAutoN1.Qte = eltFactDeboursPADParcAutoN1.Qty * coefPoidsVeh;
+                                                        //AH Débours PAD : Pénalité de stationnement 
+                                                        eltFactDeboursPADParcAutoN1.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                        eltFactDeboursPADParcAutoN1.Libelle = articleDeboursPADPenalite.LibArticle + "Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte)).ToShortDateString();
+                                                        eltFactDeboursPADParcAutoN1.Unit = lpDeboursPADPenalite.UniteLP;
+                                                        eltFactDeboursPADParcAutoN1.Ht = eltFactDeboursPADParcAutoN1.Prix * eltFactDeboursPADParcAutoN1.Qte;
+                                                        eltFactDeboursPADParcAutoN1.Tva = Math.Round((eltFactDeboursPADParcAutoN1.Ht * eltFactDeboursPADParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactDeboursPADParcAutoN1.MT = eltFactDeboursPADParcAutoN1.Ht + eltFactDeboursPADParcAutoN1.Tva;
+                                                        details.Add(eltFactDeboursPADParcAutoN1);
+
+                                                        InvoiceDetails eltFactSejourParcAutoN2 = new InvoiceDetails();
+
+                                                        eltFactSejourParcAutoN2.Prix = lpSejourParcAuto.PU2LP.Value - lpSejourParcAuto.PU2LP.Value * derogation_new;
+                                                        eltFactSejourParcAutoN2.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
+                                                        eltFactSejourParcAutoN2.TvaTaux = eltFactSejourParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactSejourParcAutoN2.Qty = (dateFin - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase.Value == lpSejourParcAuto.PU2LP.Value * (1 - derogation_new) || el.PUEFBase.Value == lpSejourParcAuto.PU2LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltFactSejourParcAutoN1.Qte - eltSejourCalcules.Where(el => el.PUEFBase.Value == lpSejourParcAuto_old.PU2LP.Value * (1 - derogation) || el.PUEFBase.Value == lpSejourParcAuto_old.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value);
+                                                        eltFactSejourParcAutoN2.Qte = eltFactSejourParcAutoN2.Qty * coefPoidsVeh;
+                                                        //AH Pénalité de stationnement
+                                                        eltFactSejourParcAutoN2.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                        eltFactSejourParcAutoN2.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactSejourParcAutoN1.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte)).ToShortDateString();
+                                                        eltFactSejourParcAutoN2.Unit = lpSejourParcAuto.UniteLP;
+                                                        eltFactSejourParcAutoN2.Ht = eltFactSejourParcAutoN2.Prix * eltFactSejourParcAutoN2.Qte;
+                                                        eltFactSejourParcAutoN2.Tva = Math.Round((eltFactSejourParcAutoN2.Ht * eltFactSejourParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactSejourParcAutoN2.MT = eltFactSejourParcAutoN2.Ht + eltFactSejourParcAutoN2.Tva;
+                                                        details.Add(eltFactSejourParcAutoN2);
+
+                                                        InvoiceDetails eltFactDeboursPADParcAutoN2 = new InvoiceDetails();
+
+                                                        eltFactDeboursPADParcAutoN2.Prix = lpDeboursPADPenalite.PU2LP.Value - lpDeboursPADPenalite.PU2LP.Value * derogation_new;
+                                                        eltFactDeboursPADParcAutoN2.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
+                                                        //eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
+
+                                                        eltFactDeboursPADParcAutoN2.Qty = (dateFin - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltFactDeboursPADParcAutoN1.Qte - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite_old.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite_old.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite_old.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite_old.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value);
+                                                        eltFactDeboursPADParcAutoN2.Qte = eltFactDeboursPADParcAutoN2.Qty * coefPoidsVeh;
+                                                        //AH Débours PAD : Pénalité de stationnement
+                                                        eltFactDeboursPADParcAutoN2.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                        eltFactDeboursPADParcAutoN2.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte)).ToShortDateString();
+                                                        eltFactDeboursPADParcAutoN2.Unit = lpDeboursPADPenalite.UniteLP;
+                                                        eltFactDeboursPADParcAutoN2.Ht = eltFactDeboursPADParcAutoN2.Prix * eltFactDeboursPADParcAutoN2.Qte;
+                                                        eltFactDeboursPADParcAutoN2.Tva = Math.Round((eltFactDeboursPADParcAutoN2.Ht * eltFactDeboursPADParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactDeboursPADParcAutoN2.MT = eltFactDeboursPADParcAutoN2.Ht + eltFactDeboursPADParcAutoN2.Tva;
+                                                        details.Add(eltFactDeboursPADParcAutoN2);
+                                                        #endregion
+                                                    }
+                                                    else if ((dateFin - matchedVehicule.FFVeh.Value).Days <= jourpalier + 20 + 30)
+                                                    {
+                                                        oldsejour = eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh).Value;
+                                                       
+                                                        #region niveau 3
+                                                        InvoiceDetails eltFactSejourParcAutoN1 = new InvoiceDetails();
+
+                                                        eltFactSejourParcAutoN1.Prix = lpSejourParcAuto.PU1LP.Value - lpSejourParcAuto.PU1LP.Value * derogation_new;
+                                                        eltFactSejourParcAutoN1.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
+                                                        eltFactSejourParcAutoN1.TvaTaux = eltFactSejourParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactSejourParcAutoN1.Qty = ((eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh) + oldsejour) < jourpalier) ? jourpalier - (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) + oldsejour) : 0;
+                                                        eltFactSejourParcAutoN1.Qte = eltFactSejourParcAutoN1.Qty * coefPoidsVeh;
+                                                        //AH "Pénalité de stationnement
+                                                        eltFactSejourParcAutoN1.Code = articleSejourParcAuto.CodeArticle.ToString();
+
+                                                        eltFactSejourParcAutoN1.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte)).ToShortDateString();
+                                                        eltFactSejourParcAutoN1.Unit = lpSejourParcAuto.UniteLP;
+                                                        eltFactSejourParcAutoN1.Ht = eltFactSejourParcAutoN1.Prix * eltFactSejourParcAutoN1.Qte;
+                                                        eltFactSejourParcAutoN1.Tva = Math.Round((eltFactSejourParcAutoN1.Ht * eltFactSejourParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactSejourParcAutoN1.MT = eltFactSejourParcAutoN1.Ht + eltFactSejourParcAutoN1.Tva;
+                                                        if (eltFactSejourParcAutoN1.Qte != 0) details.Add(eltFactSejourParcAutoN1);
+
+                                                        InvoiceDetails eltFactDeboursPADParcAutoN1 = new InvoiceDetails();
+
+                                                        eltFactDeboursPADParcAutoN1.Prix = lpDeboursPADPenalite.PU1LP.Value - lpDeboursPADPenalite.PU1LP.Value * derogation_new;
+                                                        eltFactDeboursPADParcAutoN1.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
+                                                        //eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
+
+                                                        eltFactDeboursPADParcAutoN1.Qty = ((eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh) + oldsejour) < jourpalier) ? jourpalier - (eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) + oldsejour) : 0;
+                                                        eltFactDeboursPADParcAutoN1.Qte = eltFactDeboursPADParcAutoN1.Qty * coefPoidsVeh;
+                                                        //AH Débours PAD : Pénalité de stationnement 
+                                                        eltFactDeboursPADParcAutoN1.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                        eltFactDeboursPADParcAutoN1.Libelle = articleDeboursPADPenalite.LibArticle + "Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte)).ToShortDateString();
+                                                        eltFactDeboursPADParcAutoN1.Unit = lpDeboursPADPenalite.UniteLP;
+                                                        eltFactDeboursPADParcAutoN1.Ht = eltFactDeboursPADParcAutoN1.Prix * eltFactDeboursPADParcAutoN1.Qte;
+                                                        eltFactDeboursPADParcAutoN1.Tva = Math.Round((eltFactDeboursPADParcAutoN1.Ht * eltFactDeboursPADParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactDeboursPADParcAutoN1.MT = eltFactDeboursPADParcAutoN1.Ht + eltFactDeboursPADParcAutoN1.Tva;
+                                                        if (eltFactDeboursPADParcAutoN1.Qte != 0) details.Add(eltFactDeboursPADParcAutoN1);
+
+                                                        InvoiceDetails eltFactSejourParcAutoN2 = new InvoiceDetails();
+
+                                                        eltFactSejourParcAutoN2.Prix = lpSejourParcAuto.PU2LP.Value - lpSejourParcAuto.PU2LP.Value * derogation_new;
+                                                        eltFactSejourParcAutoN2.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
+                                                        eltFactSejourParcAutoN2.TvaTaux = eltFactSejourParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactSejourParcAutoN2.Qty = ((eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU2LP * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU2LP * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh).Value + eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU2LP * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU2LP * 1.6 * (1 - derogation)).Sum(el => el.JrVeh).Value) < 20) ? 20 - (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU2LP * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU2LP * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh).Value + eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU2LP * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU2LP * 1.6 * (1 - derogation)).Sum(el => el.JrVeh).Value) : 0;
+                                                        eltFactSejourParcAutoN2.Qte = eltFactSejourParcAutoN2.Qty * coefPoidsVeh;
+                                                        //AH Pénalité de stationnement
+                                                        eltFactSejourParcAutoN2.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                        eltFactSejourParcAutoN2.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactSejourParcAutoN1.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte)).ToShortDateString();
+                                                        eltFactSejourParcAutoN2.Unit = lpSejourParcAuto.UniteLP;
+                                                        eltFactSejourParcAutoN2.Ht = eltFactSejourParcAutoN2.Prix * eltFactSejourParcAutoN2.Qte;
+                                                        eltFactSejourParcAutoN2.Tva = Math.Round((eltFactSejourParcAutoN2.Ht * eltFactSejourParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactSejourParcAutoN2.MT = eltFactSejourParcAutoN2.Ht + eltFactSejourParcAutoN2.Tva;
+
+                                                        if (eltFactSejourParcAutoN2.Qte != 0) details.Add(eltFactSejourParcAutoN2);
+
+                                                        InvoiceDetails eltFactDeboursPADParcAutoN2 = new InvoiceDetails();
+
+                                                        eltFactDeboursPADParcAutoN2.Prix = lpDeboursPADPenalite.PU2LP.Value - lpDeboursPADPenalite.PU2LP.Value * derogation_new;
+                                                        eltFactDeboursPADParcAutoN2.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
+                                                        //eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
+
+                                                        eltFactDeboursPADParcAutoN2.Qty = ((eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU2LP * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU2LP * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh).Value + eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite_old.PU2LP * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite_old.PU2LP * 1.6 * (1 - derogation)).Sum(el => el.JrVeh).Value) < 20) ? 20 - (eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU2LP * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU2LP * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh).Value + eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite_old.PU2LP * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite_old.PU2LP * 1.6 * (1 - derogation)).Sum(el => el.JrVeh).Value) : 0;
+                                                        eltFactDeboursPADParcAutoN2.Qte = eltFactDeboursPADParcAutoN2.Qty * coefPoidsVeh;
+                                                        //AH Débours PAD : Pénalité de stationnement
+                                                        eltFactDeboursPADParcAutoN2.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                        eltFactDeboursPADParcAutoN2.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte)).ToShortDateString();
+                                                        eltFactDeboursPADParcAutoN2.Unit = lpDeboursPADPenalite.UniteLP;
+                                                        eltFactDeboursPADParcAutoN2.Ht = eltFactDeboursPADParcAutoN2.Prix * eltFactDeboursPADParcAutoN2.Qte;
+                                                        eltFactDeboursPADParcAutoN2.Tva = Math.Round((eltFactDeboursPADParcAutoN2.Ht * eltFactDeboursPADParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactDeboursPADParcAutoN2.MT = eltFactDeboursPADParcAutoN2.Ht + eltFactDeboursPADParcAutoN2.Tva;
+                                                        if (eltFactDeboursPADParcAutoN2.Qte != 0) details.Add(eltFactDeboursPADParcAutoN2);
 
 
+                                                        InvoiceDetails eltFactSejourParcAutoN3 = new InvoiceDetails();
 
-                                                    InvoiceDetails eltFactSejourParcAutoN3 = new InvoiceDetails();
+                                                        eltFactSejourParcAutoN3.Prix = lpSejourParcAuto.PU3LP.Value - lpSejourParcAuto.PU3LP.Value * derogation_new;
+                                                        eltFactSejourParcAutoN3.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
+                                                        eltFactSejourParcAutoN3.TvaTaux = eltFactSejourParcAutoN3.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactSejourParcAutoN3.Qty = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU3LP.Value * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU3LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU2LP.Value * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU2LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltFactSejourParcAutoN1.Qte - eltFactSejourParcAutoN2.Qte - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU3LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU3LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value);
+                                                        eltFactSejourParcAutoN3.Qte = eltFactSejourParcAutoN3.Qty * coefPoidsVeh;
+                                                        //AH Pénalité de stationnement
+                                                        eltFactSejourParcAutoN3.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                        eltFactSejourParcAutoN3.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte + eltFactSejourParcAutoN3.Qte)).ToShortDateString();
+                                                        eltFactSejourParcAutoN3.Unit = lpSejourParcAuto.UniteLP;
+                                                        eltFactSejourParcAutoN3.Ht = eltFactSejourParcAutoN3.Prix * eltFactSejourParcAutoN3.Qte;
+                                                        eltFactSejourParcAutoN3.Tva = Math.Round((eltFactSejourParcAutoN3.Ht * eltFactSejourParcAutoN3.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactSejourParcAutoN3.MT = eltFactSejourParcAutoN3.Ht + eltFactSejourParcAutoN3.Tva;
+                                                        details.Add(eltFactSejourParcAutoN3);
 
-                                                    eltFactSejourParcAutoN3.Prix = lpSejourParcAuto.PU3LP.Value - lpSejourParcAuto.PU3LP.Value * derogation;
-                                                    eltFactSejourParcAutoN3.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
-                                                    eltFactSejourParcAutoN3.TvaTaux = eltFactSejourParcAutoN3.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactSejourParcAutoN3.Qte = (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU3LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU3LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) < 30) ? 30 - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU3LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU3LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) : 0;
-                                                    //AH Pénalité de stationnement 
-                                                    eltFactSejourParcAutoN3.Libelle = articleSejourParcAuto.LibArticle + "Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte + eltFactSejourParcAutoN3.Qte)).ToShortDateString();
-                                                    eltFactSejourParcAutoN3.Unit = lpSejourParcAuto.UniteLP;
-                                                    eltFactSejourParcAutoN3.Ht = eltFactSejourParcAutoN3.Prix * eltFactSejourParcAutoN3.Qte;
-                                                    eltFactSejourParcAutoN3.Tva = Math.Round((eltFactSejourParcAutoN3.Ht * eltFactSejourParcAutoN3.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactSejourParcAutoN3.MT = eltFactSejourParcAutoN3.Ht + eltFactSejourParcAutoN3.Tva;
-                                                    details.Add(eltFactSejourParcAutoN3); ;
+                                                        InvoiceDetails eltFactDeboursPADParcAutoN3 = new InvoiceDetails();
 
-                                                    InvoiceDetails eltFactDeboursPADParcAutoN3 = new InvoiceDetails();
+                                                        eltFactDeboursPADParcAutoN3.Prix = lpDeboursPADPenalite.PU3LP.Value - lpDeboursPADPenalite.PU3LP.Value * derogation_new;
+                                                        eltFactDeboursPADParcAutoN3.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
+                                                        // eltFactDeboursPADParcAutoN3.TvaTaux = eltFactDeboursPADParcAutoN3.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactDeboursPADParcAutoN3.TvaTaux = eltFactDeboursPADParcAutoN3.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
 
-                                                    eltFactDeboursPADParcAutoN3.Prix = lpDeboursPADPenalite.PU3LP.Value - lpDeboursPADPenalite.PU3LP.Value * derogation;
-                                                    eltFactDeboursPADParcAutoN3.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
-                                                    //eltFactDeboursPADParcAutoN3.TvaTaux = eltFactDeboursPADParcAutoN3.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactDeboursPADParcAutoN3.TvaTaux = eltFactDeboursPADParcAutoN3.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
+                                                        eltFactDeboursPADParcAutoN3.Qty = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU3LP.Value * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU3LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltFactDeboursPADParcAutoN1.Qte - eltFactDeboursPADParcAutoN2.Qte - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite_old.PU3LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite_old.PU3LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite_old.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite_old.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite_old.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite_old.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value);
+                                                        eltFactDeboursPADParcAutoN3.Qte = eltFactDeboursPADParcAutoN3.Qty * coefPoidsVeh;
+                                                        //AH Débours PAD : Pénalité de stationnement 
+                                                        eltFactDeboursPADParcAutoN3.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                        eltFactDeboursPADParcAutoN3.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte + eltFactDeboursPADParcAutoN3.Qte)).ToShortDateString();
+                                                        eltFactDeboursPADParcAutoN3.Unit = lpDeboursPADPenalite.UniteLP;
+                                                        eltFactDeboursPADParcAutoN3.Ht = eltFactDeboursPADParcAutoN3.Prix * eltFactDeboursPADParcAutoN3.Qte;
+                                                        eltFactDeboursPADParcAutoN3.Tva = Math.Round((eltFactDeboursPADParcAutoN3.Ht * eltFactDeboursPADParcAutoN3.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactDeboursPADParcAutoN3.MT = eltFactDeboursPADParcAutoN3.Ht + eltFactDeboursPADParcAutoN3.Tva;
+                                                        details.Add(eltFactDeboursPADParcAutoN3);
 
-                                                    eltFactDeboursPADParcAutoN3.Qte = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU3LP * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU3LP * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltFactDeboursPADParcAutoN1.Qte - eltFactDeboursPADParcAutoN2.Qte;
-                                                    //AH Débours PAD : Pénalité de stationnement 
-                                                    eltFactDeboursPADParcAutoN3.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte + eltFactDeboursPADParcAutoN3.Qte)).ToShortDateString();
-                                                    eltFactDeboursPADParcAutoN3.Unit = lpDeboursPADPenalite.UniteLP;
-                                                    eltFactDeboursPADParcAutoN3.Ht = eltFactDeboursPADParcAutoN3.Prix * eltFactDeboursPADParcAutoN3.Qte;
-                                                    eltFactDeboursPADParcAutoN3.Tva = Math.Round((eltFactDeboursPADParcAutoN3.Ht * eltFactDeboursPADParcAutoN3.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactDeboursPADParcAutoN3.MT = eltFactDeboursPADParcAutoN3.Ht + eltFactDeboursPADParcAutoN3.Tva;
-                                                    details.Add(eltFactDeboursPADParcAutoN3);
+                                                        #endregion
+                                                    }
+                                                    else
+                                                    {
+                                                        oldsejour = eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh).Value;
+                                                       
+                                                        #region niveau 4
+                                                        InvoiceDetails eltFactSejourParcAutoN1 = new InvoiceDetails();
 
-                                                    InvoiceDetails eltFactSejourParcAutoN4 = new InvoiceDetails();
+                                                        eltFactSejourParcAutoN1.Prix = lpSejourParcAuto.PU1LP.Value - lpSejourParcAuto.PU1LP.Value * derogation_new;
+                                                        eltFactSejourParcAutoN1.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
+                                                        eltFactSejourParcAutoN1.TvaTaux = eltFactSejourParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactSejourParcAutoN1.Qty = ((eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh) + oldsejour) < jourpalier) ? jourpalier - (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) + oldsejour) : 0;
+                                                        eltFactSejourParcAutoN1.Qte = eltFactSejourParcAutoN1.Qty * coefPoidsVeh;
+                                                        //AH "Pénalité de stationnement
+                                                        eltFactSejourParcAutoN1.Code = articleSejourParcAuto.CodeArticle.ToString();
 
-                                                    eltFactSejourParcAutoN4.Prix = lpSejourParcAuto.PU4LP.Value - lpSejourParcAuto.PU4LP.Value * derogation;
-                                                    eltFactSejourParcAutoN4.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
-                                                    eltFactSejourParcAutoN4.TvaTaux = eltFactSejourParcAutoN4.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactSejourParcAutoN4.Qte = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU4LP * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU4LP * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU3LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU3LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltFactSejourParcAutoN1.Qte - eltFactSejourParcAutoN2.Qte - eltFactSejourParcAutoN3.Qte;
-                                                    //AH Pénalité de stationnement
-                                                    eltFactSejourParcAutoN4.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte + eltFactSejourParcAutoN3.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte + eltFactSejourParcAutoN3.Qte + eltFactSejourParcAutoN4.Qte)).ToShortDateString();
-                                                    eltFactSejourParcAutoN4.Unit = lpSejourParcAuto.UniteLP;
-                                                    eltFactSejourParcAutoN4.Ht = eltFactSejourParcAutoN4.Prix * eltFactSejourParcAutoN4.Qte;
-                                                    eltFactSejourParcAutoN4.Tva = Math.Round((eltFactSejourParcAutoN4.Ht * eltFactSejourParcAutoN4.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactSejourParcAutoN4.MT = eltFactSejourParcAutoN4.Ht + eltFactSejourParcAutoN4.Tva;
-                                                    details.Add(eltFactSejourParcAutoN4);
+                                                        eltFactSejourParcAutoN1.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte)).ToShortDateString();
+                                                        eltFactSejourParcAutoN1.Unit = lpSejourParcAuto.UniteLP;
+                                                        eltFactSejourParcAutoN1.Ht = eltFactSejourParcAutoN1.Prix * eltFactSejourParcAutoN1.Qte;
+                                                        eltFactSejourParcAutoN1.Tva = Math.Round((eltFactSejourParcAutoN1.Ht * eltFactSejourParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactSejourParcAutoN1.MT = eltFactSejourParcAutoN1.Ht + eltFactSejourParcAutoN1.Tva;
+                                                        if (eltFactSejourParcAutoN1.Qte != 0) details.Add(eltFactSejourParcAutoN1);
 
-                                                    InvoiceDetails eltFactDeboursPADParcAutoN4 = new InvoiceDetails();
+                                                        InvoiceDetails eltFactDeboursPADParcAutoN1 = new InvoiceDetails();
 
-                                                    eltFactDeboursPADParcAutoN4.Prix = lpDeboursPADPenalite.PU4LP.Value - lpDeboursPADPenalite.PU4LP.Value * derogation;
-                                                    eltFactDeboursPADParcAutoN4.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
-                                                    // eltFactDeboursPADParcAutoN4.TvaTaux = eltFactDeboursPADParcAutoN4.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactDeboursPADParcAutoN4.TvaTaux = eltFactDeboursPADParcAutoN4.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
+                                                        eltFactDeboursPADParcAutoN1.Prix = lpDeboursPADPenalite.PU1LP.Value - lpDeboursPADPenalite.PU1LP.Value * derogation_new;
+                                                        eltFactDeboursPADParcAutoN1.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
+                                                        //eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
 
-                                                    eltFactDeboursPADParcAutoN4.Qte = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU4LP * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU4LP * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU3LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU3LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltFactDeboursPADParcAutoN1.Qte - eltFactDeboursPADParcAutoN2.Qte - eltFactDeboursPADParcAutoN3.Qte;
-                                                    //AH Débours PAD : Pénalité de stationnement
-                                                    eltFactDeboursPADParcAutoN4.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte + eltFactDeboursPADParcAutoN3.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte + eltFactDeboursPADParcAutoN3.Qte + eltFactDeboursPADParcAutoN4.Qte)).ToShortDateString();
-                                                    eltFactDeboursPADParcAutoN4.Unit = lpDeboursPADPenalite.UniteLP;
-                                                    eltFactDeboursPADParcAutoN4.Ht = eltFactDeboursPADParcAutoN4.Prix * eltFactDeboursPADParcAutoN4.Qte;
-                                                    eltFactDeboursPADParcAutoN4.Tva = Math.Round((eltFactDeboursPADParcAutoN4.Ht * eltFactDeboursPADParcAutoN4.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactDeboursPADParcAutoN4.MT = eltFactDeboursPADParcAutoN4.Ht + eltFactDeboursPADParcAutoN4.Tva;
-                                                    details.Add(eltFactDeboursPADParcAutoN4);
+                                                        eltFactDeboursPADParcAutoN1.Qty = ((eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh) + oldsejour) < jourpalier) ? jourpalier - (eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) + oldsejour) : 0;
+                                                        eltFactDeboursPADParcAutoN1.Qte = eltFactDeboursPADParcAutoN1.Qty * coefPoidsVeh;
+                                                        //AH Débours PAD : Pénalité de stationnement 
+                                                        eltFactDeboursPADParcAutoN1.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                        eltFactDeboursPADParcAutoN1.Libelle = articleDeboursPADPenalite.LibArticle + "Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte)).ToShortDateString();
+                                                        eltFactDeboursPADParcAutoN1.Unit = lpDeboursPADPenalite.UniteLP;
+                                                        eltFactDeboursPADParcAutoN1.Ht = eltFactDeboursPADParcAutoN1.Prix * eltFactDeboursPADParcAutoN1.Qte;
+                                                        eltFactDeboursPADParcAutoN1.Tva = Math.Round((eltFactDeboursPADParcAutoN1.Ht * eltFactDeboursPADParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactDeboursPADParcAutoN1.MT = eltFactDeboursPADParcAutoN1.Ht + eltFactDeboursPADParcAutoN1.Tva;
+                                                        if (eltFactDeboursPADParcAutoN1.Qte != 0) details.Add(eltFactDeboursPADParcAutoN1);
 
-                                                    #endregion
+                                                        InvoiceDetails eltFactSejourParcAutoN2 = new InvoiceDetails();
+
+                                                        eltFactSejourParcAutoN2.Prix = lpSejourParcAuto.PU2LP.Value - lpSejourParcAuto.PU2LP.Value * derogation_new;
+                                                        eltFactSejourParcAutoN2.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
+                                                        eltFactSejourParcAutoN2.TvaTaux = eltFactSejourParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactSejourParcAutoN2.Qty = ((eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU2LP * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU2LP * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh).Value + eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU2LP * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU2LP * 1.6 * (1 - derogation)).Sum(el => el.JrVeh).Value) < 20) ? 20 - (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU2LP * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU2LP * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh).Value + eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU2LP * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU2LP * 1.6 * (1 - derogation)).Sum(el => el.JrVeh).Value) : 0;
+                                                        eltFactSejourParcAutoN2.Qte = eltFactSejourParcAutoN2.Qty * coefPoidsVeh;
+                                                        //AH Pénalité de stationnement
+                                                        eltFactSejourParcAutoN2.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                        eltFactSejourParcAutoN2.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactSejourParcAutoN1.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte)).ToShortDateString();
+                                                        eltFactSejourParcAutoN2.Unit = lpSejourParcAuto.UniteLP;
+                                                        eltFactSejourParcAutoN2.Ht = eltFactSejourParcAutoN2.Prix * eltFactSejourParcAutoN2.Qte;
+                                                        eltFactSejourParcAutoN2.Tva = Math.Round((eltFactSejourParcAutoN2.Ht * eltFactSejourParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactSejourParcAutoN2.MT = eltFactSejourParcAutoN2.Ht + eltFactSejourParcAutoN2.Tva;
+
+                                                        if (eltFactSejourParcAutoN2.Qte != 0) details.Add(eltFactSejourParcAutoN2);
+
+                                                        InvoiceDetails eltFactDeboursPADParcAutoN2 = new InvoiceDetails();
+
+                                                        eltFactDeboursPADParcAutoN2.Prix = lpDeboursPADPenalite.PU2LP.Value - lpDeboursPADPenalite.PU2LP.Value * derogation_new;
+                                                        eltFactDeboursPADParcAutoN2.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
+                                                        //eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
+
+                                                        eltFactDeboursPADParcAutoN2.Qty = ((eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU2LP * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU2LP * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh).Value + eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite_old.PU2LP * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite_old.PU2LP * 1.6 * (1 - derogation)).Sum(el => el.JrVeh).Value) < 20) ? 20 - (eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU2LP * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU2LP * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh).Value + eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite_old.PU2LP * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite_old.PU2LP * 1.6 * (1 - derogation)).Sum(el => el.JrVeh).Value) : 0;
+                                                        eltFactDeboursPADParcAutoN2.Qte = eltFactDeboursPADParcAutoN2.Qty * coefPoidsVeh;
+                                                        //AH Débours PAD : Pénalité de stationnement
+                                                        eltFactDeboursPADParcAutoN2.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                        eltFactDeboursPADParcAutoN2.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte)).ToShortDateString();
+                                                        eltFactDeboursPADParcAutoN2.Unit = lpDeboursPADPenalite.UniteLP;
+                                                        eltFactDeboursPADParcAutoN2.Ht = eltFactDeboursPADParcAutoN2.Prix * eltFactDeboursPADParcAutoN2.Qte;
+                                                        eltFactDeboursPADParcAutoN2.Tva = Math.Round((eltFactDeboursPADParcAutoN2.Ht * eltFactDeboursPADParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactDeboursPADParcAutoN2.MT = eltFactDeboursPADParcAutoN2.Ht + eltFactDeboursPADParcAutoN2.Tva;
+                                                        if (eltFactDeboursPADParcAutoN2.Qte != 0) details.Add(eltFactDeboursPADParcAutoN2);
+
+
+                                                        InvoiceDetails eltFactSejourParcAutoN3 = new InvoiceDetails();
+
+                                                        eltFactSejourParcAutoN3.Prix = lpSejourParcAuto.PU3LP.Value - lpSejourParcAuto.PU3LP.Value * derogation_new;
+                                                        eltFactSejourParcAutoN3.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
+                                                        eltFactSejourParcAutoN3.TvaTaux = eltFactSejourParcAutoN3.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactSejourParcAutoN3.Qty = ((eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU3LP * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU3LP * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh).Value + eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU3LP * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU3LP * 1.6 * (1 - derogation)).Sum(el => el.JrVeh).Value) < 30) ? 30 - (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU3LP * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU3LP * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh).Value + eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU3LP * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU3LP * 1.6 * (1 - derogation)).Sum(el => el.JrVeh).Value) : 0;
+                                                        eltFactSejourParcAutoN3.Qte = eltFactSejourParcAutoN3.Qty * coefPoidsVeh;
+                                                        //AH Pénalité de stationnement
+                                                        eltFactSejourParcAutoN3.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                        eltFactSejourParcAutoN3.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte + eltFactSejourParcAutoN3.Qte)).ToShortDateString();
+                                                        eltFactSejourParcAutoN3.Unit = lpSejourParcAuto.UniteLP;
+                                                        eltFactSejourParcAutoN3.Ht = eltFactSejourParcAutoN3.Prix * eltFactSejourParcAutoN3.Qte;
+                                                        eltFactSejourParcAutoN3.Tva = Math.Round((eltFactSejourParcAutoN3.Ht * eltFactSejourParcAutoN3.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactSejourParcAutoN3.MT = eltFactSejourParcAutoN3.Ht + eltFactSejourParcAutoN3.Tva;
+                                                        if (eltFactSejourParcAutoN3.Qte != 0) details.Add(eltFactSejourParcAutoN3);
+
+                                                        InvoiceDetails eltFactDeboursPADParcAutoN3 = new InvoiceDetails();
+
+                                                        eltFactDeboursPADParcAutoN3.Prix = lpDeboursPADPenalite.PU3LP.Value - lpDeboursPADPenalite.PU3LP.Value * derogation_new;
+                                                        eltFactDeboursPADParcAutoN3.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
+                                                        // eltFactDeboursPADParcAutoN3.TvaTaux = eltFactDeboursPADParcAutoN3.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactDeboursPADParcAutoN3.TvaTaux = eltFactDeboursPADParcAutoN3.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
+
+                                                        eltFactDeboursPADParcAutoN3.Qty = ((eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU3LP * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU3LP * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh).Value + eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite_old.PU3LP * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite_old.PU3LP * 1.6 * (1 - derogation)).Sum(el => el.JrVeh).Value) < 30) ? 30 - (eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU3LP * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU3LP * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh).Value + eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite_old.PU3LP * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite_old.PU3LP * 1.6 * (1 - derogation)).Sum(el => el.JrVeh).Value) : 0;
+                                                        eltFactDeboursPADParcAutoN3.Qte = eltFactDeboursPADParcAutoN3.Qty * coefPoidsVeh;
+                                                        //AH Débours PAD : Pénalité de stationnement 
+                                                        eltFactDeboursPADParcAutoN3.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                        eltFactDeboursPADParcAutoN3.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte + eltFactDeboursPADParcAutoN3.Qte)).ToShortDateString();
+                                                        eltFactDeboursPADParcAutoN3.Unit = lpDeboursPADPenalite.UniteLP;
+                                                        eltFactDeboursPADParcAutoN3.Ht = eltFactDeboursPADParcAutoN3.Prix * eltFactDeboursPADParcAutoN3.Qte;
+                                                        eltFactDeboursPADParcAutoN3.Tva = Math.Round((eltFactDeboursPADParcAutoN3.Ht * eltFactDeboursPADParcAutoN3.TvaTaux), 0, MidpointRounding.AwayFromZero); 
+                                                        eltFactDeboursPADParcAutoN3.MT = eltFactDeboursPADParcAutoN3.Ht + eltFactDeboursPADParcAutoN3.Tva;
+                                                        if (eltFactDeboursPADParcAutoN3.Qte != 0) details.Add(eltFactDeboursPADParcAutoN3);
+
+                                                        InvoiceDetails eltFactSejourParcAutoN4 = new InvoiceDetails();
+
+                                                        eltFactSejourParcAutoN4.Prix = lpSejourParcAuto.PU4LP.Value - lpSejourParcAuto.PU4LP.Value * derogation_new;
+                                                        eltFactSejourParcAutoN4.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
+                                                        eltFactSejourParcAutoN4.TvaTaux = eltFactSejourParcAutoN4.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactSejourParcAutoN4.Qty = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU4LP * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU4LP * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU3LP.Value * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU3LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU2LP.Value * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU2LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltFactSejourParcAutoN1.Qte - eltFactSejourParcAutoN2.Qte - eltFactSejourParcAutoN3.Qte - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU4LP * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU4LP * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU3LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU3LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value);
+                                                        eltFactSejourParcAutoN4.Qte = eltFactSejourParcAutoN4.Qty * coefPoidsVeh;
+                                                        //AH Pénalité de stationnement
+                                                        eltFactSejourParcAutoN4.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                        eltFactSejourParcAutoN4.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte + eltFactSejourParcAutoN3.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte + eltFactSejourParcAutoN3.Qte + eltFactSejourParcAutoN4.Qte)).ToShortDateString();
+                                                        eltFactSejourParcAutoN4.Unit = lpSejourParcAuto.UniteLP;
+                                                        eltFactSejourParcAutoN4.Ht = eltFactSejourParcAutoN4.Prix * eltFactSejourParcAutoN4.Qte;
+                                                        eltFactSejourParcAutoN4.Tva = Math.Round((eltFactSejourParcAutoN4.Ht * eltFactSejourParcAutoN4.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactSejourParcAutoN4.MT = eltFactSejourParcAutoN4.Ht + eltFactSejourParcAutoN4.Tva;
+                                                        details.Add(eltFactSejourParcAutoN4);
+
+                                                        InvoiceDetails eltFactDeboursPADParcAutoN4 = new InvoiceDetails();
+
+                                                        eltFactDeboursPADParcAutoN4.Prix = lpDeboursPADPenalite.PU4LP.Value - lpDeboursPADPenalite.PU4LP.Value * derogation_new;
+                                                        eltFactDeboursPADParcAutoN4.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
+                                                        // eltFactDeboursPADParcAutoN4.TvaTaux = eltFactDeboursPADParcAutoN4.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactDeboursPADParcAutoN4.TvaTaux = eltFactDeboursPADParcAutoN4.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
+
+                                                        eltFactDeboursPADParcAutoN4.Qty = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU4LP * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU4LP * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU3LP.Value * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU3LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltFactDeboursPADParcAutoN1.Qte - eltFactDeboursPADParcAutoN2.Qte - eltFactDeboursPADParcAutoN3.Qte - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite_old.PU4LP * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite_old.PU4LP * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite_old.PU3LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite_old.PU3LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite_old.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite_old.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite_old.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite_old.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value);
+                                                        eltFactDeboursPADParcAutoN4.Qte = eltFactDeboursPADParcAutoN4.Qty * coefPoidsVeh;
+                                                        eltFactDeboursPADParcAutoN4.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                        //AH Débours PAD : Pénalité de stationnement
+                                                        eltFactDeboursPADParcAutoN4.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte + eltFactDeboursPADParcAutoN3.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte + eltFactDeboursPADParcAutoN3.Qte + eltFactDeboursPADParcAutoN4.Qte)).ToShortDateString();
+                                                        eltFactDeboursPADParcAutoN4.Unit = lpDeboursPADPenalite.UniteLP;
+                                                        eltFactDeboursPADParcAutoN4.Ht = eltFactDeboursPADParcAutoN4.Prix * eltFactDeboursPADParcAutoN4.Qte;
+                                                        eltFactDeboursPADParcAutoN4.Tva = Math.Round((eltFactDeboursPADParcAutoN4.Ht * eltFactDeboursPADParcAutoN4.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactDeboursPADParcAutoN4.MT = eltFactDeboursPADParcAutoN4.Ht + eltFactDeboursPADParcAutoN4.Tva;
+                                                        details.Add(eltFactDeboursPADParcAutoN4);
+
+                                                        #endregion
+                                                    }
                                                 }
                                             }
 
@@ -1113,22 +1259,68 @@ namespace VSOM_API.Controllers
 
                                         List<ARTICLE> articles = ctx.ARTICLEs.ToList<ARTICLE>();
 
+
                                         #region selection des articles et ligne de prix
                                         ARTICLE articleSejourParcAuto = (from art in articles where art.CodeArticle == 1801 select art).FirstOrDefault<ARTICLE>();
                                         LIGNE_PRIX lpSejourParcAuto = null;
+                                        LIGNE_PRIX lpSejourParcAuto_old = null;
 
                                         ARTICLE articleDeboursPADPenalite = (from art in articles where art.CodeArticle == 1815 select art).FirstOrDefault<ARTICLE>();
                                         LIGNE_PRIX lpDeboursPADPenalite = null;
-
+                                        LIGNE_PRIX lpDeboursPADPenalite_old = null;
+                                        double coefPoidsVeh = 1;
+                                        #region old price
                                         if (matchedVehicule.StatutCVeh == "U")
                                         {
                                             if (matchedVehicule.VolCVeh >= 50)
                                             {
-                                                lpSejourParcAuto = articleSejourParcAuto.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VU3" && lp.DDLP <= dte && lp.DFLP >= dte);
-                                                lpDeboursPADPenalite = articleDeboursPADPenalite.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VU3" && lp.DDLP <= dte && lp.DFLP >= dte);
+                                                lpSejourParcAuto_old = articleSejourParcAuto.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VU3" && lp.DFLP == DateTime.Parse("31/12/2017"));
+                                                lpDeboursPADPenalite_old = articleDeboursPADPenalite.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VU3" && lp.DFLP == DateTime.Parse("31/12/2017"));
                                             }
                                             else if (matchedVehicule.VolCVeh >= 16)
                                             {
+                                                lpSejourParcAuto_old = articleSejourParcAuto.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VU2" && lp.DFLP == DateTime.Parse("31/12/2017"));
+                                                lpDeboursPADPenalite_old = articleDeboursPADPenalite.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VU2" && lp.DFLP == DateTime.Parse("31/12/2017"));
+                                            }
+                                            else
+                                            {
+                                                lpSejourParcAuto_old = articleSejourParcAuto.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VU1" && lp.DFLP == DateTime.Parse("31/12/2017"));
+                                                lpDeboursPADPenalite_old = articleDeboursPADPenalite.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VU1" && lp.DFLP == DateTime.Parse("31/12/2017"));
+                                            }
+                                        }
+                                        else if (matchedVehicule.StatutCVeh == "N")
+                                        {
+                                            if (matchedVehicule.VolCVeh >= 50)
+                                            {
+                                                lpSejourParcAuto_old = articleSejourParcAuto.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VN3" && lp.DFLP == DateTime.Parse("31/12/2017"));
+                                                lpDeboursPADPenalite_old = articleDeboursPADPenalite.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VN3" && lp.DFLP == DateTime.Parse("31/12/2017"));
+                                            }
+                                            else if (matchedVehicule.VolCVeh >= 16)
+                                            {
+                                                lpSejourParcAuto_old = articleSejourParcAuto.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VN2" && lp.DFLP == DateTime.Parse("31/12/2017"));
+                                                lpDeboursPADPenalite_old = articleDeboursPADPenalite.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VN2" && lp.DFLP == DateTime.Parse("31/12/2017"));
+                                            }
+                                            else
+                                            {
+                                                lpSejourParcAuto_old = articleSejourParcAuto.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VN1" && lp.DFLP == DateTime.Parse("31/12/2017"));
+                                                lpDeboursPADPenalite_old = articleDeboursPADPenalite.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VN1" && lp.DFLP == DateTime.Parse("31/12/2017"));
+                                            }
+                                        }
+                                        #endregion
+                                        #region new price
+                                        if (matchedVehicule.StatutCVeh == "U")
+                                        {
+                                            //AH2jan18 if (matchedVehicule.VolCVeh >= 50)
+                                            if (matchedVehicule.PoidsCVeh >= 10000)
+                                            {
+                                                lpSejourParcAuto = articleSejourParcAuto.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VU3" && lp.DDLP <= dte && lp.DFLP >= dte);
+                                                lpDeboursPADPenalite = articleDeboursPADPenalite.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VU3" && lp.DDLP <= dte && lp.DFLP >= dte);
+                                                coefPoidsVeh = (double)matchedVehicule.PoidsCVeh.Value / 1000;
+                                            }
+                                            //AH2jan18 else if (matchedVehicule.VolCVeh >= 16)
+                                            else if (matchedVehicule.PoidsCVeh >= 2500)
+                                            {
+                                                coefPoidsVeh = (double)matchedVehicule.PoidsCVeh.Value / 1000;
                                                 lpSejourParcAuto = articleSejourParcAuto.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VU2" && lp.DDLP <= dte && lp.DFLP >= dte);
                                                 lpDeboursPADPenalite = articleDeboursPADPenalite.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VU2" && lp.DDLP <= dte && lp.DFLP >= dte);
                                             }
@@ -1140,13 +1332,17 @@ namespace VSOM_API.Controllers
                                         }
                                         else if (matchedVehicule.StatutCVeh == "N")
                                         {
-                                            if (matchedVehicule.VolCVeh >= 50)
+                                            //AH2jan18 if (matchedVehicule.VolCVeh >= 50)
+                                            if (matchedVehicule.PoidsCVeh >= 10000)
                                             {
+                                                coefPoidsVeh = (double)matchedVehicule.PoidsCVeh.Value / 1000;
                                                 lpSejourParcAuto = articleSejourParcAuto.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VN3" && lp.DDLP <= dte && lp.DFLP >= dte);
                                                 lpDeboursPADPenalite = articleDeboursPADPenalite.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VN3" && lp.DDLP <= dte && lp.DFLP >= dte);
                                             }
-                                            else if (matchedVehicule.VolCVeh >= 16)
+                                            //AH2jan18 else if (matchedVehicule.VolCVeh >= 16)
+                                            else if (matchedVehicule.PoidsCVeh >= 2500)
                                             {
+                                                coefPoidsVeh = (double)matchedVehicule.PoidsCVeh.Value / 1000;
                                                 lpSejourParcAuto = articleSejourParcAuto.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VN2" && lp.DDLP <= dte && lp.DFLP >= dte);
                                                 lpDeboursPADPenalite = articleDeboursPADPenalite.LIGNE_PRIX.FirstOrDefault<LIGNE_PRIX>(lp => lp.LP == "VN2" && lp.DDLP <= dte && lp.DFLP >= dte);
                                             }
@@ -1157,27 +1353,31 @@ namespace VSOM_API.Controllers
                                             }
                                         }
                                         #endregion
+                                        sb.AppendLine("ligne de prix recupérées");
+                                        #endregion
 
                                         bool isEltsNotFree = ctx.ELEMENT_FACTURATION.Where(ef => ef.IdVeh == matchedVehicule.IdVeh && (ef.CodeArticle == "1801") && (ef.StatutEF == "Proforma" || ef.IdFD != null))
                                                               .ToList<ELEMENT_FACTURATION>().Count != 0;
 
-                                        isEltsNotFree = false;
+                                        //isEltsNotFree = false;
+                                        
                                         if (!isEltsNotFree)
                                         {
+                                            sb.AppendLine("Bl");
                                             #region  bloc bl element facture empty
                                             //applique au VAE
                                             int nbrvae = ctx.ELEMENT_FACTURATION.Where(ef => ef.IdVeh == matchedVehicule.IdVeh && ef.CodeArticle == "1605").Count();
                                             if (nbrvae != 0)
                                             {
                                                 #region VAE
-                                                double derogation = 0;// (con.BLIL == "Y" || con.BLGN == "Y") ? 0.75 : 0;
+                                                double derogation = 0;//AH (con.BLIL == "Y" || con.BLGN == "Y") ? 0.75 : 0;
                                                 InvoiceDetails eltFactSejourParcAuto = new InvoiceDetails();
 
                                                 eltFactSejourParcAuto.Prix = lpSejourParcAuto.PU4LP.Value * 2; //lpSejourParcAuto.PU4LP.Value - lpSejourParcAuto.PU4LP.Value * derogation;
                                                 eltFactSejourParcAuto.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
                                                 eltFactSejourParcAuto.TvaTaux = eltFactSejourParcAuto.TvaCode == "TVAEX" ? 0 : 0.1925f;
                                                 eltFactSejourParcAuto.Libelle = articleSejourParcAuto.LibArticle + "Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays((dateFin - matchedVehicule.FFVeh.Value).Days).ToShortDateString();
-
+                                                eltFactSejourParcAuto.Code = articleSejourParcAuto.CodeArticle.ToString();
                                                 eltFactSejourParcAuto.Qte = dateFin.Date < matchedVehicule.FFVeh ? 0 : (dateFin.Date - matchedVehicule.FFVeh.Value).Days;
                                                 eltFactSejourParcAuto.Unit = lpSejourParcAuto.UniteLP;
                                                 eltFactSejourParcAuto.Ht = eltFactSejourParcAuto.Prix * eltFactSejourParcAuto.Qte;
@@ -1185,14 +1385,12 @@ namespace VSOM_API.Controllers
                                                 eltFactSejourParcAuto.MT = eltFactSejourParcAuto.Ht + eltFactSejourParcAuto.Tva;
                                                 details.Add(eltFactSejourParcAuto);
 
-                                                /*pas de debours PAD en VAE
+                                                /* pas de debours pad en VAE
                                                  * InvoiceDetails eltFactDeboursPADParcAuto = new InvoiceDetails();
 
                                                 eltFactDeboursPADParcAuto.Prix = lpDeboursPADPenalite.PU4LP.Value - lpDeboursPADPenalite.PU4LP.Value * derogation;
                                                 eltFactDeboursPADParcAuto.TvaCode = articleDeboursPADPenalite.CodeTVA;// "TVAEX";
-                                                //eltFactDeboursPADParcAuto.TvaTaux = eltFactSejourParcAuto.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                eltFactDeboursPADParcAuto.TvaTaux = eltFactDeboursPADParcAuto.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
-
+                                                eltFactDeboursPADParcAuto.TvaTaux = eltFactSejourParcAuto.TvaCode == "TVAEX" ? 0 : 0.1925f;
                                                 eltFactDeboursPADParcAuto.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays((dateFin - matchedVehicule.FFVeh.Value).Days).ToShortDateString();
                                                 eltFactDeboursPADParcAuto.Qte = dateFin.Date < matchedVehicule.FFVeh ? 0 : (dateFin.Date - matchedVehicule.FFVeh.Value).Days;
                                                 eltFactDeboursPADParcAuto.Unit = lpDeboursPADPenalite.UniteLP;
@@ -1206,33 +1404,38 @@ namespace VSOM_API.Controllers
                                             }
                                             else
                                             {
-                                                double derogation = (con.BLIL == "Y" || con.BLGN == "Y") ? 0.75 : 0;
-                                                if ((dateFin - matchedVehicule.FFVeh.Value).Days <= 9)
+                                                double derogation = 0; //AH retrait derogation sur stationnement janv18 (con.BLIL == "Y" || con.BLGN == "Y") ? 0.75 : 0;
+                                                //control de quotation antérieur a la date de stationnement deja effectué
+
+                                                if ((dateFin - matchedVehicule.FFVeh.Value).Days <= 10)
                                                 {
                                                     #region niveau 9jours
                                                     InvoiceDetails eltFactSejourParcAuto = new InvoiceDetails();
 
                                                     eltFactSejourParcAuto.Prix = lpSejourParcAuto.PU1LP.Value - lpSejourParcAuto.PU1LP.Value * derogation;
+                                                    // eltFactSejourParcAuto.Prix = eltFactSejourParcAuto.Prix * (matchedVehicule.PoidsCVeh / 1000);
                                                     eltFactSejourParcAuto.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
                                                     eltFactSejourParcAuto.TvaTaux = eltFactSejourParcAuto.TvaCode == "TVAEX" ? 0 : 0.1925f;
                                                     eltFactSejourParcAuto.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays((dateFin - matchedVehicule.FFVeh.Value).Days).ToShortDateString();
-                                                    eltFactSejourParcAuto.Qte = dateFin.Date < matchedVehicule.FFVeh ? 0 : (dateFin.Date - matchedVehicule.FFVeh.Value).Days;
+                                                    eltFactSejourParcAuto.Qty = dateFin.Date < matchedVehicule.FFVeh ? 0 : (dateFin.Date - matchedVehicule.FFVeh.Value).Days;
+                                                    eltFactSejourParcAuto.Qte = eltFactSejourParcAuto.Qty * coefPoidsVeh;
                                                     eltFactSejourParcAuto.Unit = lpSejourParcAuto.UniteLP;
                                                     eltFactSejourParcAuto.Ht = eltFactSejourParcAuto.Prix * eltFactSejourParcAuto.Qte;
                                                     eltFactSejourParcAuto.Tva = Math.Round((eltFactSejourParcAuto.Ht * eltFactSejourParcAuto.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
                                                     eltFactSejourParcAuto.MT = eltFactSejourParcAuto.Ht + eltFactSejourParcAuto.Tva;
+                                                    eltFactSejourParcAuto.Code = articleSejourParcAuto.CodeArticle.ToString();
                                                     details.Add(eltFactSejourParcAuto);
 
                                                     InvoiceDetails eltFactDeboursPADParcAuto = new InvoiceDetails();
 
                                                     eltFactDeboursPADParcAuto.Prix = lpDeboursPADPenalite.PU1LP.Value - lpDeboursPADPenalite.PU1LP.Value * derogation;
-                                                    eltFactDeboursPADParcAuto.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA; //TVAEX
-                                                    //eltFactDeboursPADParcAuto.TvaTaux = eltFactDeboursPADParcAuto.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                    eltFactDeboursPADParcAuto.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA; //TVAEX 
                                                     eltFactDeboursPADParcAuto.TvaTaux = eltFactDeboursPADParcAuto.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
 
                                                     eltFactDeboursPADParcAuto.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays((dateFin - matchedVehicule.FFVeh.Value).Days).ToShortDateString();
-
-                                                    eltFactDeboursPADParcAuto.Qte = dateFin.Date < matchedVehicule.FFVeh ? 0 : (dateFin.Date - matchedVehicule.FFVeh.Value).Days;
+                                                    eltFactDeboursPADParcAuto.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                    eltFactDeboursPADParcAuto.Qty = dateFin.Date < matchedVehicule.FFVeh ? 0 : (dateFin.Date - matchedVehicule.FFVeh.Value).Days;
+                                                    eltFactDeboursPADParcAuto.Qte = eltFactDeboursPADParcAuto.Qty * coefPoidsVeh;
                                                     eltFactDeboursPADParcAuto.Unit = lpDeboursPADPenalite.UniteLP;
                                                     eltFactDeboursPADParcAuto.Ht = eltFactDeboursPADParcAuto.Prix * eltFactDeboursPADParcAuto.Qte;
                                                     eltFactDeboursPADParcAuto.Tva = Math.Round((eltFactDeboursPADParcAuto.Ht * eltFactDeboursPADParcAuto.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
@@ -1241,7 +1444,7 @@ namespace VSOM_API.Controllers
 
                                                     #endregion
                                                 }
-                                                else if ((dateFin - matchedVehicule.FFVeh.Value).Days <= 9 + 20)
+                                                else if ((dateFin - matchedVehicule.FFVeh.Value).Days <= 10 + 20)
                                                 {
                                                     #region niveau 9 + 20 jours
 
@@ -1251,9 +1454,10 @@ namespace VSOM_API.Controllers
                                                     eltFactSejourParcAutoN1.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
                                                     eltFactSejourParcAutoN1.TvaTaux = eltFactSejourParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
 
-                                                    eltFactSejourParcAutoN1.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(9).ToShortDateString();
-
-                                                    eltFactSejourParcAutoN1.Qte = 9;
+                                                    eltFactSejourParcAutoN1.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(10).ToShortDateString();
+                                                    eltFactSejourParcAutoN1.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                    eltFactSejourParcAutoN1.Qte = 10 * coefPoidsVeh;
+                                                    eltFactSejourParcAutoN1.Qty = 10;
                                                     eltFactSejourParcAutoN1.Unit = lpSejourParcAuto.UniteLP;
                                                     eltFactSejourParcAutoN1.Ht = eltFactSejourParcAutoN1.Prix * eltFactSejourParcAutoN1.Qte;
                                                     eltFactSejourParcAutoN1.Tva = Math.Round((eltFactSejourParcAutoN1.Ht * eltFactSejourParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
@@ -1266,9 +1470,10 @@ namespace VSOM_API.Controllers
                                                     eltFactDeboursPADParcAutoN1.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA; //TVATI
                                                     // eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
                                                     eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
-
-                                                    eltFactDeboursPADParcAutoN1.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(9).ToShortDateString();
-                                                    eltFactDeboursPADParcAutoN1.Qte = 9;
+                                                    eltFactDeboursPADParcAutoN1.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                    eltFactDeboursPADParcAutoN1.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(10).ToShortDateString();
+                                                    eltFactDeboursPADParcAutoN1.Qte = 10 * coefPoidsVeh;
+                                                    eltFactDeboursPADParcAutoN1.Qty = 10;
                                                     eltFactDeboursPADParcAutoN1.Unit = lpDeboursPADPenalite.UniteLP;
                                                     eltFactDeboursPADParcAutoN1.Ht = eltFactDeboursPADParcAutoN1.Prix * eltFactDeboursPADParcAutoN1.Qte;
                                                     eltFactDeboursPADParcAutoN1.Tva = Math.Round((eltFactDeboursPADParcAutoN1.Ht * eltFactDeboursPADParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
@@ -1280,75 +1485,10 @@ namespace VSOM_API.Controllers
                                                     eltFactSejourParcAutoN2.Prix = lpSejourParcAuto.PU2LP.Value - lpSejourParcAuto.PU2LP.Value * derogation;
                                                     eltFactSejourParcAutoN2.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
                                                     eltFactSejourParcAutoN2.TvaTaux = eltFactSejourParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactSejourParcAutoN2.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 9).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays((dateFin - matchedVehicule.FFVeh.Value).Days).ToShortDateString();
-
-                                                    eltFactSejourParcAutoN2.Qte = (dateFin - matchedVehicule.FFVeh.Value).Days - 9;
-                                                    eltFactSejourParcAutoN2.Unit = lpSejourParcAuto.UniteLP;
-                                                    eltFactSejourParcAutoN2.Ht = eltFactSejourParcAutoN2.Prix * eltFactSejourParcAutoN2.Qte;
-                                                    eltFactSejourParcAutoN2.Tva = Math.Round((eltFactSejourParcAutoN2.Ht * eltFactSejourParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactSejourParcAutoN2.MT = eltFactSejourParcAutoN2.Ht + eltFactSejourParcAutoN2.Tva;
-                                                    details.Add(eltFactSejourParcAutoN2);
-
-                                                    InvoiceDetails eltFactDeboursPADParcAutoN2 = new InvoiceDetails();
-
-                                                    eltFactDeboursPADParcAutoN2.Prix = lpDeboursPADPenalite.PU2LP.Value - lpDeboursPADPenalite.PU2LP.Value * derogation;
-                                                    eltFactDeboursPADParcAutoN2.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA; //TVAEX
-                                                    //eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
-
-                                                    eltFactDeboursPADParcAutoN2.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 9).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays((dateFin - matchedVehicule.FFVeh.Value).Days).ToShortDateString();
-
-                                                    eltFactDeboursPADParcAutoN2.Qte = (dateFin - matchedVehicule.FFVeh.Value).Days - 9;
-                                                    eltFactDeboursPADParcAutoN2.Unit = lpDeboursPADPenalite.UniteLP;
-                                                    eltFactDeboursPADParcAutoN2.Ht = eltFactDeboursPADParcAutoN2.Prix * eltFactDeboursPADParcAutoN2.Qte;
-                                                    eltFactDeboursPADParcAutoN2.Tva = Math.Round((eltFactDeboursPADParcAutoN2.Ht * eltFactDeboursPADParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactDeboursPADParcAutoN2.MT = eltFactDeboursPADParcAutoN2.Ht + eltFactDeboursPADParcAutoN2.Tva;
-                                                    details.Add(eltFactDeboursPADParcAutoN2);
-                                                    #endregion
-
-                                                }
-                                                else if ((dateFin - matchedVehicule.FFVeh.Value).Days <= 9 + 20 + 30)
-                                                {
-                                                    #region 9 + 20 + 30
-                                                    InvoiceDetails eltFactSejourParcAutoN1 = new InvoiceDetails();
-
-                                                    eltFactSejourParcAutoN1.Prix = lpSejourParcAuto.PU1LP.Value - lpSejourParcAuto.PU1LP.Value * derogation;
-                                                    eltFactSejourParcAutoN1.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
-                                                    eltFactSejourParcAutoN1.TvaTaux = eltFactSejourParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
-
-                                                    eltFactSejourParcAutoN1.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(9).ToShortDateString();
-
-                                                    eltFactSejourParcAutoN1.Qte = 9;
-                                                    eltFactSejourParcAutoN1.Unit = lpSejourParcAuto.UniteLP;
-                                                    eltFactSejourParcAutoN1.Ht = eltFactSejourParcAutoN1.Prix * eltFactSejourParcAutoN1.Qte;
-                                                    eltFactSejourParcAutoN1.Tva = Math.Round((eltFactSejourParcAutoN1.Ht * eltFactSejourParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactSejourParcAutoN1.MT = eltFactSejourParcAutoN1.Ht + eltFactSejourParcAutoN1.Tva;
-                                                    details.Add(eltFactSejourParcAutoN1);
-
-                                                    InvoiceDetails eltFactDeboursPADParcAutoN1 = new InvoiceDetails();
-
-                                                    eltFactDeboursPADParcAutoN1.Prix = lpDeboursPADPenalite.PU1LP.Value - lpDeboursPADPenalite.PU1LP.Value * derogation;
-                                                    eltFactDeboursPADParcAutoN1.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA; //TVATI
-                                                    //eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
-
-                                                    eltFactDeboursPADParcAutoN1.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(9).ToShortDateString();
-                                                    eltFactDeboursPADParcAutoN1.Qte = 9;
-                                                    eltFactDeboursPADParcAutoN1.Unit = lpDeboursPADPenalite.UniteLP;
-                                                    eltFactDeboursPADParcAutoN1.Ht = eltFactDeboursPADParcAutoN1.Prix * eltFactDeboursPADParcAutoN1.Qte;
-                                                    eltFactDeboursPADParcAutoN1.Tva = Math.Round((eltFactDeboursPADParcAutoN1.Ht * eltFactDeboursPADParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactDeboursPADParcAutoN1.MT = eltFactDeboursPADParcAutoN1.Ht + eltFactDeboursPADParcAutoN1.Tva;
-                                                    details.Add(eltFactDeboursPADParcAutoN1);
-
-                                                    InvoiceDetails eltFactSejourParcAutoN2 = new InvoiceDetails();
-
-                                                    eltFactSejourParcAutoN2.Prix = lpSejourParcAuto.PU2LP.Value - lpSejourParcAuto.PU2LP.Value * derogation;
-                                                    eltFactSejourParcAutoN2.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
-                                                    eltFactSejourParcAutoN2.TvaTaux = eltFactSejourParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
-
-                                                    eltFactSejourParcAutoN2.Libelle = articleSejourParcAuto.LibArticle + "Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 9).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(9 + 20).ToShortDateString();
-
-                                                    eltFactSejourParcAutoN2.Qte = 20;
+                                                    eltFactSejourParcAutoN2.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 10).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays((dateFin - matchedVehicule.FFVeh.Value).Days).ToShortDateString();
+                                                    eltFactSejourParcAutoN2.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                    eltFactSejourParcAutoN2.Qty = (dateFin - matchedVehicule.FFVeh.Value).Days - 10;
+                                                    eltFactSejourParcAutoN2.Qte = eltFactSejourParcAutoN2.Qty * coefPoidsVeh;
                                                     eltFactSejourParcAutoN2.Unit = lpSejourParcAuto.UniteLP;
                                                     eltFactSejourParcAutoN2.Ht = eltFactSejourParcAutoN2.Prix * eltFactSejourParcAutoN2.Qte;
                                                     eltFactSejourParcAutoN2.Tva = Math.Round((eltFactSejourParcAutoN2.Ht * eltFactSejourParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
@@ -1362,9 +1502,80 @@ namespace VSOM_API.Controllers
                                                     // eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
                                                     eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
 
-                                                    eltFactDeboursPADParcAutoN2.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 9).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(9 + 20).ToShortDateString();
+                                                    eltFactDeboursPADParcAutoN2.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 10).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays((dateFin - matchedVehicule.FFVeh.Value).Days).ToShortDateString();
+                                                    eltFactDeboursPADParcAutoN2.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                    eltFactDeboursPADParcAutoN2.Qty = (dateFin - matchedVehicule.FFVeh.Value).Days - 10;
+                                                    eltFactDeboursPADParcAutoN2.Qte = eltFactDeboursPADParcAutoN2.Qty * coefPoidsVeh;
+                                                    eltFactDeboursPADParcAutoN2.Unit = lpDeboursPADPenalite.UniteLP;
+                                                    eltFactDeboursPADParcAutoN2.Ht = eltFactDeboursPADParcAutoN2.Prix * eltFactDeboursPADParcAutoN2.Qte;
+                                                    eltFactDeboursPADParcAutoN2.Tva = Math.Round((eltFactDeboursPADParcAutoN2.Ht * eltFactDeboursPADParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                    eltFactDeboursPADParcAutoN2.MT = eltFactDeboursPADParcAutoN2.Ht + eltFactDeboursPADParcAutoN2.Tva;
+                                                    details.Add(eltFactDeboursPADParcAutoN2);
+                                                    #endregion
 
-                                                    eltFactDeboursPADParcAutoN2.Qte = 20;
+                                                }
+                                                else if ((dateFin - matchedVehicule.FFVeh.Value).Days <= 10 + 20 + 30)
+                                                {
+                                                    #region 9 + 20 + 30
+                                                    InvoiceDetails eltFactSejourParcAutoN1 = new InvoiceDetails();
+
+                                                    eltFactSejourParcAutoN1.Prix = lpSejourParcAuto.PU1LP.Value - lpSejourParcAuto.PU1LP.Value * derogation;
+                                                    eltFactSejourParcAutoN1.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
+                                                    eltFactSejourParcAutoN1.TvaTaux = eltFactSejourParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
+
+                                                    eltFactSejourParcAutoN1.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(10).ToShortDateString();
+                                                    eltFactSejourParcAutoN1.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                    eltFactSejourParcAutoN1.Qty = 10;
+                                                    eltFactSejourParcAutoN1.Qte = eltFactSejourParcAutoN1.Qty * coefPoidsVeh;
+                                                    eltFactSejourParcAutoN1.Unit = lpSejourParcAuto.UniteLP;
+                                                    eltFactSejourParcAutoN1.Ht = eltFactSejourParcAutoN1.Prix * eltFactSejourParcAutoN1.Qte;
+                                                    eltFactSejourParcAutoN1.Tva = Math.Round((eltFactSejourParcAutoN1.Ht * eltFactSejourParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                    eltFactSejourParcAutoN1.MT = eltFactSejourParcAutoN1.Ht + eltFactSejourParcAutoN1.Tva;
+                                                    details.Add(eltFactSejourParcAutoN1);
+
+                                                    InvoiceDetails eltFactDeboursPADParcAutoN1 = new InvoiceDetails();
+
+                                                    eltFactDeboursPADParcAutoN1.Prix = lpDeboursPADPenalite.PU1LP.Value - lpDeboursPADPenalite.PU1LP.Value * derogation;
+                                                    eltFactDeboursPADParcAutoN1.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA; //TVATI
+                                                    //eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                    eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
+                                                    eltFactDeboursPADParcAutoN1.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                    eltFactDeboursPADParcAutoN1.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(10).ToShortDateString();
+                                                    eltFactDeboursPADParcAutoN1.Qty = 10;
+                                                    eltFactDeboursPADParcAutoN1.Qte = eltFactSejourParcAutoN1.Qty * coefPoidsVeh;
+                                                    eltFactDeboursPADParcAutoN1.Unit = lpDeboursPADPenalite.UniteLP;
+                                                    eltFactDeboursPADParcAutoN1.Ht = eltFactDeboursPADParcAutoN1.Prix * eltFactDeboursPADParcAutoN1.Qte;
+                                                    eltFactDeboursPADParcAutoN1.Tva = Math.Round((eltFactDeboursPADParcAutoN1.Ht * eltFactDeboursPADParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                    eltFactDeboursPADParcAutoN1.MT = eltFactDeboursPADParcAutoN1.Ht + eltFactDeboursPADParcAutoN1.Tva;
+                                                    details.Add(eltFactDeboursPADParcAutoN1);
+
+                                                    InvoiceDetails eltFactSejourParcAutoN2 = new InvoiceDetails();
+
+                                                    eltFactSejourParcAutoN2.Prix = lpSejourParcAuto.PU2LP.Value - lpSejourParcAuto.PU2LP.Value * derogation;
+                                                    eltFactSejourParcAutoN2.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
+                                                    eltFactSejourParcAutoN2.TvaTaux = eltFactSejourParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                    eltFactSejourParcAutoN2.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                    eltFactSejourParcAutoN2.Libelle = articleSejourParcAuto.LibArticle + "Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 10).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(10 + 20).ToShortDateString();
+                                                    eltFactSejourParcAutoN2.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                    eltFactSejourParcAutoN2.Qty = 20;
+                                                    eltFactSejourParcAutoN2.Qte = eltFactSejourParcAutoN2.Qty * coefPoidsVeh;
+                                                    eltFactSejourParcAutoN2.Unit = lpSejourParcAuto.UniteLP;
+                                                    eltFactSejourParcAutoN2.Ht = eltFactSejourParcAutoN2.Prix * eltFactSejourParcAutoN2.Qte;
+                                                    eltFactSejourParcAutoN2.Tva = Math.Round((eltFactSejourParcAutoN2.Ht * eltFactSejourParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                    eltFactSejourParcAutoN2.MT = eltFactSejourParcAutoN2.Ht + eltFactSejourParcAutoN2.Tva;
+                                                    details.Add(eltFactSejourParcAutoN2);
+
+                                                    InvoiceDetails eltFactDeboursPADParcAutoN2 = new InvoiceDetails();
+
+                                                    eltFactDeboursPADParcAutoN2.Prix = lpDeboursPADPenalite.PU2LP.Value - lpDeboursPADPenalite.PU2LP.Value * derogation;
+                                                    eltFactDeboursPADParcAutoN2.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA; //TVAEX
+                                                    //eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                    eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
+
+                                                    eltFactDeboursPADParcAutoN2.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 10).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(10 + 20).ToShortDateString();
+                                                    eltFactDeboursPADParcAutoN2.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                    eltFactDeboursPADParcAutoN2.Qty = 20;
+                                                    eltFactDeboursPADParcAutoN2.Qte = eltFactDeboursPADParcAutoN2.Qty * coefPoidsVeh;
                                                     eltFactDeboursPADParcAutoN2.Unit = lpDeboursPADPenalite.UniteLP;
                                                     eltFactDeboursPADParcAutoN2.Ht = eltFactDeboursPADParcAutoN2.Prix * eltFactDeboursPADParcAutoN2.Qte;
                                                     eltFactDeboursPADParcAutoN2.Tva = Math.Round((eltFactDeboursPADParcAutoN2.Ht * eltFactDeboursPADParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
@@ -1376,9 +1587,10 @@ namespace VSOM_API.Controllers
                                                     eltFactSejourParcAutoN3.Prix = lpSejourParcAuto.PU3LP.Value - lpSejourParcAuto.PU3LP.Value * derogation;
                                                     eltFactSejourParcAutoN3.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
                                                     eltFactSejourParcAutoN3.TvaTaux = eltFactSejourParcAutoN3.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactSejourParcAutoN3.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 9 + 20).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays((dateFin - matchedVehicule.FFVeh.Value).Days).ToShortDateString();
-
-                                                    eltFactSejourParcAutoN3.Qte = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - 9 - 20;
+                                                    eltFactSejourParcAutoN3.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 10 + 20).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays((dateFin - matchedVehicule.FFVeh.Value).Days).ToShortDateString();
+                                                    eltFactSejourParcAutoN3.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                    eltFactSejourParcAutoN3.Qty = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - 10 - 20;
+                                                    eltFactSejourParcAutoN3.Qte = eltFactSejourParcAutoN3.Qty * coefPoidsVeh;
                                                     eltFactSejourParcAutoN3.Unit = lpSejourParcAuto.UniteLP;
                                                     eltFactSejourParcAutoN3.Ht = eltFactSejourParcAutoN3.Prix * eltFactSejourParcAutoN3.Qte;
                                                     eltFactSejourParcAutoN3.Tva = Math.Round((eltFactSejourParcAutoN3.Ht * eltFactSejourParcAutoN3.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
@@ -1392,10 +1604,11 @@ namespace VSOM_API.Controllers
                                                     eltFactDeboursPADParcAutoN3.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA; //TVAEX
                                                     // eltFactDeboursPADParcAutoN3.TvaTaux = eltFactDeboursPADParcAutoN3.TvaCode == "TVAEX" ? 0 : 0.1925f;
                                                     eltFactDeboursPADParcAutoN3.TvaTaux = eltFactDeboursPADParcAutoN3.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
+                                                    eltFactDeboursPADParcAutoN3.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                    eltFactDeboursPADParcAutoN3.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 10 + 20).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays((dateFin - matchedVehicule.FFVeh.Value).Days).ToShortDateString();
 
-                                                    eltFactDeboursPADParcAutoN3.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 9 + 20).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays((dateFin - matchedVehicule.FFVeh.Value).Days).ToShortDateString();
-
-                                                    eltFactDeboursPADParcAutoN3.Qte = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - 9 - 20;
+                                                    eltFactDeboursPADParcAutoN3.Qty = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - 10 - 20;
+                                                    eltFactDeboursPADParcAutoN3.Qte = eltFactDeboursPADParcAutoN3.Qty * coefPoidsVeh;
                                                     eltFactDeboursPADParcAutoN3.Unit = lpDeboursPADPenalite.UniteLP;
                                                     eltFactDeboursPADParcAutoN3.Ht = eltFactDeboursPADParcAutoN3.Prix * eltFactDeboursPADParcAutoN3.Qte;
                                                     eltFactDeboursPADParcAutoN3.Tva = Math.Round((eltFactDeboursPADParcAutoN3.Ht * eltFactDeboursPADParcAutoN3.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
@@ -1413,9 +1626,10 @@ namespace VSOM_API.Controllers
                                                     eltFactSejourParcAutoN1.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
                                                     eltFactSejourParcAutoN1.TvaTaux = eltFactSejourParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
 
-                                                    eltFactSejourParcAutoN1.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(9).ToShortDateString();
-
-                                                    eltFactSejourParcAutoN1.Qte = 9;
+                                                    eltFactSejourParcAutoN1.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(10).ToShortDateString();
+                                                    eltFactSejourParcAutoN1.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                    eltFactSejourParcAutoN1.Qty = 10;
+                                                    eltFactSejourParcAutoN1.Qte = eltFactSejourParcAutoN1.Qty * coefPoidsVeh;
                                                     eltFactSejourParcAutoN1.Unit = lpSejourParcAuto.UniteLP;
                                                     eltFactSejourParcAutoN1.Ht = eltFactSejourParcAutoN1.Prix * eltFactSejourParcAutoN1.Qte;
                                                     eltFactSejourParcAutoN1.Tva = Math.Round((eltFactSejourParcAutoN1.Ht * eltFactSejourParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
@@ -1428,9 +1642,10 @@ namespace VSOM_API.Controllers
                                                     eltFactDeboursPADParcAutoN1.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA; //TVATI
                                                     //eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
                                                     eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
-
-                                                    eltFactDeboursPADParcAutoN1.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(9).ToShortDateString();
-                                                    eltFactDeboursPADParcAutoN1.Qte = 9;
+                                                    eltFactDeboursPADParcAutoN1.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                    eltFactDeboursPADParcAutoN1.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(10).ToShortDateString();
+                                                    eltFactDeboursPADParcAutoN1.Qty = 10;
+                                                    eltFactDeboursPADParcAutoN1.Qte = eltFactSejourParcAutoN1.Qty * coefPoidsVeh;
                                                     eltFactDeboursPADParcAutoN1.Unit = lpDeboursPADPenalite.UniteLP;
                                                     eltFactDeboursPADParcAutoN1.Ht = eltFactDeboursPADParcAutoN1.Prix * eltFactDeboursPADParcAutoN1.Qte;
                                                     eltFactDeboursPADParcAutoN1.Tva = Math.Round((eltFactDeboursPADParcAutoN1.Ht * eltFactDeboursPADParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
@@ -1442,10 +1657,11 @@ namespace VSOM_API.Controllers
                                                     eltFactSejourParcAutoN2.Prix = lpSejourParcAuto.PU2LP.Value - lpSejourParcAuto.PU2LP.Value * derogation;
                                                     eltFactSejourParcAutoN2.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
                                                     eltFactSejourParcAutoN2.TvaTaux = eltFactSejourParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
-
-                                                    eltFactSejourParcAutoN2.Libelle = articleSejourParcAuto.LibArticle + "Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 9).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(9 + 20).ToShortDateString();
-
-                                                    eltFactSejourParcAutoN2.Qte = 20;
+                                                    eltFactSejourParcAutoN2.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                    eltFactSejourParcAutoN2.Libelle = articleSejourParcAuto.LibArticle + "Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 10).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(10 + 20).ToShortDateString();
+                                                    eltFactSejourParcAutoN2.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                    eltFactSejourParcAutoN2.Qty = 20;
+                                                    eltFactSejourParcAutoN2.Qte = eltFactSejourParcAutoN2.Qty * coefPoidsVeh;
                                                     eltFactSejourParcAutoN2.Unit = lpSejourParcAuto.UniteLP;
                                                     eltFactSejourParcAutoN2.Ht = eltFactSejourParcAutoN2.Prix * eltFactSejourParcAutoN2.Qte;
                                                     eltFactSejourParcAutoN2.Tva = Math.Round((eltFactSejourParcAutoN2.Ht * eltFactSejourParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
@@ -1459,9 +1675,10 @@ namespace VSOM_API.Controllers
                                                     //eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
                                                     eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
 
-                                                    eltFactDeboursPADParcAutoN2.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 9).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(9 + 20).ToShortDateString();
-
-                                                    eltFactDeboursPADParcAutoN2.Qte = 20;
+                                                    eltFactDeboursPADParcAutoN2.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 10).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(10 + 20).ToShortDateString();
+                                                    eltFactDeboursPADParcAutoN2.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                    eltFactDeboursPADParcAutoN2.Qty = 20;
+                                                    eltFactDeboursPADParcAutoN2.Qte = eltFactDeboursPADParcAutoN2.Qty * coefPoidsVeh;
                                                     eltFactDeboursPADParcAutoN2.Unit = lpDeboursPADPenalite.UniteLP;
                                                     eltFactDeboursPADParcAutoN2.Ht = eltFactDeboursPADParcAutoN2.Prix * eltFactDeboursPADParcAutoN2.Qte;
                                                     eltFactDeboursPADParcAutoN2.Tva = Math.Round((eltFactDeboursPADParcAutoN2.Ht * eltFactDeboursPADParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
@@ -1473,9 +1690,10 @@ namespace VSOM_API.Controllers
                                                     eltFactSejourParcAutoN3.Prix = lpSejourParcAuto.PU3LP.Value - lpSejourParcAuto.PU3LP.Value * derogation;
                                                     eltFactSejourParcAutoN3.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
                                                     eltFactSejourParcAutoN3.TvaTaux = eltFactSejourParcAutoN3.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactSejourParcAutoN3.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 9 + 20).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(9 + 20 + 30).ToShortDateString();
-
-                                                    eltFactSejourParcAutoN3.Qte = 30;
+                                                    eltFactSejourParcAutoN3.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 10 + 20).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(10 + 20 + 30).ToShortDateString();
+                                                    eltFactSejourParcAutoN3.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                    eltFactSejourParcAutoN3.Qty = 30;
+                                                    eltFactSejourParcAutoN3.Qte = eltFactSejourParcAutoN3.Qty * coefPoidsVeh;
                                                     eltFactSejourParcAutoN3.Unit = lpSejourParcAuto.UniteLP;
                                                     eltFactSejourParcAutoN3.Ht = eltFactSejourParcAutoN3.Prix * eltFactSejourParcAutoN3.Qte;
                                                     eltFactSejourParcAutoN3.Tva = Math.Round((eltFactSejourParcAutoN3.Ht * eltFactSejourParcAutoN3.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
@@ -1486,12 +1704,13 @@ namespace VSOM_API.Controllers
 
                                                     eltFactDeboursPADParcAutoN3.Prix = lpDeboursPADPenalite.PU3LP.Value - lpDeboursPADPenalite.PU3LP.Value * derogation;
                                                     eltFactDeboursPADParcAutoN3.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA; //TVAEX
-                                                    //eltFactDeboursPADParcAutoN3.TvaTaux = eltFactDeboursPADParcAutoN3.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                    // eltFactDeboursPADParcAutoN3.TvaTaux = eltFactDeboursPADParcAutoN3.TvaCode == "TVAEX" ? 0 : 0.1925f;
                                                     eltFactDeboursPADParcAutoN3.TvaTaux = eltFactDeboursPADParcAutoN3.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
+                                                    eltFactDeboursPADParcAutoN3.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                    eltFactDeboursPADParcAutoN3.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 10 + 20).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(10 + 20 + 30).ToShortDateString();
 
-                                                    eltFactDeboursPADParcAutoN3.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 9 + 20).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays(9 + 20 + 30).ToShortDateString();
-
-                                                    eltFactDeboursPADParcAutoN3.Qte = 30;
+                                                    eltFactDeboursPADParcAutoN3.Qty = 30;
+                                                    eltFactDeboursPADParcAutoN3.Qte = eltFactDeboursPADParcAutoN3.Qty * coefPoidsVeh;
                                                     eltFactDeboursPADParcAutoN3.Unit = lpDeboursPADPenalite.UniteLP;
                                                     eltFactDeboursPADParcAutoN3.Ht = eltFactDeboursPADParcAutoN3.Prix * eltFactDeboursPADParcAutoN3.Qte;
                                                     eltFactDeboursPADParcAutoN3.Tva = Math.Round((eltFactDeboursPADParcAutoN3.Ht * eltFactDeboursPADParcAutoN3.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
@@ -1503,9 +1722,10 @@ namespace VSOM_API.Controllers
                                                     eltFactSejourParcAutoN4.Prix = lpSejourParcAuto.PU4LP.Value - lpSejourParcAuto.PU4LP.Value * derogation;
                                                     eltFactSejourParcAutoN4.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
                                                     eltFactSejourParcAutoN4.TvaTaux = eltFactSejourParcAutoN4.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactSejourParcAutoN4.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 9 + 20 + 30).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays((dateFin - matchedVehicule.FFVeh.Value).Days).ToShortDateString();
-
-                                                    eltFactSejourParcAutoN4.Qte = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - 9 - 20 - 30;
+                                                    eltFactSejourParcAutoN4.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 10 + 20 + 30).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays((dateFin - matchedVehicule.FFVeh.Value).Days).ToShortDateString();
+                                                    eltFactSejourParcAutoN4.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                    eltFactSejourParcAutoN4.Qty = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - 10 - 20 - 30;
+                                                    eltFactSejourParcAutoN4.Qte = eltFactSejourParcAutoN4.Qty * coefPoidsVeh;
                                                     eltFactSejourParcAutoN4.Unit = lpSejourParcAuto.UniteLP;
                                                     eltFactSejourParcAutoN4.Ht = eltFactSejourParcAutoN4.Prix * eltFactSejourParcAutoN4.Qte;
                                                     eltFactSejourParcAutoN4.Tva = Math.Round((eltFactSejourParcAutoN4.Ht * eltFactSejourParcAutoN4.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
@@ -1516,13 +1736,13 @@ namespace VSOM_API.Controllers
 
                                                     eltFactDeboursPADParcAutoN4.Prix = lpDeboursPADPenalite.PU4LP.Value - lpDeboursPADPenalite.PU4LP.Value * derogation;
                                                     eltFactDeboursPADParcAutoN4.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA; //TVAEX
-                                                    //eltFactDeboursPADParcAutoN4.TvaTaux = eltFactDeboursPADParcAutoN4.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                    // eltFactDeboursPADParcAutoN4.TvaTaux = eltFactDeboursPADParcAutoN4.TvaCode == "TVAEX" ? 0 : 0.1925f;
                                                     eltFactDeboursPADParcAutoN4.TvaTaux = eltFactDeboursPADParcAutoN4.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
+                                                    eltFactDeboursPADParcAutoN4.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                    eltFactDeboursPADParcAutoN4.Libelle = articleDeboursPADPenalite.LibArticle + "Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 10 + 20 + 30).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays((dateFin - matchedVehicule.FFVeh.Value).Days).ToShortDateString();
 
-                                                    //AH Débours PAD : Pénalité de stationnement 
-                                                    eltFactDeboursPADParcAutoN4.Libelle = articleDeboursPADPenalite.LibArticle + "Chassis N° " + matchedVehicule.NumChassis + " : " + matchedVehicule.FFVeh.Value.AddDays(1 + 9 + 20 + 30).ToShortDateString() + " - " + matchedVehicule.FFVeh.Value.AddDays((dateFin - matchedVehicule.FFVeh.Value).Days).ToShortDateString();
-
-                                                    eltFactDeboursPADParcAutoN4.Qte = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - 9 - 20 - 30;
+                                                    eltFactDeboursPADParcAutoN4.Qty = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - 10 - 20 - 30;
+                                                    eltFactDeboursPADParcAutoN4.Qte = eltFactDeboursPADParcAutoN4.Qty * coefPoidsVeh;
                                                     eltFactDeboursPADParcAutoN4.Unit = lpDeboursPADPenalite.UniteLP;
                                                     eltFactDeboursPADParcAutoN4.Ht = eltFactDeboursPADParcAutoN4.Prix * eltFactDeboursPADParcAutoN4.Qte;
                                                     eltFactDeboursPADParcAutoN4.Tva = Math.Round((eltFactDeboursPADParcAutoN4.Ht * eltFactDeboursPADParcAutoN4.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
@@ -1533,9 +1753,11 @@ namespace VSOM_API.Controllers
                                                 }
                                             }
                                             #endregion
+                                        
                                         }
                                         else
                                         {
+
                                             #region block bl encours de traitement
 
                                             List<ELEMENT_FACTURATION> eltSejourCalcules = ctx.ELEMENT_FACTURATION.Where(ef => ef.IdVeh == matchedVehicule.IdVeh &&
@@ -1552,8 +1774,9 @@ namespace VSOM_API.Controllers
                                                 eltFactSejourParcAuto.Prix = lpSejourParcAuto.PU4LP.Value * 2; //lpSejourParcAuto.PU4LP.Value - lpSejourParcAuto.PU4LP.Value * derogation;
                                                 eltFactSejourParcAuto.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
                                                 eltFactSejourParcAuto.TvaTaux = eltFactSejourParcAuto.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                eltFactSejourParcAuto.Qte = dateFin.Date < finAncienSejour ? 0 : (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU4LP.Value * (1 - derogation)).Sum(el => el.QTEEF) <= 9) ? (dateFin - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU4LP.Value * (1 - derogation)).Sum(el => el.QTEEF.Value) : 0;
+                                                eltFactSejourParcAuto.Qte = dateFin.Date < finAncienSejour ? 0 : (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU4LP.Value * (1 - derogation)).Sum(el => el.JrVeh) <= 10) ? (dateFin - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU4LP.Value * (1 - derogation)).Sum(el => el.JrVeh.Value) : 0;
                                                 //AH  "Pénalité de stationnement
+                                                eltFactSejourParcAuto.Code = articleSejourParcAuto.CodeArticle.ToString();
                                                 eltFactSejourParcAuto.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAuto.Qte)).ToShortDateString();
                                                 eltFactSejourParcAuto.Unit = lpSejourParcAuto.UniteLP;
                                                 eltFactSejourParcAuto.Ht = eltFactSejourParcAuto.Prix * eltFactSejourParcAuto.Qte;
@@ -1561,354 +1784,422 @@ namespace VSOM_API.Controllers
                                                 eltFactSejourParcAuto.MT = eltFactSejourParcAuto.Ht + eltFactSejourParcAuto.Tva;
                                                 details.Add(eltFactSejourParcAuto);
 
-                                                /*pas de debourd pad en vae.
+                                                /*pas de debourd pad en VAE 
                                                  * InvoiceDetails eltFactDeboursPADParcAuto = new InvoiceDetails();
 
-                                                eltFactDeboursPADParcAuto.Prix = lpDeboursPADPenalite.PU4LP.Value - lpDeboursPADPenalite.PU4LP.Value * derogation;
-                                                eltFactDeboursPADParcAuto.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA; //TVAEX
-                                                //eltFactDeboursPADParcAuto.TvaTaux = eltFactDeboursPADParcAuto.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                eltFactDeboursPADParcAuto.TvaTaux = eltFactDeboursPADParcAuto.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
+                                                 eltFactDeboursPADParcAuto.Prix = lpDeboursPADPenalite.PU4LP.Value - lpDeboursPADPenalite.PU4LP.Value * derogation;
+                                                 eltFactDeboursPADParcAuto.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA; //TVAEX
+                                                 // eltFactDeboursPADParcAuto.TvaTaux = eltFactDeboursPADParcAuto.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                 eltFactDeboursPADParcAuto.TvaTaux = eltFactDeboursPADParcAuto.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
 
-                                                eltFactDeboursPADParcAuto.Qte = dateFin.Date < finAncienSejour ? 0 : (eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU4LP.Value * (1 - derogation)).Sum(el => el.QTEEF) <= 9) ? (dateFin - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU4LP.Value * (1 - derogation)).Sum(el => el.QTEEF.Value) : 0;
-                                                //AH Débours PAD : Pénalité de stationnement
-                                                eltFactDeboursPADParcAuto.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAuto.Qte)).ToShortDateString();
-                                                eltFactDeboursPADParcAuto.Unit = lpDeboursPADPenalite.UniteLP; ;
-                                                eltFactDeboursPADParcAuto.Ht = eltFactDeboursPADParcAuto.Prix * eltFactDeboursPADParcAuto.Qte;
-                                                eltFactDeboursPADParcAuto.Tva = Math.Round((eltFactDeboursPADParcAuto.Ht * eltFactDeboursPADParcAuto.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                eltFactDeboursPADParcAuto.MT = eltFactDeboursPADParcAuto.Ht + eltFactDeboursPADParcAuto.Tva;
-                                                details.Add(eltFactDeboursPADParcAuto);
-                                                 */ 
+                                                 eltFactDeboursPADParcAuto.Qte = dateFin.Date < finAncienSejour ? 0 : (eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU4LP.Value * (1 - derogation)).Sum(el => el.QTEEF) <= 9) ? (dateFin - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU4LP.Value * (1 - derogation)).Sum(el => el.QTEEF.Value) : 0;
+                                                 //AH Débours PAD : Pénalité de stationnement
+                                                 eltFactDeboursPADParcAuto.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAuto.Qte)).ToShortDateString();
+                                                 eltFactDeboursPADParcAuto.Unit = lpDeboursPADPenalite.UniteLP; ;
+                                                 eltFactDeboursPADParcAuto.Ht = eltFactDeboursPADParcAuto.Prix * eltFactDeboursPADParcAuto.Qte;
+                                                 eltFactDeboursPADParcAuto.Tva = Math.Round((eltFactDeboursPADParcAuto.Ht * eltFactDeboursPADParcAuto.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                 eltFactDeboursPADParcAuto.MT = eltFactDeboursPADParcAuto.Ht + eltFactDeboursPADParcAuto.Tva;
+                                                 details.Add(eltFactDeboursPADParcAuto);
+                                                 */
                                                 #endregion
                                             }
                                             else
                                             {
-
-                                                // Gestion pour les véhicules suivant le flux normal
-                                                double derogation = (con.BLIL == "Y" || con.BLGN == "Y") ? 0.75 : 0;
-                                                if ((dateFin - matchedVehicule.FFVeh.Value).Days <= 9)
+                                                //control de cotation antérieur a la date de stationnement deja effectué
+                                                if (dateFin < finAncienSejour)
                                                 {
-                                                    #region niveau 1
-                                                    InvoiceDetails eltFactSejourParcAuto = new InvoiceDetails();
-
-                                                    eltFactSejourParcAuto.Prix = lpSejourParcAuto.PU1LP.Value - lpSejourParcAuto.PU1LP.Value * derogation;
-                                                    eltFactSejourParcAuto.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
-                                                    eltFactSejourParcAuto.TvaTaux = eltFactSejourParcAuto.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactSejourParcAuto.Qte = dateFin.Date < finAncienSejour ? 0 : (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF) <= 9) ? (dateFin - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) : 0;
-                                                    //AH Pénalité de stationnement
-                                                    eltFactSejourParcAuto.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAuto.Qte)).ToShortDateString();
-                                                    eltFactSejourParcAuto.Unit = lpSejourParcAuto.UniteLP;
-                                                    eltFactSejourParcAuto.Ht = eltFactSejourParcAuto.Prix * eltFactSejourParcAuto.Qte;
-                                                    eltFactSejourParcAuto.Tva = Math.Round((eltFactSejourParcAuto.Ht * eltFactSejourParcAuto.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactSejourParcAuto.MT = eltFactSejourParcAuto.Ht + eltFactSejourParcAuto.Tva;
-                                                    details.Add(eltFactSejourParcAuto);
-
-                                                    InvoiceDetails eltFactDeboursPADParcAuto = new InvoiceDetails();
-
-                                                    eltFactDeboursPADParcAuto.Prix = lpDeboursPADPenalite.PU1LP.Value - lpDeboursPADPenalite.PU1LP.Value * derogation;
-                                                    eltFactDeboursPADParcAuto.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA; //TVAEX
-                                                    //eltFactDeboursPADParcAuto.TvaTaux = eltFactDeboursPADParcAuto.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactDeboursPADParcAuto.TvaTaux = eltFactDeboursPADParcAuto.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
-
-                                                    eltFactDeboursPADParcAuto.Qte = dateFin.Date < finAncienSejour ? 0 : (eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) <= 9) ? (dateFin - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) : 0;
-                                                    //AH Débours PAD : Pénalité de stationnement
-                                                    eltFactDeboursPADParcAuto.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAuto.Qte)).ToShortDateString();
-                                                    eltFactDeboursPADParcAuto.Unit = lpDeboursPADPenalite.UniteLP;
-                                                    eltFactDeboursPADParcAuto.Ht = eltFactDeboursPADParcAuto.Prix * eltFactDeboursPADParcAuto.Qte;
-                                                    eltFactDeboursPADParcAuto.Tva = Math.Round((eltFactDeboursPADParcAuto.Ht * eltFactDeboursPADParcAuto.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactDeboursPADParcAuto.MT = eltFactDeboursPADParcAuto.Ht + eltFactDeboursPADParcAuto.Tva;
-                                                    details.Add(eltFactDeboursPADParcAuto);
-                                                    #endregion
-                                                }
-                                                else if ((dateFin - matchedVehicule.FFVeh.Value).Days <= 9 + 20)
-                                                {
-                                                    #region niveau 2
-                                                    InvoiceDetails eltFactSejourParcAutoN1 = new InvoiceDetails();
-
-                                                    eltFactSejourParcAutoN1.Prix = lpSejourParcAuto.PU1LP.Value - lpSejourParcAuto.PU1LP.Value * derogation;
-                                                    eltFactSejourParcAutoN1.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
-                                                    eltFactSejourParcAutoN1.TvaTaux = eltFactSejourParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactSejourParcAutoN1.Qte = (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF) < 9) ? 9 - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) : 0;
-                                                    //AH "Pénalité de stationnement
-                                                    eltFactSejourParcAutoN1.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte)).ToShortDateString();
-                                                    eltFactSejourParcAutoN1.Unit = lpSejourParcAuto.UniteLP;
-                                                    eltFactSejourParcAutoN1.Ht = eltFactSejourParcAutoN1.Prix * eltFactSejourParcAutoN1.Qte;
-                                                    eltFactSejourParcAutoN1.Tva = Math.Round((eltFactSejourParcAutoN1.Ht * eltFactSejourParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactSejourParcAutoN1.MT = eltFactSejourParcAutoN1.Ht + eltFactSejourParcAutoN1.Tva;
-                                                    details.Add(eltFactSejourParcAutoN1);
-
-                                                    InvoiceDetails eltFactDeboursPADParcAutoN1 = new InvoiceDetails();
-
-                                                    eltFactDeboursPADParcAutoN1.Prix = lpDeboursPADPenalite.PU1LP.Value - lpDeboursPADPenalite.PU1LP.Value * derogation;
-                                                    eltFactDeboursPADParcAutoN1.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
-                                                    //eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
-
-                                                    eltFactDeboursPADParcAutoN1.Qte = (eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF) < 9) ? 9 - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) : 0;
-                                                    //AH Débours PAD : Pénalité de stationnement 
-                                                    eltFactDeboursPADParcAutoN1.Libelle = articleDeboursPADPenalite.LibArticle + "Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte)).ToShortDateString();
-                                                    eltFactDeboursPADParcAutoN1.Unit = lpDeboursPADPenalite.UniteLP;
-                                                    eltFactDeboursPADParcAutoN1.Ht = eltFactDeboursPADParcAutoN1.Prix * eltFactDeboursPADParcAutoN1.Qte;
-                                                    eltFactDeboursPADParcAutoN1.Tva = Math.Round((eltFactDeboursPADParcAutoN1.Ht * eltFactDeboursPADParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactDeboursPADParcAutoN1.MT = eltFactDeboursPADParcAutoN1.Ht + eltFactDeboursPADParcAutoN1.Tva;
-                                                    details.Add(eltFactDeboursPADParcAutoN1);
-
-                                                    InvoiceDetails eltFactSejourParcAutoN2 = new InvoiceDetails();
-
-                                                    eltFactSejourParcAutoN2.Prix = lpSejourParcAuto.PU2LP.Value - lpSejourParcAuto.PU2LP.Value * derogation;
-                                                    eltFactSejourParcAutoN2.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
-                                                    eltFactSejourParcAutoN2.TvaTaux = eltFactSejourParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactSejourParcAutoN2.Qte = (dateFin - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase.Value == lpSejourParcAuto.PU2LP.Value * (1 - derogation) || el.PUEFBase.Value == lpSejourParcAuto.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltFactSejourParcAutoN1.Qte;
-                                                    //AH Pénalité de stationnement
-                                                    eltFactSejourParcAutoN2.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactSejourParcAutoN1.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte)).ToShortDateString();
-                                                    eltFactSejourParcAutoN2.Unit = lpSejourParcAuto.UniteLP;
-                                                    eltFactSejourParcAutoN2.Ht = eltFactSejourParcAutoN2.Prix * eltFactSejourParcAutoN2.Qte;
-                                                    eltFactSejourParcAutoN2.Tva = Math.Round((eltFactSejourParcAutoN2.Ht * eltFactSejourParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactSejourParcAutoN2.MT = eltFactSejourParcAutoN2.Ht + eltFactSejourParcAutoN2.Tva;
-                                                    details.Add(eltFactSejourParcAutoN2);
-
-                                                    InvoiceDetails eltFactDeboursPADParcAutoN2 = new InvoiceDetails();
-
-                                                    eltFactDeboursPADParcAutoN2.Prix = lpDeboursPADPenalite.PU2LP.Value - lpDeboursPADPenalite.PU2LP.Value * derogation;
-                                                    eltFactDeboursPADParcAutoN2.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
-                                                    //eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
-
-                                                    eltFactDeboursPADParcAutoN2.Qte = (dateFin - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltFactDeboursPADParcAutoN1.Qte;
-                                                    //AH Débours PAD : Pénalité de stationnement
-                                                    eltFactDeboursPADParcAutoN2.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte)).ToShortDateString();
-                                                    eltFactDeboursPADParcAutoN2.Unit = lpDeboursPADPenalite.UniteLP;
-                                                    eltFactDeboursPADParcAutoN2.Ht = eltFactDeboursPADParcAutoN2.Prix * eltFactDeboursPADParcAutoN2.Qte;
-                                                    eltFactDeboursPADParcAutoN2.Tva = Math.Round((eltFactDeboursPADParcAutoN2.Ht * eltFactDeboursPADParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactDeboursPADParcAutoN2.MT = eltFactDeboursPADParcAutoN2.Ht + eltFactDeboursPADParcAutoN2.Tva;
-                                                    details.Add(eltFactDeboursPADParcAutoN2);
-                                                    #endregion
-                                                }
-                                                else if ((dateFin - matchedVehicule.FFVeh.Value).Days <= 9 + 20 + 30)
-                                                {
-                                                    #region niveau 3
-                                                    InvoiceDetails eltFactSejourParcAutoN1 = new InvoiceDetails();
-
-                                                    eltFactSejourParcAutoN1.Prix = lpSejourParcAuto.PU1LP.Value - lpSejourParcAuto.PU1LP.Value * derogation;
-                                                    eltFactSejourParcAutoN1.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
-                                                    eltFactSejourParcAutoN1.TvaTaux = eltFactSejourParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactSejourParcAutoN1.Qte = (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF) < 9) ? 9 - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) : 0;
-                                                    //AH "Pénalité de stationnement
-                                                    eltFactSejourParcAutoN1.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte)).ToShortDateString();
-                                                    eltFactSejourParcAutoN1.Unit = lpSejourParcAuto.UniteLP;
-                                                    eltFactSejourParcAutoN1.Ht = eltFactSejourParcAutoN1.Prix * eltFactSejourParcAutoN1.Qte;
-                                                    eltFactSejourParcAutoN1.Tva = Math.Round((eltFactSejourParcAutoN1.Ht * eltFactSejourParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactSejourParcAutoN1.MT = eltFactSejourParcAutoN1.Ht + eltFactSejourParcAutoN1.Tva;
-                                                    details.Add(eltFactSejourParcAutoN1);
-
-                                                    InvoiceDetails eltFactDeboursPADParcAutoN1 = new InvoiceDetails();
-
-                                                    eltFactDeboursPADParcAutoN1.Prix = lpDeboursPADPenalite.PU1LP.Value - lpDeboursPADPenalite.PU1LP.Value * derogation;
-                                                    eltFactDeboursPADParcAutoN1.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
-                                                    //eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
-
-                                                    eltFactDeboursPADParcAutoN1.Qte = (eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF) < 9) ? 9 - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) : 0;
-                                                    //AH Débours PAD : Pénalité de stationnement 
-                                                    eltFactDeboursPADParcAutoN1.Libelle = articleDeboursPADPenalite.LibArticle + "Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte)).ToShortDateString();
-                                                    eltFactDeboursPADParcAutoN1.Unit = lpDeboursPADPenalite.UniteLP;
-                                                    eltFactDeboursPADParcAutoN1.Ht = eltFactDeboursPADParcAutoN1.Prix * eltFactDeboursPADParcAutoN1.Qte;
-                                                    eltFactDeboursPADParcAutoN1.Tva = Math.Round((eltFactDeboursPADParcAutoN1.Ht * eltFactDeboursPADParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactDeboursPADParcAutoN1.MT = eltFactDeboursPADParcAutoN1.Ht + eltFactDeboursPADParcAutoN1.Tva;
-                                                    details.Add(eltFactDeboursPADParcAutoN1);
-
-                                                    InvoiceDetails eltFactSejourParcAutoN2 = new InvoiceDetails();
-
-                                                    eltFactSejourParcAutoN2.Prix = lpSejourParcAuto.PU2LP.Value - lpSejourParcAuto.PU2LP.Value * derogation;
-                                                    eltFactSejourParcAutoN2.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
-                                                    eltFactSejourParcAutoN2.TvaTaux = eltFactSejourParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactSejourParcAutoN2.Qte = (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) < 20) ? 20 - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU2LP * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) : 0;
-                                                    //AH Pénalité de stationnement
-                                                    eltFactSejourParcAutoN2.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactSejourParcAutoN1.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte)).ToShortDateString();
-                                                    eltFactSejourParcAutoN2.Unit = lpSejourParcAuto.UniteLP;
-                                                    eltFactSejourParcAutoN2.Ht = eltFactSejourParcAutoN2.Prix * eltFactSejourParcAutoN2.Qte;
-                                                    eltFactSejourParcAutoN2.Tva = Math.Round((eltFactSejourParcAutoN2.Ht * eltFactSejourParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactSejourParcAutoN2.MT = eltFactSejourParcAutoN2.Ht + eltFactSejourParcAutoN2.Tva;
-                                                    details.Add(eltFactSejourParcAutoN2);
-
-                                                    InvoiceDetails eltFactDeboursPADParcAutoN2 = new InvoiceDetails();
-
-                                                    eltFactDeboursPADParcAutoN2.Prix = lpDeboursPADPenalite.PU2LP.Value - lpDeboursPADPenalite.PU2LP.Value * derogation;
-                                                    eltFactDeboursPADParcAutoN2.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
-                                                    //eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
-
-                                                    eltFactDeboursPADParcAutoN2.Qte = (eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) < 20) ? 20 - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU2LP * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) : 0;
-                                                    //AH Débours PAD : Pénalité de stationnement
-                                                    eltFactDeboursPADParcAutoN2.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte)).ToShortDateString();
-                                                    eltFactDeboursPADParcAutoN2.Unit = lpDeboursPADPenalite.UniteLP;
-                                                    eltFactDeboursPADParcAutoN2.Ht = eltFactDeboursPADParcAutoN2.Prix * eltFactDeboursPADParcAutoN2.Qte;
-                                                    eltFactDeboursPADParcAutoN2.Tva = Math.Round((eltFactDeboursPADParcAutoN2.Ht * eltFactDeboursPADParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactDeboursPADParcAutoN2.MT = eltFactDeboursPADParcAutoN2.Ht + eltFactDeboursPADParcAutoN2.Tva;
-                                                    details.Add(eltFactDeboursPADParcAutoN2);
-
-                                                    InvoiceDetails eltFactSejourParcAutoN3 = new InvoiceDetails();
-
-                                                    eltFactSejourParcAutoN3.Prix = lpSejourParcAuto.PU3LP.Value - lpSejourParcAuto.PU3LP.Value * derogation;
-                                                    eltFactSejourParcAutoN3.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
-                                                    eltFactSejourParcAutoN3.TvaTaux = eltFactSejourParcAutoN3.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactSejourParcAutoN3.Qte = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU3LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU3LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltFactSejourParcAutoN1.Qte - eltFactSejourParcAutoN2.Qte;
-                                                    //AH Pénalité de stationnement
-                                                    eltFactSejourParcAutoN3.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte + eltFactSejourParcAutoN3.Qte)).ToShortDateString();
-                                                    eltFactSejourParcAutoN3.Unit = lpSejourParcAuto.UniteLP;
-                                                    eltFactSejourParcAutoN3.Ht = eltFactSejourParcAutoN3.Prix * eltFactSejourParcAutoN3.Qte;
-                                                    eltFactSejourParcAutoN3.Tva = Math.Round((eltFactSejourParcAutoN3.Ht * eltFactSejourParcAutoN3.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactSejourParcAutoN3.MT = eltFactSejourParcAutoN3.Ht + eltFactSejourParcAutoN3.Tva;
-                                                    details.Add(eltFactSejourParcAutoN3);
-
-                                                    InvoiceDetails eltFactDeboursPADParcAutoN3 = new InvoiceDetails();
-
-                                                    eltFactDeboursPADParcAutoN3.Prix = lpDeboursPADPenalite.PU3LP.Value - lpDeboursPADPenalite.PU3LP.Value * derogation;
-                                                    eltFactDeboursPADParcAutoN3.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
-                                                    // eltFactDeboursPADParcAutoN3.TvaTaux = eltFactDeboursPADParcAutoN3.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactDeboursPADParcAutoN3.TvaTaux = eltFactDeboursPADParcAutoN3.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
-
-                                                    eltFactDeboursPADParcAutoN3.Qte = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU3LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU3LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltFactDeboursPADParcAutoN1.Qte - eltFactDeboursPADParcAutoN2.Qte;
-                                                    //AH Débours PAD : Pénalité de stationnement 
-                                                    eltFactDeboursPADParcAutoN3.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte + eltFactDeboursPADParcAutoN3.Qte)).ToShortDateString();
-                                                    eltFactDeboursPADParcAutoN3.Unit = lpDeboursPADPenalite.UniteLP;
-                                                    eltFactDeboursPADParcAutoN3.Ht = eltFactDeboursPADParcAutoN3.Prix * eltFactDeboursPADParcAutoN3.Qte;
-                                                    eltFactDeboursPADParcAutoN3.Tva = Math.Round((eltFactDeboursPADParcAutoN3.Ht * eltFactDeboursPADParcAutoN3.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactDeboursPADParcAutoN3.MT = eltFactDeboursPADParcAutoN3.Ht + eltFactDeboursPADParcAutoN3.Tva;
-                                                    details.Add(eltFactDeboursPADParcAutoN3);
-
-                                                    #endregion
+                                                    throw new ApplicationException("Le stationnement  est deja calculé jusqu'au" + finAncienSejour.ToShortDateString());
                                                 }
                                                 else
                                                 {
-                                                    #region niveau 4
-                                                    InvoiceDetails eltFactSejourParcAutoN1 = new InvoiceDetails();
+                                                    // Gestion pour les véhicules suivant le flux normal
+                                                    double derogation_new = 0; ;//AH5jan18 retrait dergation sur stationnement (con.BLIL == "Y" || con.BLGN == "Y") ? 0.75 : 0;
+                                                    double derogation = (con.BLIL == "Y" || con.BLGN == "Y") ? 0.75 : 0;
+                                                    int jourpalier = 0; double oldsejour = 0;
+                                                    double nbroldsejour = eltSejourCalcules.Where(el => el.IdLP == 14 || el.IdLP == 47).Sum(el => el.JrVeh).Value;
+                                                    //8janv18 pour definir le temps de sejour du palier 1 est effectue avec le nouveau prix
+                                                    double nbrnewsejour = eltSejourCalcules.Where(el => el.IdLP == 668 || el.IdLP == 669).Sum(el => el.JrVeh).Value;
 
-                                                    eltFactSejourParcAutoN1.Prix = lpSejourParcAuto.PU1LP.Value - lpSejourParcAuto.PU1LP.Value * derogation;
-                                                    eltFactSejourParcAutoN1.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
-                                                    eltFactSejourParcAutoN1.TvaTaux = eltFactSejourParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactSejourParcAutoN1.Qte = (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF) < 9) ? 9 - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) : 0;
-                                                    //AH "Pénalité de stationnement
-                                                    eltFactSejourParcAutoN1.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte)).ToShortDateString();
-                                                    eltFactSejourParcAutoN1.Unit = lpSejourParcAuto.UniteLP;
-                                                    eltFactSejourParcAutoN1.Ht = eltFactSejourParcAutoN1.Prix * eltFactSejourParcAutoN1.Qte;
-                                                    eltFactSejourParcAutoN1.Tva = Math.Round((eltFactSejourParcAutoN1.Ht * eltFactSejourParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactSejourParcAutoN1.MT = eltFactSejourParcAutoN1.Ht + eltFactSejourParcAutoN1.Tva;
-                                                    details.Add(eltFactSejourParcAutoN1);
+                                                    if (nbroldsejour >= 9) jourpalier = 9; else jourpalier = 10;
 
-                                                    InvoiceDetails eltFactDeboursPADParcAutoN1 = new InvoiceDetails();
+                                                    if ((dateFin - matchedVehicule.FFVeh.Value).Days <= jourpalier)
+                                                    {
+                                                        oldsejour = eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh).Value;
+                                                        #region niveau 1
+                                                        InvoiceDetails eltFactSejourParcAuto = new InvoiceDetails();
 
-                                                    eltFactDeboursPADParcAutoN1.Prix = lpDeboursPADPenalite.PU1LP.Value - lpDeboursPADPenalite.PU1LP.Value * derogation;
-                                                    eltFactDeboursPADParcAutoN1.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
-                                                    //eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
+                                                        eltFactSejourParcAuto.Prix = lpSejourParcAuto.PU1LP.Value - lpSejourParcAuto.PU1LP.Value * derogation_new;
+                                                        eltFactSejourParcAuto.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
+                                                        eltFactSejourParcAuto.TvaTaux = eltFactSejourParcAuto.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactSejourParcAuto.Qty = dateFin.Date < finAncienSejour ? 0 : ((eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh).Value + oldsejour) <= jourpalier) ? (dateFin - matchedVehicule.FFVeh.Value).Days - (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) + oldsejour) : 0;
+                                                        eltFactSejourParcAuto.Qte = eltFactSejourParcAuto.Qty * coefPoidsVeh;
+                                                        //AH Pénalité de stationnement
+                                                        eltFactSejourParcAuto.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                        eltFactSejourParcAuto.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAuto.Qte)).ToShortDateString();
+                                                        eltFactSejourParcAuto.Unit = lpSejourParcAuto.UniteLP;
+                                                        eltFactSejourParcAuto.Ht = eltFactSejourParcAuto.Prix * eltFactSejourParcAuto.Qte;
+                                                        eltFactSejourParcAuto.Tva = Math.Round((eltFactSejourParcAuto.Ht * eltFactSejourParcAuto.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactSejourParcAuto.MT = eltFactSejourParcAuto.Ht + eltFactSejourParcAuto.Tva;
+                                                        details.Add(eltFactSejourParcAuto);
 
-                                                    eltFactDeboursPADParcAutoN1.Qte = (eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF) < 9) ? 9 - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) : 0;
-                                                    //AH Débours PAD : Pénalité de stationnement 
-                                                    eltFactDeboursPADParcAutoN1.Libelle = articleDeboursPADPenalite.LibArticle + "Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte)).ToShortDateString();
-                                                    eltFactDeboursPADParcAutoN1.Unit = lpDeboursPADPenalite.UniteLP;
-                                                    eltFactDeboursPADParcAutoN1.Ht = eltFactDeboursPADParcAutoN1.Prix * eltFactDeboursPADParcAutoN1.Qte;
-                                                    eltFactDeboursPADParcAutoN1.Tva = Math.Round((eltFactDeboursPADParcAutoN1.Ht * eltFactDeboursPADParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactDeboursPADParcAutoN1.MT = eltFactDeboursPADParcAutoN1.Ht + eltFactDeboursPADParcAutoN1.Tva;
-                                                    details.Add(eltFactDeboursPADParcAutoN1);
+                                                        InvoiceDetails eltFactDeboursPADParcAuto = new InvoiceDetails();
 
-                                                    InvoiceDetails eltFactSejourParcAutoN2 = new InvoiceDetails();
+                                                        eltFactDeboursPADParcAuto.Prix = lpDeboursPADPenalite.PU1LP.Value - lpDeboursPADPenalite.PU1LP.Value * derogation_new;
+                                                        eltFactDeboursPADParcAuto.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA; //TVAEX
+                                                        // eltFactDeboursPADParcAuto.TvaTaux = eltFactDeboursPADParcAuto.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactDeboursPADParcAuto.TvaTaux = eltFactDeboursPADParcAuto.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
 
-                                                    eltFactSejourParcAutoN2.Prix = lpSejourParcAuto.PU2LP.Value - lpSejourParcAuto.PU2LP.Value * derogation;
-                                                    eltFactSejourParcAutoN2.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
-                                                    eltFactSejourParcAutoN2.TvaTaux = eltFactSejourParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactSejourParcAutoN2.Qte = (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) < 20) ? 20 - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU2LP * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) : 0;
-                                                    //AH Pénalité de stationnement
-                                                    eltFactSejourParcAutoN2.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactSejourParcAutoN1.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte)).ToShortDateString();
-                                                    eltFactSejourParcAutoN2.Unit = lpSejourParcAuto.UniteLP;
-                                                    eltFactSejourParcAutoN2.Ht = eltFactSejourParcAutoN2.Prix * eltFactSejourParcAutoN2.Qte;
-                                                    eltFactSejourParcAutoN2.Tva = Math.Round((eltFactSejourParcAutoN2.Ht * eltFactSejourParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactSejourParcAutoN2.MT = eltFactSejourParcAutoN2.Ht + eltFactSejourParcAutoN2.Tva;
-                                                    details.Add(eltFactSejourParcAutoN2);
+                                                        eltFactDeboursPADParcAuto.Qty = dateFin.Date < finAncienSejour ? 0 : ((eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value) + oldsejour) <= jourpalier) ? (dateFin - matchedVehicule.FFVeh.Value).Days - (eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) + oldsejour) : 0;
+                                                        eltFactDeboursPADParcAuto.Qte = eltFactDeboursPADParcAuto.Qty * coefPoidsVeh;
+                                                        //AH Débours PAD : Pénalité de stationnement
+                                                        eltFactDeboursPADParcAuto.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                        eltFactDeboursPADParcAuto.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAuto.Qte)).ToShortDateString();
+                                                        eltFactDeboursPADParcAuto.Unit = lpDeboursPADPenalite.UniteLP;
+                                                        eltFactDeboursPADParcAuto.Ht = eltFactDeboursPADParcAuto.Prix * eltFactDeboursPADParcAuto.Qte;
+                                                        eltFactDeboursPADParcAuto.Tva = Math.Round((eltFactDeboursPADParcAuto.Ht * eltFactDeboursPADParcAuto.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactDeboursPADParcAuto.MT = eltFactDeboursPADParcAuto.Ht + eltFactDeboursPADParcAuto.Tva;
+                                                        details.Add(eltFactDeboursPADParcAuto);
+                                                        #endregion
+                                                    }
+                                                    else if ((dateFin - matchedVehicule.FFVeh.Value).Days <= jourpalier + 20)
+                                                    {
+                                                        oldsejour = eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh).Value;
+                                                        #region niveau 2
+                                                        InvoiceDetails eltFactSejourParcAutoN1 = new InvoiceDetails();
 
-                                                    InvoiceDetails eltFactDeboursPADParcAutoN2 = new InvoiceDetails();
+                                                        eltFactSejourParcAutoN1.Prix = lpSejourParcAuto.PU1LP.Value - lpSejourParcAuto.PU1LP.Value * derogation_new;
+                                                        eltFactSejourParcAutoN1.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
+                                                        eltFactSejourParcAutoN1.TvaTaux = eltFactSejourParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactSejourParcAutoN1.Qty = ((eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh) + oldsejour) < jourpalier) ? jourpalier - (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) + oldsejour) : 0;
+                                                        eltFactSejourParcAutoN1.Qte = eltFactSejourParcAutoN1.Qty * coefPoidsVeh;
+                                                        //AH "Pénalité de stationnement
+                                                        eltFactSejourParcAutoN1.Code = articleSejourParcAuto.CodeArticle.ToString();
 
-                                                    eltFactDeboursPADParcAutoN2.Prix = lpDeboursPADPenalite.PU2LP.Value - lpDeboursPADPenalite.PU2LP.Value * derogation;
-                                                    eltFactDeboursPADParcAutoN2.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
-                                                    // eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
+                                                        eltFactSejourParcAutoN1.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte)).ToShortDateString();
+                                                        eltFactSejourParcAutoN1.Unit = lpSejourParcAuto.UniteLP;
+                                                        eltFactSejourParcAutoN1.Ht = eltFactSejourParcAutoN1.Prix * eltFactSejourParcAutoN1.Qte;
+                                                        eltFactSejourParcAutoN1.Tva = Math.Round((eltFactSejourParcAutoN1.Ht * eltFactSejourParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactSejourParcAutoN1.MT = eltFactSejourParcAutoN1.Ht + eltFactSejourParcAutoN1.Tva;
+                                                        details.Add(eltFactSejourParcAutoN1);
 
-                                                    eltFactDeboursPADParcAutoN2.Qte = (eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) < 20) ? 20 - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU2LP * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) : 0;
-                                                    //AH Débours PAD : Pénalité de stationnement
-                                                    eltFactDeboursPADParcAutoN2.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte)).ToShortDateString();
-                                                    eltFactDeboursPADParcAutoN2.Unit = lpDeboursPADPenalite.UniteLP;
-                                                    eltFactDeboursPADParcAutoN2.Ht = eltFactDeboursPADParcAutoN2.Prix * eltFactDeboursPADParcAutoN2.Qte;
-                                                    eltFactDeboursPADParcAutoN2.Tva = Math.Round((eltFactDeboursPADParcAutoN2.Ht * eltFactDeboursPADParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactDeboursPADParcAutoN2.MT = eltFactDeboursPADParcAutoN2.Ht + eltFactDeboursPADParcAutoN2.Tva;
-                                                    details.Add(eltFactDeboursPADParcAutoN2);
+                                                        InvoiceDetails eltFactDeboursPADParcAutoN1 = new InvoiceDetails();
+
+                                                        eltFactDeboursPADParcAutoN1.Prix = lpDeboursPADPenalite.PU1LP.Value - lpDeboursPADPenalite.PU1LP.Value * derogation_new;
+                                                        eltFactDeboursPADParcAutoN1.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
+                                                        //eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
+
+                                                        eltFactDeboursPADParcAutoN1.Qty = ((eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh) + oldsejour) < jourpalier) ? jourpalier - (eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) + oldsejour) : 0;
+                                                        eltFactDeboursPADParcAutoN1.Qte = eltFactDeboursPADParcAutoN1.Qty * coefPoidsVeh;
+                                                        //AH Débours PAD : Pénalité de stationnement 
+                                                        eltFactDeboursPADParcAutoN1.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                        eltFactDeboursPADParcAutoN1.Libelle = articleDeboursPADPenalite.LibArticle + "Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte)).ToShortDateString();
+                                                        eltFactDeboursPADParcAutoN1.Unit = lpDeboursPADPenalite.UniteLP;
+                                                        eltFactDeboursPADParcAutoN1.Ht = eltFactDeboursPADParcAutoN1.Prix * eltFactDeboursPADParcAutoN1.Qte;
+                                                        eltFactDeboursPADParcAutoN1.Tva = Math.Round((eltFactDeboursPADParcAutoN1.Ht * eltFactDeboursPADParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactDeboursPADParcAutoN1.MT = eltFactDeboursPADParcAutoN1.Ht + eltFactDeboursPADParcAutoN1.Tva;
+                                                        details.Add(eltFactDeboursPADParcAutoN1);
+
+                                                        InvoiceDetails eltFactSejourParcAutoN2 = new InvoiceDetails();
+
+                                                        eltFactSejourParcAutoN2.Prix = lpSejourParcAuto.PU2LP.Value - lpSejourParcAuto.PU2LP.Value * derogation_new;
+                                                        eltFactSejourParcAutoN2.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
+                                                        eltFactSejourParcAutoN2.TvaTaux = eltFactSejourParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactSejourParcAutoN2.Qty = (dateFin - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase.Value == lpSejourParcAuto.PU2LP.Value * (1 - derogation_new) || el.PUEFBase.Value == lpSejourParcAuto.PU2LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltFactSejourParcAutoN1.Qte - eltSejourCalcules.Where(el => el.PUEFBase.Value == lpSejourParcAuto_old.PU2LP.Value * (1 - derogation) || el.PUEFBase.Value == lpSejourParcAuto_old.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value);
+                                                        eltFactSejourParcAutoN2.Qte = eltFactSejourParcAutoN2.Qty * coefPoidsVeh;
+                                                        //AH Pénalité de stationnement
+                                                        eltFactSejourParcAutoN2.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                        eltFactSejourParcAutoN2.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactSejourParcAutoN1.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte)).ToShortDateString();
+                                                        eltFactSejourParcAutoN2.Unit = lpSejourParcAuto.UniteLP;
+                                                        eltFactSejourParcAutoN2.Ht = eltFactSejourParcAutoN2.Prix * eltFactSejourParcAutoN2.Qte;
+                                                        eltFactSejourParcAutoN2.Tva = Math.Round((eltFactSejourParcAutoN2.Ht * eltFactSejourParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactSejourParcAutoN2.MT = eltFactSejourParcAutoN2.Ht + eltFactSejourParcAutoN2.Tva;
+                                                        details.Add(eltFactSejourParcAutoN2);
+
+                                                        InvoiceDetails eltFactDeboursPADParcAutoN2 = new InvoiceDetails();
+
+                                                        eltFactDeboursPADParcAutoN2.Prix = lpDeboursPADPenalite.PU2LP.Value - lpDeboursPADPenalite.PU2LP.Value * derogation_new;
+                                                        eltFactDeboursPADParcAutoN2.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
+                                                        //eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
+
+                                                        eltFactDeboursPADParcAutoN2.Qty = (dateFin - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltFactDeboursPADParcAutoN1.Qte - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite_old.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite_old.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite_old.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite_old.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value);
+                                                        eltFactDeboursPADParcAutoN2.Qte = eltFactDeboursPADParcAutoN2.Qty * coefPoidsVeh;
+                                                        //AH Débours PAD : Pénalité de stationnement
+                                                        eltFactDeboursPADParcAutoN2.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                        eltFactDeboursPADParcAutoN2.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte)).ToShortDateString();
+                                                        eltFactDeboursPADParcAutoN2.Unit = lpDeboursPADPenalite.UniteLP;
+                                                        eltFactDeboursPADParcAutoN2.Ht = eltFactDeboursPADParcAutoN2.Prix * eltFactDeboursPADParcAutoN2.Qte;
+                                                        eltFactDeboursPADParcAutoN2.Tva = Math.Round((eltFactDeboursPADParcAutoN2.Ht * eltFactDeboursPADParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactDeboursPADParcAutoN2.MT = eltFactDeboursPADParcAutoN2.Ht + eltFactDeboursPADParcAutoN2.Tva;
+                                                        details.Add(eltFactDeboursPADParcAutoN2);
+                                                        #endregion
+                                                    }
+                                                    else if ((dateFin - matchedVehicule.FFVeh.Value).Days <= jourpalier + 20 + 30)
+                                                    {
+                                                        oldsejour = eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh).Value;
+
+                                                        #region niveau 3
+                                                        InvoiceDetails eltFactSejourParcAutoN1 = new InvoiceDetails();
+
+                                                        eltFactSejourParcAutoN1.Prix = lpSejourParcAuto.PU1LP.Value - lpSejourParcAuto.PU1LP.Value * derogation_new;
+                                                        eltFactSejourParcAutoN1.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
+                                                        eltFactSejourParcAutoN1.TvaTaux = eltFactSejourParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactSejourParcAutoN1.Qty = ((eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh) + oldsejour) < jourpalier) ? jourpalier - (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) + oldsejour) : 0;
+                                                        eltFactSejourParcAutoN1.Qte = eltFactSejourParcAutoN1.Qty * coefPoidsVeh;
+                                                        //AH "Pénalité de stationnement
+                                                        eltFactSejourParcAutoN1.Code = articleSejourParcAuto.CodeArticle.ToString();
+
+                                                        eltFactSejourParcAutoN1.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte)).ToShortDateString();
+                                                        eltFactSejourParcAutoN1.Unit = lpSejourParcAuto.UniteLP;
+                                                        eltFactSejourParcAutoN1.Ht = eltFactSejourParcAutoN1.Prix * eltFactSejourParcAutoN1.Qte;
+                                                        eltFactSejourParcAutoN1.Tva = Math.Round((eltFactSejourParcAutoN1.Ht * eltFactSejourParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactSejourParcAutoN1.MT = eltFactSejourParcAutoN1.Ht + eltFactSejourParcAutoN1.Tva;
+                                                        if (eltFactSejourParcAutoN1.Qte != 0) details.Add(eltFactSejourParcAutoN1);
+
+                                                        InvoiceDetails eltFactDeboursPADParcAutoN1 = new InvoiceDetails();
+
+                                                        eltFactDeboursPADParcAutoN1.Prix = lpDeboursPADPenalite.PU1LP.Value - lpDeboursPADPenalite.PU1LP.Value * derogation_new;
+                                                        eltFactDeboursPADParcAutoN1.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
+                                                        //eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
+
+                                                        eltFactDeboursPADParcAutoN1.Qty = ((eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh) + oldsejour) < jourpalier) ? jourpalier - (eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) + oldsejour) : 0;
+                                                        eltFactDeboursPADParcAutoN1.Qte = eltFactDeboursPADParcAutoN1.Qty * coefPoidsVeh;
+                                                        //AH Débours PAD : Pénalité de stationnement 
+                                                        eltFactDeboursPADParcAutoN1.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                        eltFactDeboursPADParcAutoN1.Libelle = articleDeboursPADPenalite.LibArticle + "Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte)).ToShortDateString();
+                                                        eltFactDeboursPADParcAutoN1.Unit = lpDeboursPADPenalite.UniteLP;
+                                                        eltFactDeboursPADParcAutoN1.Ht = eltFactDeboursPADParcAutoN1.Prix * eltFactDeboursPADParcAutoN1.Qte;
+                                                        eltFactDeboursPADParcAutoN1.Tva = Math.Round((eltFactDeboursPADParcAutoN1.Ht * eltFactDeboursPADParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactDeboursPADParcAutoN1.MT = eltFactDeboursPADParcAutoN1.Ht + eltFactDeboursPADParcAutoN1.Tva;
+                                                        if (eltFactDeboursPADParcAutoN1.Qte != 0) details.Add(eltFactDeboursPADParcAutoN1);
+
+                                                        InvoiceDetails eltFactSejourParcAutoN2 = new InvoiceDetails();
+
+                                                        eltFactSejourParcAutoN2.Prix = lpSejourParcAuto.PU2LP.Value - lpSejourParcAuto.PU2LP.Value * derogation_new;
+                                                        eltFactSejourParcAutoN2.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
+                                                        eltFactSejourParcAutoN2.TvaTaux = eltFactSejourParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactSejourParcAutoN2.Qty = ((eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU2LP * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU2LP * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh).Value + eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU2LP * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU2LP * 1.6 * (1 - derogation)).Sum(el => el.JrVeh).Value) < 20) ? 20 - (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU2LP * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU2LP * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh).Value + eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU2LP * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU2LP * 1.6 * (1 - derogation)).Sum(el => el.JrVeh).Value) : 0;
+                                                        eltFactSejourParcAutoN2.Qte = eltFactSejourParcAutoN2.Qty * coefPoidsVeh;
+                                                        //AH Pénalité de stationnement
+                                                        eltFactSejourParcAutoN2.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                        eltFactSejourParcAutoN2.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactSejourParcAutoN1.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte)).ToShortDateString();
+                                                        eltFactSejourParcAutoN2.Unit = lpSejourParcAuto.UniteLP;
+                                                        eltFactSejourParcAutoN2.Ht = eltFactSejourParcAutoN2.Prix * eltFactSejourParcAutoN2.Qte;
+                                                        eltFactSejourParcAutoN2.Tva = Math.Round((eltFactSejourParcAutoN2.Ht * eltFactSejourParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactSejourParcAutoN2.MT = eltFactSejourParcAutoN2.Ht + eltFactSejourParcAutoN2.Tva;
+
+                                                        if (eltFactSejourParcAutoN2.Qte != 0) details.Add(eltFactSejourParcAutoN2);
+
+                                                        InvoiceDetails eltFactDeboursPADParcAutoN2 = new InvoiceDetails();
+
+                                                        eltFactDeboursPADParcAutoN2.Prix = lpDeboursPADPenalite.PU2LP.Value - lpDeboursPADPenalite.PU2LP.Value * derogation_new;
+                                                        eltFactDeboursPADParcAutoN2.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
+                                                        //eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
+
+                                                        eltFactDeboursPADParcAutoN2.Qty = ((eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU2LP * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU2LP * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh).Value + eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite_old.PU2LP * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite_old.PU2LP * 1.6 * (1 - derogation)).Sum(el => el.JrVeh).Value) < 20) ? 20 - (eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU2LP * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU2LP * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh).Value + eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite_old.PU2LP * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite_old.PU2LP * 1.6 * (1 - derogation)).Sum(el => el.JrVeh).Value) : 0;
+                                                        eltFactDeboursPADParcAutoN2.Qte = eltFactDeboursPADParcAutoN2.Qty * coefPoidsVeh;
+                                                        //AH Débours PAD : Pénalité de stationnement
+                                                        eltFactDeboursPADParcAutoN2.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                        eltFactDeboursPADParcAutoN2.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte)).ToShortDateString();
+                                                        eltFactDeboursPADParcAutoN2.Unit = lpDeboursPADPenalite.UniteLP;
+                                                        eltFactDeboursPADParcAutoN2.Ht = eltFactDeboursPADParcAutoN2.Prix * eltFactDeboursPADParcAutoN2.Qte;
+                                                        eltFactDeboursPADParcAutoN2.Tva = Math.Round((eltFactDeboursPADParcAutoN2.Ht * eltFactDeboursPADParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactDeboursPADParcAutoN2.MT = eltFactDeboursPADParcAutoN2.Ht + eltFactDeboursPADParcAutoN2.Tva;
+                                                        if (eltFactDeboursPADParcAutoN2.Qte != 0) details.Add(eltFactDeboursPADParcAutoN2);
 
 
+                                                        InvoiceDetails eltFactSejourParcAutoN3 = new InvoiceDetails();
 
-                                                    InvoiceDetails eltFactSejourParcAutoN3 = new InvoiceDetails();
+                                                        eltFactSejourParcAutoN3.Prix = lpSejourParcAuto.PU3LP.Value - lpSejourParcAuto.PU3LP.Value * derogation_new;
+                                                        eltFactSejourParcAutoN3.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
+                                                        eltFactSejourParcAutoN3.TvaTaux = eltFactSejourParcAutoN3.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactSejourParcAutoN3.Qty = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU3LP.Value * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU3LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU2LP.Value * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU2LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltFactSejourParcAutoN1.Qte - eltFactSejourParcAutoN2.Qte - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU3LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU3LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value);
+                                                        eltFactSejourParcAutoN3.Qte = eltFactSejourParcAutoN3.Qty * coefPoidsVeh;
+                                                        //AH Pénalité de stationnement
+                                                        eltFactSejourParcAutoN3.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                        eltFactSejourParcAutoN3.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte + eltFactSejourParcAutoN3.Qte)).ToShortDateString();
+                                                        eltFactSejourParcAutoN3.Unit = lpSejourParcAuto.UniteLP;
+                                                        eltFactSejourParcAutoN3.Ht = eltFactSejourParcAutoN3.Prix * eltFactSejourParcAutoN3.Qte;
+                                                        eltFactSejourParcAutoN3.Tva = Math.Round((eltFactSejourParcAutoN3.Ht * eltFactSejourParcAutoN3.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactSejourParcAutoN3.MT = eltFactSejourParcAutoN3.Ht + eltFactSejourParcAutoN3.Tva;
+                                                        details.Add(eltFactSejourParcAutoN3);
 
-                                                    eltFactSejourParcAutoN3.Prix = lpSejourParcAuto.PU3LP.Value - lpSejourParcAuto.PU3LP.Value * derogation;
-                                                    eltFactSejourParcAutoN3.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
-                                                    eltFactSejourParcAutoN3.TvaTaux = eltFactSejourParcAutoN3.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactSejourParcAutoN3.Qte = (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU3LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU3LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) < 30) ? 30 - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU3LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU3LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) : 0;
-                                                    //AH Pénalité de stationnement 
-                                                    eltFactSejourParcAutoN3.Libelle = articleSejourParcAuto.LibArticle + "Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte + eltFactSejourParcAutoN3.Qte)).ToShortDateString();
-                                                    eltFactSejourParcAutoN3.Unit = lpSejourParcAuto.UniteLP;
-                                                    eltFactSejourParcAutoN3.Ht = eltFactSejourParcAutoN3.Prix * eltFactSejourParcAutoN3.Qte;
-                                                    eltFactSejourParcAutoN3.Tva = Math.Round((eltFactSejourParcAutoN3.Ht * eltFactSejourParcAutoN3.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactSejourParcAutoN3.MT = eltFactSejourParcAutoN3.Ht + eltFactSejourParcAutoN3.Tva;
-                                                    details.Add(eltFactSejourParcAutoN3); ;
+                                                        InvoiceDetails eltFactDeboursPADParcAutoN3 = new InvoiceDetails();
 
-                                                    InvoiceDetails eltFactDeboursPADParcAutoN3 = new InvoiceDetails();
+                                                        eltFactDeboursPADParcAutoN3.Prix = lpDeboursPADPenalite.PU3LP.Value - lpDeboursPADPenalite.PU3LP.Value * derogation_new;
+                                                        eltFactDeboursPADParcAutoN3.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
+                                                        // eltFactDeboursPADParcAutoN3.TvaTaux = eltFactDeboursPADParcAutoN3.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactDeboursPADParcAutoN3.TvaTaux = eltFactDeboursPADParcAutoN3.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
 
-                                                    eltFactDeboursPADParcAutoN3.Prix = lpDeboursPADPenalite.PU3LP.Value - lpDeboursPADPenalite.PU3LP.Value * derogation;
-                                                    eltFactDeboursPADParcAutoN3.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
-                                                    //eltFactDeboursPADParcAutoN3.TvaTaux = eltFactDeboursPADParcAutoN3.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactDeboursPADParcAutoN3.TvaTaux = eltFactDeboursPADParcAutoN3.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
+                                                        eltFactDeboursPADParcAutoN3.Qty = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU3LP.Value * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU3LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltFactDeboursPADParcAutoN1.Qte - eltFactDeboursPADParcAutoN2.Qte - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite_old.PU3LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite_old.PU3LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite_old.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite_old.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite_old.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite_old.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value);
+                                                        eltFactDeboursPADParcAutoN3.Qte = eltFactDeboursPADParcAutoN3.Qty * coefPoidsVeh;
+                                                        //AH Débours PAD : Pénalité de stationnement 
+                                                        eltFactDeboursPADParcAutoN3.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                        eltFactDeboursPADParcAutoN3.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte + eltFactDeboursPADParcAutoN3.Qte)).ToShortDateString();
+                                                        eltFactDeboursPADParcAutoN3.Unit = lpDeboursPADPenalite.UniteLP;
+                                                        eltFactDeboursPADParcAutoN3.Ht = eltFactDeboursPADParcAutoN3.Prix * eltFactDeboursPADParcAutoN3.Qte;
+                                                        eltFactDeboursPADParcAutoN3.Tva = Math.Round((eltFactDeboursPADParcAutoN3.Ht * eltFactDeboursPADParcAutoN3.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactDeboursPADParcAutoN3.MT = eltFactDeboursPADParcAutoN3.Ht + eltFactDeboursPADParcAutoN3.Tva;
+                                                        details.Add(eltFactDeboursPADParcAutoN3);
 
-                                                    eltFactDeboursPADParcAutoN3.Qte = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU3LP * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU3LP * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltFactDeboursPADParcAutoN1.Qte - eltFactDeboursPADParcAutoN2.Qte;
-                                                    //AH Débours PAD : Pénalité de stationnement 
-                                                    eltFactDeboursPADParcAutoN3.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte + eltFactDeboursPADParcAutoN3.Qte)).ToShortDateString();
-                                                    eltFactDeboursPADParcAutoN3.Unit = lpDeboursPADPenalite.UniteLP;
-                                                    eltFactDeboursPADParcAutoN3.Ht = eltFactDeboursPADParcAutoN3.Prix * eltFactDeboursPADParcAutoN3.Qte;
-                                                    eltFactDeboursPADParcAutoN3.Tva = Math.Round((eltFactDeboursPADParcAutoN3.Ht * eltFactDeboursPADParcAutoN3.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactDeboursPADParcAutoN3.MT = eltFactDeboursPADParcAutoN3.Ht + eltFactDeboursPADParcAutoN3.Tva;
-                                                    details.Add(eltFactDeboursPADParcAutoN3);
+                                                        #endregion
+                                                    }
+                                                    else
+                                                    {
+                                                        oldsejour = eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh).Value;
 
-                                                    InvoiceDetails eltFactSejourParcAutoN4 = new InvoiceDetails();
+                                                        #region niveau 4
+                                                        InvoiceDetails eltFactSejourParcAutoN1 = new InvoiceDetails();
 
-                                                    eltFactSejourParcAutoN4.Prix = lpSejourParcAuto.PU4LP.Value - lpSejourParcAuto.PU4LP.Value * derogation;
-                                                    eltFactSejourParcAutoN4.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
-                                                    eltFactSejourParcAutoN4.TvaTaux = eltFactSejourParcAutoN4.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactSejourParcAutoN4.Qte = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU4LP * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU4LP * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU3LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU3LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltFactSejourParcAutoN1.Qte - eltFactSejourParcAutoN2.Qte - eltFactSejourParcAutoN3.Qte;
-                                                    //AH Pénalité de stationnement
-                                                    eltFactSejourParcAutoN4.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte + eltFactSejourParcAutoN3.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte + eltFactSejourParcAutoN3.Qte + eltFactSejourParcAutoN4.Qte)).ToShortDateString();
-                                                    eltFactSejourParcAutoN4.Unit = lpSejourParcAuto.UniteLP;
-                                                    eltFactSejourParcAutoN4.Ht = eltFactSejourParcAutoN4.Prix * eltFactSejourParcAutoN4.Qte;
-                                                    eltFactSejourParcAutoN4.Tva = Math.Round((eltFactSejourParcAutoN4.Ht * eltFactSejourParcAutoN4.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactSejourParcAutoN4.MT = eltFactSejourParcAutoN4.Ht + eltFactSejourParcAutoN4.Tva;
-                                                    details.Add(eltFactSejourParcAutoN4);
+                                                        eltFactSejourParcAutoN1.Prix = lpSejourParcAuto.PU1LP.Value - lpSejourParcAuto.PU1LP.Value * derogation_new;
+                                                        eltFactSejourParcAutoN1.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
+                                                        eltFactSejourParcAutoN1.TvaTaux = eltFactSejourParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactSejourParcAutoN1.Qty = ((eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh) + oldsejour) < jourpalier) ? jourpalier - (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) + oldsejour) : 0;
+                                                        eltFactSejourParcAutoN1.Qte = eltFactSejourParcAutoN1.Qty * coefPoidsVeh;
+                                                        //AH "Pénalité de stationnement
+                                                        eltFactSejourParcAutoN1.Code = articleSejourParcAuto.CodeArticle.ToString();
 
-                                                    InvoiceDetails eltFactDeboursPADParcAutoN4 = new InvoiceDetails();
+                                                        eltFactSejourParcAutoN1.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte)).ToShortDateString();
+                                                        eltFactSejourParcAutoN1.Unit = lpSejourParcAuto.UniteLP;
+                                                        eltFactSejourParcAutoN1.Ht = eltFactSejourParcAutoN1.Prix * eltFactSejourParcAutoN1.Qte;
+                                                        eltFactSejourParcAutoN1.Tva = Math.Round((eltFactSejourParcAutoN1.Ht * eltFactSejourParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactSejourParcAutoN1.MT = eltFactSejourParcAutoN1.Ht + eltFactSejourParcAutoN1.Tva;
+                                                        if (eltFactSejourParcAutoN1.Qte != 0) details.Add(eltFactSejourParcAutoN1);
 
-                                                    eltFactDeboursPADParcAutoN4.Prix = lpDeboursPADPenalite.PU4LP.Value - lpDeboursPADPenalite.PU4LP.Value * derogation;
-                                                    eltFactDeboursPADParcAutoN4.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
-                                                    //eltFactDeboursPADParcAutoN4.TvaTaux = eltFactDeboursPADParcAutoN4.TvaCode == "TVAEX" ? 0 : 0.1925f;
-                                                    eltFactDeboursPADParcAutoN4.TvaTaux = eltFactDeboursPADParcAutoN4.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
+                                                        InvoiceDetails eltFactDeboursPADParcAutoN1 = new InvoiceDetails();
 
-                                                    eltFactDeboursPADParcAutoN4.Qte = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU4LP * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU4LP * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU3LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU3LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.QTEEF.Value) - eltFactDeboursPADParcAutoN1.Qte - eltFactDeboursPADParcAutoN2.Qte - eltFactDeboursPADParcAutoN3.Qte;
-                                                    //AH Débours PAD : Pénalité de stationnement
-                                                    eltFactDeboursPADParcAutoN4.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte + eltFactDeboursPADParcAutoN3.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte + eltFactDeboursPADParcAutoN3.Qte + eltFactDeboursPADParcAutoN4.Qte)).ToShortDateString();
-                                                    eltFactDeboursPADParcAutoN4.Unit = lpDeboursPADPenalite.UniteLP;
-                                                    eltFactDeboursPADParcAutoN4.Ht = eltFactDeboursPADParcAutoN4.Prix * eltFactDeboursPADParcAutoN4.Qte;
-                                                    eltFactDeboursPADParcAutoN4.Tva = Math.Round((eltFactDeboursPADParcAutoN4.Ht * eltFactDeboursPADParcAutoN4.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
-                                                    eltFactDeboursPADParcAutoN4.MT = eltFactDeboursPADParcAutoN4.Ht + eltFactDeboursPADParcAutoN4.Tva;
-                                                    details.Add(eltFactDeboursPADParcAutoN4);
+                                                        eltFactDeboursPADParcAutoN1.Prix = lpDeboursPADPenalite.PU1LP.Value - lpDeboursPADPenalite.PU1LP.Value * derogation_new;
+                                                        eltFactDeboursPADParcAutoN1.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
+                                                        //eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactDeboursPADParcAutoN1.TvaTaux = eltFactDeboursPADParcAutoN1.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
 
-                                                    #endregion
+                                                        eltFactDeboursPADParcAutoN1.Qty = ((eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh) + oldsejour) < jourpalier) ? jourpalier - (eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) + oldsejour) : 0;
+                                                        eltFactDeboursPADParcAutoN1.Qte = eltFactDeboursPADParcAutoN1.Qty * coefPoidsVeh;
+                                                        //AH Débours PAD : Pénalité de stationnement 
+                                                        eltFactDeboursPADParcAutoN1.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                        eltFactDeboursPADParcAutoN1.Libelle = articleDeboursPADPenalite.LibArticle + "Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte)).ToShortDateString();
+                                                        eltFactDeboursPADParcAutoN1.Unit = lpDeboursPADPenalite.UniteLP;
+                                                        eltFactDeboursPADParcAutoN1.Ht = eltFactDeboursPADParcAutoN1.Prix * eltFactDeboursPADParcAutoN1.Qte;
+                                                        eltFactDeboursPADParcAutoN1.Tva = Math.Round((eltFactDeboursPADParcAutoN1.Ht * eltFactDeboursPADParcAutoN1.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactDeboursPADParcAutoN1.MT = eltFactDeboursPADParcAutoN1.Ht + eltFactDeboursPADParcAutoN1.Tva;
+                                                        if (eltFactDeboursPADParcAutoN1.Qte != 0) details.Add(eltFactDeboursPADParcAutoN1);
+
+                                                        InvoiceDetails eltFactSejourParcAutoN2 = new InvoiceDetails();
+
+                                                        eltFactSejourParcAutoN2.Prix = lpSejourParcAuto.PU2LP.Value - lpSejourParcAuto.PU2LP.Value * derogation_new;
+                                                        eltFactSejourParcAutoN2.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
+                                                        eltFactSejourParcAutoN2.TvaTaux = eltFactSejourParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactSejourParcAutoN2.Qty = ((eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU2LP * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU2LP * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh).Value + eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU2LP * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU2LP * 1.6 * (1 - derogation)).Sum(el => el.JrVeh).Value) < 20) ? 20 - (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU2LP * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU2LP * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh).Value + eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU2LP * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU2LP * 1.6 * (1 - derogation)).Sum(el => el.JrVeh).Value) : 0;
+                                                        eltFactSejourParcAutoN2.Qte = eltFactSejourParcAutoN2.Qty * coefPoidsVeh;
+                                                        //AH Pénalité de stationnement
+                                                        eltFactSejourParcAutoN2.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                        eltFactSejourParcAutoN2.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactSejourParcAutoN1.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte)).ToShortDateString();
+                                                        eltFactSejourParcAutoN2.Unit = lpSejourParcAuto.UniteLP;
+                                                        eltFactSejourParcAutoN2.Ht = eltFactSejourParcAutoN2.Prix * eltFactSejourParcAutoN2.Qte;
+                                                        eltFactSejourParcAutoN2.Tva = Math.Round((eltFactSejourParcAutoN2.Ht * eltFactSejourParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactSejourParcAutoN2.MT = eltFactSejourParcAutoN2.Ht + eltFactSejourParcAutoN2.Tva;
+
+                                                        if (eltFactSejourParcAutoN2.Qte != 0) details.Add(eltFactSejourParcAutoN2);
+
+                                                        InvoiceDetails eltFactDeboursPADParcAutoN2 = new InvoiceDetails();
+
+                                                        eltFactDeboursPADParcAutoN2.Prix = lpDeboursPADPenalite.PU2LP.Value - lpDeboursPADPenalite.PU2LP.Value * derogation_new;
+                                                        eltFactDeboursPADParcAutoN2.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
+                                                        //eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactDeboursPADParcAutoN2.TvaTaux = eltFactDeboursPADParcAutoN2.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
+
+                                                        eltFactDeboursPADParcAutoN2.Qty = ((eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU2LP * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU2LP * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh).Value + eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite_old.PU2LP * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite_old.PU2LP * 1.6 * (1 - derogation)).Sum(el => el.JrVeh).Value) < 20) ? 20 - (eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU2LP * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU2LP * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh).Value + eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite_old.PU2LP * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite_old.PU2LP * 1.6 * (1 - derogation)).Sum(el => el.JrVeh).Value) : 0;
+                                                        eltFactDeboursPADParcAutoN2.Qte = eltFactDeboursPADParcAutoN2.Qty * coefPoidsVeh;
+                                                        //AH Débours PAD : Pénalité de stationnement
+                                                        eltFactDeboursPADParcAutoN2.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                        eltFactDeboursPADParcAutoN2.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte)).ToShortDateString();
+                                                        eltFactDeboursPADParcAutoN2.Unit = lpDeboursPADPenalite.UniteLP;
+                                                        eltFactDeboursPADParcAutoN2.Ht = eltFactDeboursPADParcAutoN2.Prix * eltFactDeboursPADParcAutoN2.Qte;
+                                                        eltFactDeboursPADParcAutoN2.Tva = Math.Round((eltFactDeboursPADParcAutoN2.Ht * eltFactDeboursPADParcAutoN2.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactDeboursPADParcAutoN2.MT = eltFactDeboursPADParcAutoN2.Ht + eltFactDeboursPADParcAutoN2.Tva;
+                                                        if (eltFactDeboursPADParcAutoN2.Qte != 0) details.Add(eltFactDeboursPADParcAutoN2);
+
+
+                                                        InvoiceDetails eltFactSejourParcAutoN3 = new InvoiceDetails();
+
+                                                        eltFactSejourParcAutoN3.Prix = lpSejourParcAuto.PU3LP.Value - lpSejourParcAuto.PU3LP.Value * derogation_new;
+                                                        eltFactSejourParcAutoN3.TvaCode = con.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
+                                                        eltFactSejourParcAutoN3.TvaTaux = eltFactSejourParcAutoN3.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactSejourParcAutoN3.Qty = ((eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU3LP * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU3LP * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh).Value + eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU3LP * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU3LP * 1.6 * (1 - derogation)).Sum(el => el.JrVeh).Value) < 30) ? 30 - (eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU3LP * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU3LP * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh).Value + eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU3LP * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU3LP * 1.6 * (1 - derogation)).Sum(el => el.JrVeh).Value) : 0;
+                                                        eltFactSejourParcAutoN3.Qte = eltFactSejourParcAutoN3.Qty * coefPoidsVeh;
+                                                        //AH Pénalité de stationnement
+                                                        eltFactSejourParcAutoN3.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                        eltFactSejourParcAutoN3.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte + eltFactSejourParcAutoN3.Qte)).ToShortDateString();
+                                                        eltFactSejourParcAutoN3.Unit = lpSejourParcAuto.UniteLP;
+                                                        eltFactSejourParcAutoN3.Ht = eltFactSejourParcAutoN3.Prix * eltFactSejourParcAutoN3.Qte;
+                                                        eltFactSejourParcAutoN3.Tva = Math.Round((eltFactSejourParcAutoN3.Ht * eltFactSejourParcAutoN3.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactSejourParcAutoN3.MT = eltFactSejourParcAutoN3.Ht + eltFactSejourParcAutoN3.Tva;
+                                                        if (eltFactSejourParcAutoN3.Qte != 0) details.Add(eltFactSejourParcAutoN3);
+
+                                                        InvoiceDetails eltFactDeboursPADParcAutoN3 = new InvoiceDetails();
+
+                                                        eltFactDeboursPADParcAutoN3.Prix = lpDeboursPADPenalite.PU3LP.Value - lpDeboursPADPenalite.PU3LP.Value * derogation_new;
+                                                        eltFactDeboursPADParcAutoN3.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
+                                                        // eltFactDeboursPADParcAutoN3.TvaTaux = eltFactDeboursPADParcAutoN3.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactDeboursPADParcAutoN3.TvaTaux = eltFactDeboursPADParcAutoN3.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
+
+                                                        eltFactDeboursPADParcAutoN3.Qty = ((eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU3LP * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU3LP * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh).Value + eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite_old.PU3LP * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite_old.PU3LP * 1.6 * (1 - derogation)).Sum(el => el.JrVeh).Value) < 30) ? 30 - (eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU3LP * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU3LP * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh).Value + eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite_old.PU3LP * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite_old.PU3LP * 1.6 * (1 - derogation)).Sum(el => el.JrVeh).Value) : 0;
+                                                        eltFactDeboursPADParcAutoN3.Qte = eltFactDeboursPADParcAutoN3.Qty * coefPoidsVeh;
+                                                        //AH Débours PAD : Pénalité de stationnement 
+                                                        eltFactDeboursPADParcAutoN3.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                        eltFactDeboursPADParcAutoN3.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte + eltFactDeboursPADParcAutoN3.Qte)).ToShortDateString();
+                                                        eltFactDeboursPADParcAutoN3.Unit = lpDeboursPADPenalite.UniteLP;
+                                                        eltFactDeboursPADParcAutoN3.Ht = eltFactDeboursPADParcAutoN3.Prix * eltFactDeboursPADParcAutoN3.Qte;
+                                                        eltFactDeboursPADParcAutoN3.Tva = Math.Round((eltFactDeboursPADParcAutoN3.Ht * eltFactDeboursPADParcAutoN3.TvaTaux), 0, MidpointRounding.AwayFromZero);
+                                                        eltFactDeboursPADParcAutoN3.MT = eltFactDeboursPADParcAutoN3.Ht + eltFactDeboursPADParcAutoN3.Tva;
+                                                        if (eltFactDeboursPADParcAutoN3.Qte != 0) details.Add(eltFactDeboursPADParcAutoN3);
+
+                                                        InvoiceDetails eltFactSejourParcAutoN4 = new InvoiceDetails();
+
+                                                        eltFactSejourParcAutoN4.Prix = lpSejourParcAuto.PU4LP.Value - lpSejourParcAuto.PU4LP.Value * derogation_new;
+                                                        eltFactSejourParcAutoN4.TvaCode = matchedVehicule.CONNAISSEMENT.BLIL == "Y" ? "TVAEX" : (con.CodeTVA == "TVAEX" ? "TVAEX" : con.CLIENT.CodeTVA);
+                                                        eltFactSejourParcAutoN4.TvaTaux = eltFactSejourParcAutoN4.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactSejourParcAutoN4.Qty = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU4LP * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU4LP * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU3LP.Value * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU3LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU2LP.Value * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU2LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpSejourParcAuto.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltFactSejourParcAutoN1.Qte - eltFactSejourParcAutoN2.Qte - eltFactSejourParcAutoN3.Qte - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU4LP * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU4LP * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU3LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU3LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpSejourParcAuto_old.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpSejourParcAuto_old.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value);
+                                                        eltFactSejourParcAutoN4.Qte = eltFactSejourParcAutoN4.Qty * coefPoidsVeh;
+                                                        //AH Pénalité de stationnement
+                                                        eltFactSejourParcAutoN4.Code = articleSejourParcAuto.CodeArticle.ToString();
+                                                        eltFactSejourParcAutoN4.Libelle = articleSejourParcAuto.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte + eltFactSejourParcAutoN3.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactSejourParcAutoN1.Qte + eltFactSejourParcAutoN2.Qte + eltFactSejourParcAutoN3.Qte + eltFactSejourParcAutoN4.Qte)).ToShortDateString();
+                                                        eltFactSejourParcAutoN4.Unit = lpSejourParcAuto.UniteLP;
+                                                        eltFactSejourParcAutoN4.Ht = eltFactSejourParcAutoN4.Prix * eltFactSejourParcAutoN4.Qte;
+                                                        eltFactSejourParcAutoN4.Tva = Math.Round((eltFactSejourParcAutoN4.Ht * eltFactSejourParcAutoN4.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactSejourParcAutoN4.MT = eltFactSejourParcAutoN4.Ht + eltFactSejourParcAutoN4.Tva;
+                                                        details.Add(eltFactSejourParcAutoN4);
+
+                                                        InvoiceDetails eltFactDeboursPADParcAutoN4 = new InvoiceDetails();
+
+                                                        eltFactDeboursPADParcAutoN4.Prix = lpDeboursPADPenalite.PU4LP.Value - lpDeboursPADPenalite.PU4LP.Value * derogation_new;
+                                                        eltFactDeboursPADParcAutoN4.TvaCode = lpDeboursPADPenalite.ARTICLE.CodeTVA;//TVAEX
+                                                        // eltFactDeboursPADParcAutoN4.TvaTaux = eltFactDeboursPADParcAutoN4.TvaCode == "TVAEX" ? 0 : 0.1925f;
+                                                        eltFactDeboursPADParcAutoN4.TvaTaux = eltFactDeboursPADParcAutoN4.TvaCode == "TVAEX" ? 0 : con.CodeTVA == "TVAEX" ? 0 : (con.CLIENT.CodeTVA == "TVAEX" ? 0 : 0.1925f);
+
+                                                        eltFactDeboursPADParcAutoN4.Qty = (dateFin.Date - matchedVehicule.FFVeh.Value).Days - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU4LP * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU4LP * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU3LP.Value * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU3LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU2LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * (1 - derogation_new) || el.PUEFBase == lpDeboursPADPenalite.PU1LP.Value * 1.6 * (1 - derogation_new)).Sum(el => el.JrVeh.Value) - eltFactDeboursPADParcAutoN1.Qte - eltFactDeboursPADParcAutoN2.Qte - eltFactDeboursPADParcAutoN3.Qte - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite_old.PU4LP * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite_old.PU4LP * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite_old.PU3LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite_old.PU3LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite_old.PU2LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite_old.PU2LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value) - eltSejourCalcules.Where(el => el.PUEFBase == lpDeboursPADPenalite_old.PU1LP.Value * (1 - derogation) || el.PUEFBase == lpDeboursPADPenalite_old.PU1LP.Value * 1.6 * (1 - derogation)).Sum(el => el.JrVeh.Value);
+                                                        eltFactDeboursPADParcAutoN4.Qte = eltFactDeboursPADParcAutoN4.Qty * coefPoidsVeh;
+                                                        eltFactDeboursPADParcAutoN4.Code = articleDeboursPADPenalite.CodeArticle.ToString();
+                                                        //AH Débours PAD : Pénalité de stationnement
+                                                        eltFactDeboursPADParcAutoN4.Libelle = articleDeboursPADPenalite.LibArticle + " Chassis N° " + matchedVehicule.NumChassis + " : " + finAncienSejour.AddDays(1 + Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte + eltFactDeboursPADParcAutoN3.Qte)).ToShortDateString() + " - " + finAncienSejour.AddDays(Convert.ToInt32(eltFactDeboursPADParcAutoN1.Qte + eltFactDeboursPADParcAutoN2.Qte + eltFactDeboursPADParcAutoN3.Qte + eltFactDeboursPADParcAutoN4.Qte)).ToShortDateString();
+                                                        eltFactDeboursPADParcAutoN4.Unit = lpDeboursPADPenalite.UniteLP;
+                                                        eltFactDeboursPADParcAutoN4.Ht = eltFactDeboursPADParcAutoN4.Prix * eltFactDeboursPADParcAutoN4.Qte;
+                                                        eltFactDeboursPADParcAutoN4.Tva = Math.Round((eltFactDeboursPADParcAutoN4.Ht * eltFactDeboursPADParcAutoN4.TvaTaux), 0, MidpointRounding.AwayFromZero); ;
+                                                        eltFactDeboursPADParcAutoN4.MT = eltFactDeboursPADParcAutoN4.Ht + eltFactDeboursPADParcAutoN4.Tva;
+                                                        details.Add(eltFactDeboursPADParcAutoN4);
+
+                                                        #endregion
+                                                    }
                                                 }
                                             }
 
                                             #endregion
+                                        
                                         }
+
 
                                         // dcAcc.SubmitChanges();
 
@@ -1928,10 +2219,10 @@ namespace VSOM_API.Controllers
 
                     #region enregistrement quodation valide et envoie de mail team socomar
                     //verifie si la validation correspond a l'existant
-
+                    
                     var req = new requetes
                     {
-                        ETAT = "Pending",
+                        ETAT = owner== 2 ? "Pending" : "Processing",
                         ID_QUOTATION = int.Parse(tok),
                         IDCOMPTES = owner,
                         LIBELLE = " Quotation " + tok + " sur BL " + bl + " pour stationnement au " + date,
@@ -1940,8 +2231,7 @@ namespace VSOM_API.Controllers
                     //string email 
                     using (var ctx = new RM_VSOMEntities1())
                     {
-                        //TODO: verifie sil y a une quotation deja encours et non valide
-
+                        //TODO: verifie sil y a une quotation deja encours et non valide 
 
                         quotation quot = ctx.quotation.Where(s => s.ID == req.ID_QUOTATION && s.COMPTES_ID == owner && s.STATUT == "Pending").FirstOrDefault<quotation>();
                         if (quot != null)
@@ -1993,11 +2283,38 @@ namespace VSOM_API.Controllers
 
                         QuotationInvoice qi = new QuotationInvoice();
 
-                        qi.HT = details.Sum(e => e.Ht) + pendingElmt.Sum(e => e.Ht);
-                        qi.TVA = details.Sum(e => e.Tva) + pendingElmt.Sum(e => e.Tva);
-                        qi.MT = details.Sum(e => e.MT) + pendingElmt.Sum(e => e.MT);
-                        qi.Lignes = details;
-                        qi.OLignes = pendingElmt;
+                        qi.HT = String.Format("{0:N0} XAF", (details.Sum(e => e.Ht) + pendingElmt.Sum(e => e.Ht)) );
+                        qi.TVA = String.Format("{0:N0} XAF", (details.Sum(e => e.Tva) + pendingElmt.Sum(e => e.Tva)) );
+                        qi.MT = String.Format("{0:N0} XAF", (details.Sum(e => e.MT) + pendingElmt.Sum(e => e.MT)) );
+                        qi.Lignes = (from  m in details where m.Qte!=0 select m).ToList();
+                        qi.OLignes = (from m in pendingElmt where m.Qte != 0 select m).ToList();
+
+                        if (idclient == 1)//separation concerne uniquement client particulier
+                        {
+                            List<InvoiceDetails> id = new List<InvoiceDetails>();
+                            id.AddRange(details);
+                            id.AddRange(pendingElmt);
+
+                            List<string> fmlst = new List<string>(); fmlst.Add("1601"); fmlst.Add("2101"); fmlst.Add("1703"); fmlst.Add("1702"); fmlst.Add("1701"); fmlst.Add("1820");
+                            qi.FMLignes = (from m in id where fmlst.Contains(m.Code) select m).ToList();
+                            qi.FMHT = String.Format("{0:N0} XAF", qi.FMLignes.Sum(e => e.Ht)); ;
+                            qi.FMTVA = String.Format("{0:N0} XAF", qi.FMLignes.Sum(e => e.Tva)) ;
+                            qi.FMMT = String.Format("{0:N0} XAF", qi.FMLignes.Sum(e => e.MT));
+
+                            List<string> slst = new List<string>(); slst.Add("1801");  slst.Add("1815");
+                            qi.SLignes = (from m in id where slst.Contains(m.Code) select m).ToList();
+                            qi.SLHT = String.Format("{0:N0} XAF", qi.SLignes.Sum(e => e.Ht));
+                            qi.SLTVA = String.Format("{0:N0} XAF", qi.SLignes.Sum(e => e.Tva));
+                            qi.SLMT =String.Format("{0:N0} XAF",  qi.SLignes.Sum(e => e.MT));
+
+                            foreach (InvoiceDetails ids in qi.FMLignes) id.Remove(ids);
+                            foreach (InvoiceDetails ids in qi.SLignes) id.Remove(ids);
+                            qi.DTLignes = id;
+                            qi.DTHT = String.Format("{0:N0} XAF", qi.DTLignes.Sum(e => e.Ht));
+                            qi.DTTVA = String.Format("{0:N0} XAF", qi.DTLignes.Sum(e => e.Tva));
+                            qi.DTMT = String.Format("{0:N0} XAF", qi.DTLignes.Sum(e => e.MT));
+
+                        }
 
                         //enregistre la quotation et ses details
                         var quot = new quotation
@@ -2009,10 +2326,12 @@ namespace VSOM_API.Controllers
                                LEVEL = _chassis == "All" ? "BL" : "Chassis",
                                REC_DATE = DateTime.Now,
                                STATUT = "Pending",
-                               HT = int.Parse(qi.HT.ToString()),
-                               TVA = int.Parse(qi.TVA.ToString()),
-                               TTC = int.Parse(qi.MT.ToString())
-                               , USERS_ID=tkusr, CLIENTS_ID=idclient
+                               HT = int.Parse((details.Sum(e => e.Ht) + pendingElmt.Sum(e => e.Ht)).ToString()),
+                               TVA = int.Parse((details.Sum(e => e.Tva) + pendingElmt.Sum(e => e.Tva)).ToString()),
+                               TTC = int.Parse((details.Sum(e => e.MT) + pendingElmt.Sum(e => e.MT)).ToString())
+                               ,
+                               USERS_ID = tkusr,
+                               CLIENTS_ID = idclient
                            };
                         using (var ctx = new RM_VSOMEntities1())
                         {
@@ -2064,7 +2383,259 @@ namespace VSOM_API.Controllers
 
         }
 
-        [AllowAnonymous]
+        [Authorize]
+        [HttpGet]
+        public IHttpActionResult GetCashing(string bl, int tkusr, string type , int fm , int sl , int dt)
+        {
+            BL blview = null; List<InvoiceDetails> pendingElmt = null; ESCALE esc = null;
+            try
+            {
+                CONNAISSEMENT con = null; //je force que le client qui peut verifier ce bl doit etre comptant
+
+
+                if (type == "get") //recuperation des donnees pour creation proforma
+                {
+                    #region global
+                    using (var ctx = new VSOMEntities())
+                    {
+
+                        con = ctx.CONNAISSEMENTs.Where(s => s.IdClient.Value == 1 && s.NumBL == bl && s.StatutBL != "Initié" && s.StatutBL != "Traité" && s.StatutBL != "Cloturé" && s.TypeBL == "R")
+                                                    .FirstOrDefault<CONNAISSEMENT>();
+
+                        if (con != null)
+                        {
+                            #region recuperation des element en pending sur le BL client
+                            List<ELEMENT_FACTURATION> pendel = ctx.ELEMENT_FACTURATION.Where(el => el.IdBL == con.IdBL && el.StatutEF != "Annule" && el.StatutEF != "Facturé" && (el.EltFacture == "MF" || el.EltFacture == "Veh" || el.EltFacture == "BL")).ToList<ELEMENT_FACTURATION>();
+                            pendingElmt = new List<InvoiceDetails>();
+                            foreach (ELEMENT_FACTURATION el in pendel)
+                            {
+                                if (el.PUEF != 0 && el.JrVeh != 0)
+                                {
+                                    InvoiceDetails id = new InvoiceDetails();
+                                    id.Ref = el.IdJEF.ToString();
+                                    id.Prix = el.PUEF.Value;
+                                    id.TvaCode = el.CodeTVA;
+                                    id.TvaTaux = el.TauxTVA.Value;
+                                    id.Libelle = el.LibEF;
+                                    id.Qte = Math.Round(el.QTEEF.Value, 3, MidpointRounding.AwayFromZero);
+                                    id.Unit = el.UnitEF;
+                                    id.Ht = Math.Round((id.Prix * id.Qte), 0, MidpointRounding.AwayFromZero);
+                                    id.Tva = Math.Round((id.Ht * (id.TvaTaux / 100)), 0, MidpointRounding.AwayFromZero); ;
+                                    id.MT = id.Ht + id.Tva;
+                                    id.Code = el.CodeArticle;
+                                    pendingElmt.Add(id);
+                                }
+                            }
+                            #endregion
+
+                           // esc = ctx.ESCALEs.Where(s => s.IdEsc == con.IdEsc).FirstOrDefault<ESCALE>();
+                        }
+                    }
+
+
+                    if (pendingElmt.Count > 0)
+                    {
+
+                        QuotationInvoice qi = new QuotationInvoice();
+
+                        #region creation et generation reponse http
+                        qi.HT = String.Format("{0:N0} XAF", pendingElmt.Sum(e => e.Ht));
+                        qi.TVA = String.Format("{0:N0} XAF", (pendingElmt.Sum(e => e.Tva)));
+                        qi.MT = String.Format("{0:N0} XAF", (pendingElmt.Sum(e => e.MT)));
+
+                        qi.OLignes = (from m in pendingElmt where m.Qte != 0 select m).ToList();
+                        List<InvoiceDetails> id = new List<InvoiceDetails>();
+                        id.AddRange(pendingElmt);
+
+                        List<string> fmlst = new List<string>(); fmlst.Add("1601"); fmlst.Add("2101"); fmlst.Add("1703");
+                        fmlst.Add("1702"); fmlst.Add("1701"); fmlst.Add("1820");
+                        qi.FMLignes = (from m in id where fmlst.Contains(m.Code) select m).ToList();
+                        qi.FMHT = String.Format("{0:N0} XAF", qi.FMLignes.Sum(e => e.Ht)); ;
+                        qi.FMTVA = String.Format("{0:N0} XAF", qi.FMLignes.Sum(e => e.Tva));
+                        qi.FMMT = String.Format("{0:N0} XAF", qi.FMLignes.Sum(e => e.MT));
+
+                        List<string> slst = new List<string>(); slst.Add("1801"); slst.Add("1815");
+                        qi.SLignes = (from m in id where slst.Contains(m.Code) select m).ToList();
+                        qi.SLHT = String.Format("{0:N0} XAF", qi.SLignes.Sum(e => e.Ht));
+                        qi.SLTVA = String.Format("{0:N0} XAF", qi.SLignes.Sum(e => e.Tva));
+                        qi.SLMT = String.Format("{0:N0} XAF", qi.SLignes.Sum(e => e.MT));
+
+                        foreach (InvoiceDetails ids in qi.FMLignes) id.Remove(ids);
+                        foreach (InvoiceDetails ids in qi.SLignes) id.Remove(ids);
+                        qi.DTLignes = id;
+                        qi.DTHT = String.Format("{0:N0} XAF", qi.DTLignes.Sum(e => e.Ht));
+                        qi.DTTVA = String.Format("{0:N0} XAF", qi.DTLignes.Sum(e => e.Tva));
+                        qi.DTMT = String.Format("{0:N0} XAF", qi.DTLignes.Sum(e => e.MT));
+
+                        #endregion
+
+
+                        using (System.IO.StreamWriter sw = new System.IO.StreamWriter(String.Format("E:\\enavy\\cashing_{0}_{1}_{2}.xml", bl, tkusr, type)))
+                        {
+                            sw.WriteLine(qi.ToXML());
+                        }
+                        return Ok(qi);
+                    }
+                    else
+                        return NotFound(); 
+                    #endregion
+
+                }
+                else
+                    if (type == "go") //confirmation creation proforma. ici je cree direct la profoma. vu que cela ne rentre pas ds ma comptabilite
+                    {
+                         
+                        using (var ctx = new VSOMEntities())
+                        {
+                            con = ctx.CONNAISSEMENTs.Where(s => s.IdClient.Value == 1 && s.NumBL == bl && s.StatutBL != "Initié" && s.StatutBL != "Traité" && s.StatutBL != "Cloturé" && s.TypeBL == "R")
+                                                    .FirstOrDefault<CONNAISSEMENT>();
+
+                            if (con != null)
+                            {
+                                #region recuperation des element en pending sur le BL client
+                                List<ELEMENT_FACTURATION> pendel = ctx.ELEMENT_FACTURATION.Where(el => el.IdBL == con.IdBL && el.StatutEF != "Annule" && el.StatutEF != "Facturé" && (el.EltFacture == "MF" || el.EltFacture == "Veh" || el.EltFacture == "BL")).ToList<ELEMENT_FACTURATION>();
+                                pendingElmt = new List<InvoiceDetails>();
+                                foreach (ELEMENT_FACTURATION el in pendel)
+                                {
+                                    if (el.PUEF != 0 && el.QTEEF != 0)
+                                    {
+                                        InvoiceDetails id = new InvoiceDetails();
+                                        id.Ref = el.IdJEF.ToString();
+                                        id.Prix = el.PUEF.Value;
+                                        id.TvaCode = el.CodeTVA;
+                                        id.TvaTaux = el.TauxTVA.Value;
+                                        id.Libelle = el.LibEF;
+                                        id.Qte = Math.Round(el.QTEEF.Value, 3, MidpointRounding.AwayFromZero);
+                                        id.Unit = el.UnitEF;
+                                        id.Ht = Math.Round((id.Prix * id.Qte), 0, MidpointRounding.AwayFromZero);
+                                        id.Tva = Math.Round((id.Ht * (id.TvaTaux / 100)), 0, MidpointRounding.AwayFromZero); ;
+                                        id.MT = id.Ht + id.Tva;
+                                        id.Code = el.CodeArticle;
+                                        pendingElmt.Add(id);
+                                    }
+                                }
+                                #endregion
+
+                                esc = ctx.ESCALEs.Where(s => s.IdEsc == con.IdEsc).FirstOrDefault<ESCALE>();
+                                if (pendel.Count > 0)
+                                {
+                                    QuotationInvoice qi = new QuotationInvoice();
+                                
+                                    List<string> codeart = new List<string>();
+                                    foreach (ELEMENT_FACTURATION e in pendel)
+                                    {
+                                        codeart.Add(e.CodeArticle);
+                                    }
+                                    List<ARTICLE> listArts = ctx.ARTICLEs.Where(s => codeart.Contains(s.CodeArticle.ToString())).OrderBy(s => s.LibArticle).ToList<ARTICLE>();
+                                    List<string> fmlst = new List<string>(); fmlst.Add("1601"); fmlst.Add("2101"); fmlst.Add("1703");
+                                    fmlst.Add("1702"); fmlst.Add("1701"); fmlst.Add("1820");
+                                    List<string> slst = new List<string>(); slst.Add("1801"); slst.Add("1815");
+                                    //idu 176 compte nova user soline
+                                    #region mise en place des lignes proforma
+                                    List<ELEMENT_FACTURATION> _id = new List<ELEMENT_FACTURATION>();
+                                    if (fm == 1) _id.AddRange((from m in pendel where fmlst.Contains(m.CodeArticle) select m).ToList());
+                                    if (sl == 1) _id.AddRange((from m in pendel where slst.Contains(m.CodeArticle) select m).ToList());
+                                   // if (dt == 1) _id.AddRange(qi.DTLignes);
+                                    #endregion
+
+                                    PROFORMA proforma = new PROFORMA();
+                                    proforma.AIFP = "";
+                                    proforma.DCFP = DateTime.Now;
+                                    proforma.IdArm = esc.IdArm;
+                                    proforma.AIFP = "Created by soline";
+                                    proforma.StatutFP = "O";
+                                    proforma.IdBL = con.IdBL;
+                                    proforma.IdU = 176;
+                                    proforma.IdClient = con.IdClient;
+                                    proforma.ClientFacture = "CLIENT COMPTANT";
+                                    proforma.MHT = Convert.ToInt32(_id.Sum(elt => Math.Abs(Math.Round((Math.Round(elt.QTEEF.Value, 3, MidpointRounding.AwayFromZero) * elt.PUEF.Value), 0, MidpointRounding.AwayFromZero))));
+                                    proforma.MTVA = Convert.ToInt32(_id.Sum(elt => Math.Abs(Math.Round((Math.Round((Math.Round(elt.QTEEF.Value, 3, MidpointRounding.AwayFromZero) * elt.PUEF.Value), 0, MidpointRounding.AwayFromZero) * (elt.TauxTVA.Value / 100)), 0, MidpointRounding.AwayFromZero))));
+                                    proforma.MTTC = proforma.MHT + proforma.MTVA;
+
+                                    foreach (ARTICLE art in listArts)
+                                    { 
+                                        if (proforma.AIFP != "")
+                                        {
+                                            proforma.AIFP = proforma.AIFP + " - " + art.LibArticle;
+                                        }
+                                        else
+                                        {
+                                            proforma.AIFP = art.LibArticle;
+                                        }
+                                    }
+                                    ctx.PROFORMAs.Add(proforma);
+                                    ctx.SaveChanges();
+
+                                    StringBuilder msgVehEnProforma = new StringBuilder();
+
+                                    foreach (ELEMENT_FACTURATION elt in _id)
+                                    {
+                                        LIGNE_PROFORMA ligne = new LIGNE_PROFORMA();
+                                        ligne.IdJEF = elt.IdJEF;
+                                        ligne.IdFP = proforma.IdFP;
+                                        ligne.StatutLP = "O";
+
+                                        /*var matchedElt = (from e in dcAcc.GetTable<ELEMENT_FACTURATION>()
+                                                          where e.IdJEF == elt.IdElt
+                                                          select e).SingleOrDefault<ELEMENT_FACTURATION>();*/
+
+                                        ligne.PUEF = elt.PUEF;
+                                        ligne.QTEEF = elt.QTEEF;
+                                        ligne.TauxTVA = elt.TauxTVA;
+
+                                        /*if (matchedElt.VEHICULE != null && matchedElt.VEHICULE.CUBAGE_VEHICULE.Count(cb => !cb.DateVal.HasValue) != 0 && (matchedElt.LibEF.Contains("Manutention") || matchedElt.LibEF.Contains("Séjour Parc Auto")))
+                                        {
+                                            msgVehEnProforma.Append(matchedElt.VEHICULE.NumChassis + " " + matchedElt.VEHICULE.DescVeh).Append(Environment.NewLine);
+                                        }
+
+                                        if (matchedElt.StatutEF == "Facturé")
+                                        {
+                                            throw new ApplicationException("Cet élément de facture a déjà été facturé : " + matchedElt.LibEF + ".\nEchec de création de la proforma");
+                                        }
+                                        */
+                                        elt.StatutEF = "Proforma";
+                                        ctx.LIGNE_PROFORMA.Add(ligne);
+                                        
+                                    }
+                                    ctx.SaveChanges();
+                                    /*if (msgVehEnProforma.ToString().Trim() != "")
+                                    {
+                                        throw new ApplicationException("Les véhicules suivants : \n" + msgVehEnProforma.ToString() + " Sont en cubage. Veuillez au préalable valider les cubages des véhicules concernés");
+                                    }*/
+                                    return Ok(proforma.IdFP.ToString());
+                                }
+                                else { return NotFound(); }
+                            }
+                            else
+                            {
+                                return NotFound();
+                            }
+                             
+
+                        }
+                        //
+                    }
+                    else
+                        return NotFound();
+               
+            }
+            catch (Exception ex)
+            {
+                using (System.IO.StreamWriter sw = new System.IO.StreamWriter(String.Format("E:\\enavy\\error_cashing_{0}_{1}_{2}_{3}_{4}_{5}_{6}_{7}.txt", bl, type, DateTime.Today.Day, DateTime.Today.Month, DateTime.Today.Year, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second)))
+                {
+                    //sw.WriteLine("message : " + ex.Message + " -------- innerexception : " + ex.StackTrace);
+                    sw.WriteLine("message exception: " + ex.Message); sw.WriteLine("innerexception : " + ex.InnerException); sw.WriteLine("StackTrace : " + ex.StackTrace);
+                }
+
+                var message = new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    Content = new StringContent("Demande non traitée : Veuillez ressayer.")
+                };
+                throw new HttpResponseException(message);
+            }
+        }
+
+        [Authorize]
         [HttpGet]
         public IHttpActionResult GetVin(string bl, string vin, string type)
         {
@@ -2078,7 +2649,7 @@ namespace VSOM_API.Controllers
                 using (var ctx = new VSOMEntities())
                 {
                     CONNAISSEMENT con = null; //je force que le client qui peut verifier ce bl doit etre comptant
-                    con = ctx.CONNAISSEMENTs.Include("VEHICULEs").Where(s => s.IdClient.Value == 1 && s.DCBL.Value >= startdate && s.NumBL == bl && s.StatutBL != "Initié" && s.StatutBL != "Cloturé" && s.TypeBL == "R")
+                    con = ctx.CONNAISSEMENTs.Include("VEHICULEs").Where(s => s.IdClient.Value == 1 && s.DCBL.Value >= startdate && s.NumBL == bl && s.StatutBL != "Initié" && s.StatutBL != "Traité" && s.StatutBL != "Cloturé" && s.TypeBL == "R")
                                             .FirstOrDefault<CONNAISSEMENT>();
                          
                     if (con != null)
@@ -2105,19 +2676,20 @@ namespace VSOM_API.Controllers
                             }
                             else
                             {
+                                ESCALE esc = ctx.ESCALEs.Where(s => s.IdEsc == con.IdEsc).FirstOrDefault<ESCALE>();
                                 blview = new BL()
                                 {
                                     NumBl = bl,
                                     Lib = "1",
                                     Consignee = con.ConsigneeBL,
-                                    Notify = con.NotifyBL,
+                                    Notify = con.NotifyBL, NumMan=esc.NumManifestSydonia,
                                     FinFranchise = con.VEHICULEs.ToList<VEHICULE>()[0].FFVeh.Value.ToShortDateString(),
                                     Vehicules = new List<Cars>()
                                 };
 
                                 foreach (VEHICULE _veh in con.VEHICULEs)
                                 {
-                                    if (veh.IdVehAP == null && veh.StatVeh != "Livré")
+                                    if (_veh.IdVehAP == null && veh.StatVeh != "Livré")
                                     {
                                         blview.Vehicules.Add(new Cars
                                         {

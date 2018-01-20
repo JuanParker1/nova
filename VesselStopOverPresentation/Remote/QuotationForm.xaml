@@ -118,7 +118,10 @@
                         <TextBox Grid.Row="3" Grid.Column="1" Margin="0,2,105,2" Text="{Binding Level}" IsEnabled="False" Name="txtLevel" />
 
                         <Label Grid.Row="4" Grid.Column="0" Content="Client a facturer : " Margin="0,2,0,2"/>
-                        <TextBox Grid.Row="4" Grid.Column="1" Margin="0,2,105,2" Text="" IsEnabled="False" Name="txtClientFature" />
+                        <TextBox Grid.Row="4" Grid.Column="1" Margin="0,2" Text="" IsEnabled="False" Name="txtClientFature" HorizontalAlignment="Left" Width="220" />
+
+                        <Label Grid.Row="5" Grid.Column="0" Content="Numéro facture : " Margin="0,2,0,2"/>
+                        <TextBox Grid.Row="5" Grid.Column="1" Margin="0,2,105,2" Text="" IsEnabled="False" Name="txtrefFacture" />
 
                     </Grid>
                     <GroupBox DockPanel.Dock="Top" Header="Connaissement" Background="#FAFAFA" Margin="0,2,0,2">

@@ -193,6 +193,7 @@
     <Compile Include="CONNAISSEMENT.cs">
       <DependentUpon>VsomEntty.tt</DependentUpon>
     </Compile>
+    <Compile Include="Controllers\Navy2Controller.cs" />
     <Compile Include="Controllers\NavyController.cs" />
     <Compile Include="Controllers\RHController.cs" />
     <Compile Include="Controllers\Vsom0Controller.cs" />

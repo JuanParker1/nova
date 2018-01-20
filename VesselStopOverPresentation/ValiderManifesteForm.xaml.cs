@@ -64,7 +64,7 @@ namespace VesselStopOverPresentation
             {
                 //using (var ctx = new VSOMClassesDataContext())
                 //{
-                    vsomAcc = new VSOMAccessors();
+                   vsomAcc = new VSOMAccessors();
                     MANIFESTE man = vsomAcc.ValiderManifeste(vsomAcc.GetManifesteByIdMan(Convert.ToInt32(manForm.cbIdMan.Text)).IdMan, new TextRange(txtObservations.Document.ContentStart, txtObservations.Document.ContentEnd).Text, utilisateur.IdU);
 
                     //Raffraîchir les informations
@@ -87,7 +87,7 @@ namespace VesselStopOverPresentation
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message + "\n" + ex.StackTrace, "Echec de l'opération !", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(ex.Message + "\n Détail :" + ex.StackTrace, "Echec de l'opération !", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

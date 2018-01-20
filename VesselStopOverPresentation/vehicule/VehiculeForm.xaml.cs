@@ -688,7 +688,7 @@ namespace VesselStopOverPresentation
             }
             catch (Exception ex)
             {
-
+                MessageBox.Show(ex.Message, "Calcule stationnement");
             }
         }
 
@@ -1466,6 +1466,45 @@ namespace VesselStopOverPresentation
             catch (Exception ex)
             {
 
+            }
+        }
+
+        private void btnRollBackStationnement_Click_1(object sender, RoutedEventArgs e)
+        {
+            if (MessageBox.Show("Confirmez-vous l'annulation des stationnements impayé ?", "Annulation Séjour", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    vsomAcc = new VSOMAccessors();
+                    VEHICULE veh = vsomAcc.GetVehiculeByIdVeh(Convert.ToInt32(txtIdChassis.Text));
+                    DateTime _date = vsomAcc.AnnulerSejourImpaye(Convert.ToInt32(txtIdChassis.Text), utilisateur);
+                    MessageBox.Show("Le séjour du véhicule est annulé au " + _date);
+                    formLoader.LoadVehiculeForm(this, veh);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Echec de l'opération : \n " + ex.Message, "Annulation séjour");
+                }
+            }
+            
+
+        }
+
+        private void btnCalculerSejour2017_Click_1(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                CalculerSejourVehiculeForm calcForm = new CalculerSejourVehiculeForm(this, utilisateur,"old");
+                calcForm.Title = "Calcul du séjour séjour 2017 - Chassis N° : " + cbNumChassis.Text;
+                calcForm.ShowDialog();
+            }
+            catch (ApplicationException ex)
+            {
+                MessageBox.Show(ex.Message, "Echec de l'opération !", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Calcule stationnement");
             }
         }
     }

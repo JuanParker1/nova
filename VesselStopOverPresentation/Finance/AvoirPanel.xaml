@@ -24,16 +24,18 @@
     <Border DockPanel.Dock="Top" BorderThickness="1.5" CornerRadius="1.5" BorderBrush="#FFD8D2D2">
         <DockPanel Name="panelRecherche" Background="#FFD8D2D2">
             <ComboBox DockPanel.Dock="Right" Name="listRechercher" Width="150" VerticalContentAlignment="Center" Background="#FFD8D2D2" AllowDrop="True">
+                
                 <ComboBoxItem Content="N° connaissement"/>
                 <ComboBoxItem Content="N° escale"/>
                 <ComboBoxItem Content="N° Facture"/>
+                <ComboBoxItem Content="N° Avoir"/>
             </ComboBox>
             <Button Name="btnAnnulerRecherche" Width="20" DockPanel.Dock="Right" Focusable="False">
                 <Button.Background>
                     <ImageBrush ImageSource="/VesselStopOverPresentation;component/Icons/cross.png" Stretch="UniformToFill" TileMode="None" />
                 </Button.Background>
             </Button>
-            <TextBox Name="txtRechercher" DockPanel.Dock="Right" Width="150" FlowDirection="LeftToRight" TextAlignment="Right"/>
+            <TextBox Name="txtRechercher" KeyDown="txtRechercher_KeyDown_1" PreviewKeyDown="txtRechercher_PreviewKeyDown_1" DockPanel.Dock="Right" Width="150" FlowDirection="LeftToRight" TextAlignment="Right"/>
             <Label Content="Rechercher" DockPanel.Dock="Right" FontStyle="Italic" FontWeight="Bold" FlowDirection="LeftToRight"/>
             <Label Content="Avoirs : " DockPanel.Dock="Left" FontWeight="Bold" FlowDirection="LeftToRight"/>
             <ComboBox Name="cbFiltres" DockPanel.Dock="Left" Width="200" HorizontalAlignment="Left" VerticalContentAlignment="Center" Background="#FFD8D2D2" BorderThickness="0" BorderBrush="Transparent" SelectionChanged="cbFiltres_SelectionChanged">

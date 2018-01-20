@@ -792,6 +792,8 @@
       <Column Name="IdFSoc" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="REF_IDJEF" Type="System.Int32" DbType="INT" CanBeNull="true" />
       <Column Name="ID_QUOTATION" Type="System.Int32" DbType="int" CanBeNull="true" />
+      <Column Name="JrVeh" Type="System.Double" DbType="float" CanBeNull="true" />
+      <Column Name="PoidsVeh" Type="System.Int32" DbType="int" CanBeNull="true" />
       <Association Name="ELEMENT_FACTURATION_LIGNE_PROFORMA" Member="LIGNE_PROFORMA" ThisKey="IdJEF" OtherKey="IdJEF" Type="LIGNE_PROFORMA" />
       <Association Name="ELEMENT_FACTURATION_LIGNE_AVOIR" Member="LIGNE_AVOIR" ThisKey="IdJEF" OtherKey="IdJEF" Type="LIGNE_AVOIR" />
       <Association Name="ELEMENT_FACTURATION_LIGNE_FACTURE_ARMATEUR" Member="LIGNE_FACTURE_ARMATEUR" ThisKey="IdJEF" OtherKey="IdJEF" Type="LIGNE_FACTURE_ARMATEUR" Cardinality="One" />
@@ -1694,7 +1696,7 @@
       <Column Name="IdFA" Type="System.Int32" DbType="int " CanBeNull="false" />
       <Column Name="CodeArticle" Type="System.Int16" DbType="SmallInt " CanBeNull="false" />
       <Column Name="StatutLP" Type="System.String" DbType="nvarchar(1)" CanBeNull="true" />
-      <Column Name="PUEF" Type="System.Single" DbType="float" CanBeNull="false" />
+      <Column Name="PUEF" Type="System.Double" DbType="float" CanBeNull="false" />
       <Column Name="QTEEF" Type="System.Single" DbType="float" CanBeNull="false" />
       <Column Name="TauxTVA" Type="System.Double" DbType="real" CanBeNull="false" />
       <Column Name="IdAuto" Type="System.Int32" DbType="int" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />

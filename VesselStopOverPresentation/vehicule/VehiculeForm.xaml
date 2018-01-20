@@ -81,6 +81,12 @@
                                     <TextBlock Text=" Calculer séjour" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
                                 </StackPanel>
                             </Button>
+                            <Button DockPanel.Dock="Left" Height="25" Width="150" VerticalAlignment="Top" Name="btnCalculerSejour2017" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnCalculerSejour2017_Click_1">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Cash-register-icon.png" Stretch="Uniform" Height="20" Width="20" />
+                                    <TextBlock Text=" Calculer séjour 2017" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                                </StackPanel>
+                            </Button>
                         </StackPanel>
                         <StackPanel DockPanel.Dock="Left" Orientation="Vertical" HorizontalAlignment="Left">
                             <Button DockPanel.Dock="Left" Height="25" Width="150" VerticalAlignment="Top" Name="btnTransfEmpl" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnTransfEmpl_Click">
@@ -121,6 +127,12 @@
                                     <TextBlock Text=" Ventes aux enchères" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
                                 </StackPanel>
                             </Button>
+                            <Button DockPanel.Dock="Left" Height="25" Width="150" VerticalAlignment="Top" Name="btnRollBackStationnement" HorizontalContentAlignment="Left" Background="{x:Null}" BorderBrush="Transparent" BorderThickness="0" Cursor="Hand" Focusable="False" Click="btnRollBackStationnement_Click_1">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="/VesselStopOverPresentation;component/Icons/Auction.png" Stretch="Uniform" Height="20" Width="20" />
+                                    <TextBlock Text=" Rollback Séjour impayé" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
+                                </StackPanel>
+                            </Button>
                         </StackPanel>
                     </StackPanel>
                 </DockPanel>
@@ -142,6 +154,7 @@
                                 <TextBlock Text=" Duplicata bon de sortie" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" />
                             </StackPanel>
                         </Button>
+                       
                     </StackPanel>
                 </DockPanel>
             </Border>

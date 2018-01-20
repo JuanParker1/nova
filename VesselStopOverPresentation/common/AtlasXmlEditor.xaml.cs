@@ -27,12 +27,18 @@ namespace VesselStopOverPresentation.common
     }
     public class ctn_segment
     {
+         
+
         public string Ctn_reference { get; set; }
         public string Number_of_packages { get; set; }
+       public string Type_of_container{ get; set; }
+        public string    Empty_Full{ get; set; }
         public string Marks1 { get; set; }
         public string Marks2 { get; set; }
+       public string Sealing_Party{ get; set; }
         public string Gross_mass { get; set; }
-        public string Type_of_container { get; set; }
+       public string Fridge_indicator{ get; set; }
+        public string Dangerous_indicator { get; set; }
     }
     public class Goods_detail_segment
     {
@@ -79,7 +85,7 @@ namespace VesselStopOverPresentation.common
         private Consignee consignee;
         private Notify notify;
         private XElement xdocument;
-        private List<Goods_detail_segment> lst_good;
+        private List<Goods_detail_segment> lst_good; List<ctn_segment> lst_ctn;
         public AtlasXmlEditor()
         {
             InitializeComponent();
@@ -139,7 +145,7 @@ namespace VesselStopOverPresentation.common
                     txtBLPoids.Text = (string)(from item in el.Descendants("Gross_mass") select item).First();
 
                     var ctn = (from item in el.Descendants("ctn_segment") select item).ToList();
-                    List<ctn_segment> lst_ctn = new List<ctn_segment>();
+                     lst_ctn = new List<ctn_segment>();
 
                     foreach (var _ctn in ctn)
                     {
@@ -150,7 +156,11 @@ namespace VesselStopOverPresentation.common
                             Marks1 = (string)(from item in _ctn.Descendants("Marks1") select item).First(),
                             Marks2 = (string)(from item in _ctn.Descendants("Marks2") select item).First(),
                             Number_of_packages = (string)(from item in _ctn.Descendants("Number_of_packages") select item).First(),
-                            Type_of_container = (string)(from item in _ctn.Descendants("Type_of_container") select item).First()
+                            Type_of_container = (string)(from item in _ctn.Descendants("Type_of_container") select item).First(),
+                            Dangerous_indicator = (string)(from item in _ctn.Descendants("Dangerous_indicator") select item).First(),
+                            Empty_Full = (string)(from item in _ctn.Descendants("Empty_Full") select item).First(),
+                            Fridge_indicator = (string)(from item in _ctn.Descendants("Fridge_indicator") select item).First(),
+                            Sealing_Party = (string)(from item in _ctn.Descendants("Sealing_Party") select item).First()
 
                         });
                     }
@@ -184,7 +194,12 @@ namespace VesselStopOverPresentation.common
         }
         private void dtgMchd_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
         {
-            // Goods_detail_segment gds = (Goods_detail_segment)dtgMchd.SelectedItem;
+             Goods_detail_segment gds = (Goods_detail_segment)dtgMchd.SelectedItem;
+             if (gds != null)
+             {
+                 rtb.Document.Blocks.Clear(); 
+                 rtb.Document.Blocks.Add(new Paragraph(new Run(gds.Goods_description)));
+             }
         }
 
         /// <summary>
@@ -258,46 +273,86 @@ namespace VesselStopOverPresentation.common
             XElement upd = (from bol in xdocument.Elements("Bol_segment")
                             where (string)bol.Element("Bol_id").Element("Bol_reference").Value == bs.Bol_reference
                             select bol).SingleOrDefault();
-            upd.Element("Traders_segment").Element("Exporter").Element("Exporter_name").Value = exporter.Exporter_name;
-            upd.Element("Traders_segment").Element("Exporter").Element("Exporter_address1").Value = exporter.Exporter_address1;
-            upd.Element("Traders_segment").Element("Exporter").Element("Exporter_address2").Value = exporter.Exporter_address2;
-            upd.Element("Traders_segment").Element("Exporter").Element("Exporter_address3").Value = exporter.Exporter_address3;
-            upd.Element("Traders_segment").Element("Exporter").Element("Exporter_address4").Value = exporter.Exporter_address4;
-
-            upd.Element("Traders_segment").Element("Notify").Element("Notify_name").Value = notify.Notify_name;
-            upd.Element("Traders_segment").Element("Notify").Element("Notify_address1").Value = notify.Notify_address1;
-            upd.Element("Traders_segment").Element("Notify").Element("Notify_address2").Value = notify.Notify_address2;
-            upd.Element("Traders_segment").Element("Notify").Element("Notify_address3").Value = notify.Notify_address3;
-            upd.Element("Traders_segment").Element("Notify").Element("Notify_address4").Value = notify.Notify_address4;
-
-            upd.Element("Traders_segment").Element("Consignee").Element("Consignee_name").Value = consignee.Consignee_name;
-            upd.Element("Traders_segment").Element("Consignee").Element("Consignee_address1").Value = consignee.Consignee_address1;
-            upd.Element("Traders_segment").Element("Consignee").Element("Consignee_address2").Value = consignee.Consignee_address2;
-            upd.Element("Traders_segment").Element("Consignee").Element("Consignee_address3").Value = consignee.Consignee_address3;
-            upd.Element("Traders_segment").Element("Consignee").Element("Consignee_address4").Value = consignee.Consignee_address4;
-
-            (from m in upd.Descendants("Goods_segment").Descendants("Goods_detail_segment") select m).Remove();
-            // XElement xgds = (from m in upd.Descendants("Goods_segment") select m).SingleOrDefault();
-            foreach (Goods_detail_segment gds in lst_good)
+            if(upd==null)
             {
-                upd.Element("Goods_segment")
-                   .Add(new XElement("Goods_detail_segment",
-                    new XElement("Package_type_code", gds.Package_type_code),
-                    new XElement("Goods_description", gds.Goods_description),
-                    new XElement("Shipping_marks", gds.Shipping_marks),
-                    new XElement("Gross_mass", gds.Gross_mass),
-                    new XElement("Number_of_packages", gds.Number_of_packages),
-                    new XElement("Volume_in_cubic_meters", gds.Volume_in_cubic_meters),
-                    new XElement("Ctn_reference", gds.Ctn_reference),
-                    new XElement("Dangerous_indicator", gds.Dangerous_indicator),
-                    new XElement("Seals_segment", gds.Seals_segment)
-                    ));
+                MessageBox.Show("Auccune modification n'est effectuée.", "ATLAS XML", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+            else
+            {
+                try
+                {
+                    upd.Element("Traders_segment").Element("Exporter").Element("Exporter_name").Value = exporter.Exporter_name;
+                    upd.Element("Traders_segment").Element("Exporter").Element("Exporter_address1").Value = exporter.Exporter_address1;
+                    upd.Element("Traders_segment").Element("Exporter").Element("Exporter_address2").Value = exporter.Exporter_address2;
+                    upd.Element("Traders_segment").Element("Exporter").Element("Exporter_address3").Value = exporter.Exporter_address3;
+                    upd.Element("Traders_segment").Element("Exporter").Element("Exporter_address4").Value = exporter.Exporter_address4;
 
-            xdocument.Save(filename);
-            //recharge le fichier
-            xdocument = XElement.Load(filename);
-            readxml();
+                    upd.Element("Traders_segment").Element("Notify").Element("Notify_name").Value = notify.Notify_name;
+                    upd.Element("Traders_segment").Element("Notify").Element("Notify_address1").Value = notify.Notify_address1;
+                    upd.Element("Traders_segment").Element("Notify").Element("Notify_address2").Value = notify.Notify_address2;
+                    upd.Element("Traders_segment").Element("Notify").Element("Notify_address3").Value = notify.Notify_address3;
+                    upd.Element("Traders_segment").Element("Notify").Element("Notify_address4").Value = notify.Notify_address4;
+
+                    upd.Element("Traders_segment").Element("Consignee").Element("Consignee_name").Value = consignee.Consignee_name;
+                    upd.Element("Traders_segment").Element("Consignee").Element("Consignee_address1").Value = consignee.Consignee_address1;
+                    upd.Element("Traders_segment").Element("Consignee").Element("Consignee_address2").Value = consignee.Consignee_address2;
+                    upd.Element("Traders_segment").Element("Consignee").Element("Consignee_address3").Value = consignee.Consignee_address3;
+                    upd.Element("Traders_segment").Element("Consignee").Element("Consignee_address4").Value = consignee.Consignee_address4;
+
+                    upd.Element("Bol_id").Element("Bol_nature").Value = bs.Bol_nature;
+                    upd.Element("Location").Element("Location_code").Value = bs.Location_code;
+                    upd.Element("Goods_segment").Element("Gross_mass").Value = txtBLPoids.Text.Trim();
+                    upd.Element("Goods_segment").Element("Number_of_packages").Value = txtBLNbrPackages.Text.Trim();
+
+                    (from m in upd.Descendants("Goods_segment").Descendants("Goods_detail_segment") select m).Remove();
+                    // XElement xgds = (from m in upd.Descendants("Goods_segment") select m).SingleOrDefault();
+                    foreach (Goods_detail_segment gds in lst_good)
+                    {
+
+                        upd.Element("Goods_segment")
+                           .Add(new XElement("Goods_detail_segment",
+                            new XElement("Package_type_code", gds.Package_type_code),
+                            new XElement("Goods_description", gds.Goods_description),
+                            new XElement("Shipping_marks", gds.Shipping_marks),
+                            new XElement("Gross_mass", gds.Gross_mass),
+                            new XElement("Number_of_packages", gds.Number_of_packages),
+                            new XElement("Volume_in_cubic_meters", gds.Volume_in_cubic_meters),
+                            new XElement("Ctn_reference", gds.Ctn_reference),
+                            new XElement("Dangerous_indicator", gds.Dangerous_indicator),
+                            new XElement("Seals_segment", gds.Seals_segment)
+                            ));
+                    }
+
+                    (from m in upd.Descendants("ctn_segment") select m).Remove();
+                    foreach (ctn_segment ctn in lst_ctn)
+                    {
+                        upd.Element("Goods_segment").AddBeforeSelf(new XElement("ctn_segment",
+                          new XElement("Ctn_reference", ctn.Ctn_reference),
+                          new XElement("Number_of_packages", ctn.Number_of_packages),
+                          new XElement("Type_of_container", ctn.Type_of_container),
+                          new XElement("Empty_Full", ctn.Empty_Full),
+                          new XElement("Marks1", ctn.Marks1),
+                          new XElement("Marks2", ctn.Marks2),
+                          new XElement("Sealing_Party", ctn.Sealing_Party),
+                          new XElement("Gross_mass", ctn.Gross_mass),
+                          new XElement("Fridge_indicator", ctn.Fridge_indicator),
+                          new XElement("Dangerous_indicator", ctn.Dangerous_indicator)
+                          ));
+
+
+                    }
+
+                    xdocument.Save(filename);
+                    MessageBox.Show("BL modifiée");
+                    //recharge le fichier
+                    xdocument = XElement.Load(filename);
+                    readxml();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Une erreur est survenue durant l'opération", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
         }
 
         private void btnGoodUpd_Click_1(object sender, RoutedEventArgs e)

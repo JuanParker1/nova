@@ -70,7 +70,12 @@
                 <Label Grid.Row="0" Grid.Column="4">Nature</Label>
                 <TextBox Grid.Row="0" Grid.Column="5" Text="{Binding Bol_nature, Mode=TwoWay}" ></TextBox>
                 <Label Grid.Row="0" Grid.Column="6">Localisation</Label>
-                <TextBox Grid.Row="0" Grid.Column="7" Text="{Binding Location_code, Mode=TwoWay}" ></TextBox>
+                <!--<TextBox Grid.Row="0" Grid.Column="7" Text="{Binding Location_code, Mode=TwoWay}" ></TextBox>-->
+                <ComboBox  Name="cbNature" Grid.Column="7" Grid.Row="0" Text="{Binding Location_code, Mode=TwoWay}">
+                    <ComboBoxItem>DIT</ComboBoxItem>
+                    <ComboBoxItem>SOCOMAR_AUTOS</ComboBoxItem>
+                    <ComboBoxItem>SOCOMAR_ N_9</ComboBoxItem>
+                </ComboBox>
                 <!--<Button Grid.Column="8" Grid.Row="0" HorizontalAlignment="Right" Width="116">Ajouter un BL</Button>-->
                 <Button Grid.Column="9" Grid.Row="0" HorizontalAlignment="Right" Name="btnUpdatBOL" Width="116" Click="btnUpdatBOL_Click_1">Modifier le BL</Button>
             </Grid>
@@ -93,162 +98,166 @@
                 </DataGrid>
             </GroupBox>
             <GroupBox DockPanel.Dock="Right" Header="" Background="#FAFAFA" BorderThickness="0"  >
-                <WrapPanel FlowDirection="LeftToRight" >
-                    <GroupBox  Header="Shipper" Width="350" Height="200">
-                        <Grid Name="grid_shipper">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="30"></RowDefinition>
-                                <RowDefinition Height="30"></RowDefinition>
-                                <RowDefinition Height="30"></RowDefinition>
-                                <RowDefinition Height="30"></RowDefinition>
-                                <RowDefinition Height="30"></RowDefinition>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="80"></ColumnDefinition>
-                                <ColumnDefinition Width="200"></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" Grid.Row="0">Nom :</Label>
-                            <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Exporter_name, Mode=TwoWay}" Margin="0,0,-46,0" HorizontalAlignment="Right" Width="242"></TextBox>
-                            <Label Grid.Column="0" Grid.Row="1">Adresse 1 :</Label>
-                            <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Exporter_address1, Mode=TwoWay}" Margin="0,0,-46,0" HorizontalAlignment="Right" Width="242"></TextBox>
-                            <Label Grid.Column="0" Grid.Row="2">Adresse 2 :</Label>
-                            <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Exporter_address2, Mode=TwoWay}" Margin="0,0,-46,0" HorizontalAlignment="Right" Width="242"></TextBox>
-                            <Label Grid.Column="0" Grid.Row="3">Adresse 3 :</Label>
-                            <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Exporter_address3, Mode=TwoWay}" Margin="0,0,-46,0" HorizontalAlignment="Right" Width="242"></TextBox>
-                            <Label Grid.Column="0" Grid.Row="4">Adresse 4 :</Label>
-                            <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding Exporter_address4, Mode=TwoWay}" Margin="0,0,-46,0" HorizontalAlignment="Right" Width="242"></TextBox>
-                        </Grid>
+                <ScrollViewer Margin="0,0,0,-12" >
+                    <WrapPanel FlowDirection="LeftToRight"  Width="auto" Height="auto">
+                        <GroupBox  Header="Shipper" Width="350" Height="200">
+                            <Grid Name="grid_shipper">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30"></RowDefinition>
+                                    <RowDefinition Height="30"></RowDefinition>
+                                    <RowDefinition Height="30"></RowDefinition>
+                                    <RowDefinition Height="30"></RowDefinition>
+                                    <RowDefinition Height="30"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="80"></ColumnDefinition>
+                                    <ColumnDefinition Width="200"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Grid.Row="0">Nom :</Label>
+                                <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Exporter_name, Mode=TwoWay}" Margin="0,0,-46,0" HorizontalAlignment="Right" Width="242"></TextBox>
+                                <Label Grid.Column="0" Grid.Row="1">Adresse 1 :</Label>
+                                <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Exporter_address1, Mode=TwoWay}" Margin="0,0,-46,0" HorizontalAlignment="Right" Width="242"></TextBox>
+                                <Label Grid.Column="0" Grid.Row="2">Adresse 2 :</Label>
+                                <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Exporter_address2, Mode=TwoWay}" Margin="0,0,-46,0" HorizontalAlignment="Right" Width="242"></TextBox>
+                                <Label Grid.Column="0" Grid.Row="3">Adresse 3 :</Label>
+                                <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Exporter_address3, Mode=TwoWay}" Margin="0,0,-46,0" HorizontalAlignment="Right" Width="242"></TextBox>
+                                <Label Grid.Column="0" Grid.Row="4">Adresse 4 :</Label>
+                                <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding Exporter_address4, Mode=TwoWay}" Margin="0,0,-46,0" HorizontalAlignment="Right" Width="242"></TextBox>
+                            </Grid>
 
-                    </GroupBox>
-                    <GroupBox  Header="Notify" Width="350" Height="200">
-                        <Grid Name="grid_notify">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="30"></RowDefinition>
-                                <RowDefinition Height="30"></RowDefinition>
-                                <RowDefinition Height="30"></RowDefinition>
-                                <RowDefinition Height="30"></RowDefinition>
-                                <RowDefinition Height="30"></RowDefinition>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="80"></ColumnDefinition>
-                                <ColumnDefinition Width="200"></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" Grid.Row="0">Nom :</Label>
-                            <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Notify_name, Mode=TwoWay}" Margin="0,0,-46,0" HorizontalAlignment="Right" Width="242"></TextBox>
-                            <Label Grid.Column="0" Grid.Row="1">Adresse 1 :</Label>
-                            <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Notify_address1, Mode=TwoWay}" Margin="0,0,-46,0" HorizontalAlignment="Right" Width="242"></TextBox>
-                            <Label Grid.Column="0" Grid.Row="2">Adresse 2 :</Label>
-                            <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Notify_address2, Mode=TwoWay}" Margin="0,0,-46,0" HorizontalAlignment="Right" Width="242"></TextBox>
-                            <Label Grid.Column="0" Grid.Row="3">Adresse 3 :</Label>
-                            <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Notify_address3, Mode=TwoWay}" Margin="0,0,-46,0" HorizontalAlignment="Right" Width="242"></TextBox>
-                            <Label Grid.Column="0" Grid.Row="4">Adresse 4 :</Label>
-                            <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding Notify_address4, Mode=TwoWay}" Margin="0,0,-46,0" HorizontalAlignment="Right" Width="242"></TextBox>
-                        </Grid>
+                        </GroupBox>
+                        <GroupBox  Header="Notify" Width="350" Height="200">
+                            <Grid Name="grid_notify">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30"></RowDefinition>
+                                    <RowDefinition Height="30"></RowDefinition>
+                                    <RowDefinition Height="30"></RowDefinition>
+                                    <RowDefinition Height="30"></RowDefinition>
+                                    <RowDefinition Height="30"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="80"></ColumnDefinition>
+                                    <ColumnDefinition Width="200"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Grid.Row="0">Nom :</Label>
+                                <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Notify_name, Mode=TwoWay}" Margin="0,0,-46,0" HorizontalAlignment="Right" Width="242"></TextBox>
+                                <Label Grid.Column="0" Grid.Row="1">Adresse 1 :</Label>
+                                <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Notify_address1, Mode=TwoWay}" Margin="0,0,-46,0" HorizontalAlignment="Right" Width="242"></TextBox>
+                                <Label Grid.Column="0" Grid.Row="2">Adresse 2 :</Label>
+                                <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Notify_address2, Mode=TwoWay}" Margin="0,0,-46,0" HorizontalAlignment="Right" Width="242"></TextBox>
+                                <Label Grid.Column="0" Grid.Row="3">Adresse 3 :</Label>
+                                <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Notify_address3, Mode=TwoWay}" Margin="0,0,-46,0" HorizontalAlignment="Right" Width="242"></TextBox>
+                                <Label Grid.Column="0" Grid.Row="4">Adresse 4 :</Label>
+                                <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding Notify_address4, Mode=TwoWay}" Margin="0,0,-46,0" HorizontalAlignment="Right" Width="242"></TextBox>
+                            </Grid>
 
-                    </GroupBox>
-                    <GroupBox  Header="Consignee " Width="350" Height="200">
-                        <Grid Name="grid_consignee">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="30"></RowDefinition>
-                                <RowDefinition Height="30"></RowDefinition>
-                                <RowDefinition Height="30"></RowDefinition>
-                                <RowDefinition Height="30"></RowDefinition>
-                                <RowDefinition Height="30"></RowDefinition>
-                                <RowDefinition Height="30"></RowDefinition>
-                                <RowDefinition Height="30"></RowDefinition>
-                                <RowDefinition Height="30"></RowDefinition>
-                                <RowDefinition Height="30"></RowDefinition>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="80"></ColumnDefinition>
-                                <ColumnDefinition Width="200"></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" Grid.Row="0">Nom :</Label>
-                            <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Consignee_name, Mode=TwoWay}" Margin="0,0,-46,0" HorizontalAlignment="Right" Width="242"></TextBox>
-                            <Label Grid.Column="0" Grid.Row="1">Adresse 1 :</Label>
-                            <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Consignee_address1, Mode=TwoWay}" Margin="0,0,-46,0" HorizontalAlignment="Right" Width="242"></TextBox>
-                            <Label Grid.Column="0" Grid.Row="2">Adresse 2 :</Label>
-                            <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Consignee_address2, Mode=TwoWay}" Margin="0,0,-46,0" HorizontalAlignment="Right" Width="242"></TextBox>
-                            <Label Grid.Column="0" Grid.Row="3">Adresse 3 :</Label>
-                            <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Consignee_address3, Mode=TwoWay}" Margin="0,0,-46,0" HorizontalAlignment="Right" Width="242"></TextBox>
-                            <Label Grid.Column="0" Grid.Row="4">Adresse 4 :</Label>
-                            <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding Consignee_address4, Mode=TwoWay}" Margin="0,0,-46,0" HorizontalAlignment="Right" Width="242"></TextBox>
+                        </GroupBox>
+                        <GroupBox  Header="Consignee " Width="350" Height="200">
+                            <Grid Name="grid_consignee">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30"></RowDefinition>
+                                    <RowDefinition Height="30"></RowDefinition>
+                                    <RowDefinition Height="30"></RowDefinition>
+                                    <RowDefinition Height="30"></RowDefinition>
+                                    <RowDefinition Height="30"></RowDefinition>
+                                    <RowDefinition Height="30"></RowDefinition>
+                                    <RowDefinition Height="30"></RowDefinition>
+                                    <RowDefinition Height="30"></RowDefinition>
+                                    <RowDefinition Height="30"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="80"></ColumnDefinition>
+                                    <ColumnDefinition Width="200"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Grid.Row="0">Nom :</Label>
+                                <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Consignee_name, Mode=TwoWay}" Margin="0,0,-46,0" HorizontalAlignment="Right" Width="242"></TextBox>
+                                <Label Grid.Column="0" Grid.Row="1">Adresse 1 :</Label>
+                                <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Consignee_address1, Mode=TwoWay}" Margin="0,0,-46,0" HorizontalAlignment="Right" Width="242"></TextBox>
+                                <Label Grid.Column="0" Grid.Row="2">Adresse 2 :</Label>
+                                <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Consignee_address2, Mode=TwoWay}" Margin="0,0,-46,0" HorizontalAlignment="Right" Width="242"></TextBox>
+                                <Label Grid.Column="0" Grid.Row="3">Adresse 3 :</Label>
+                                <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Consignee_address3, Mode=TwoWay}" Margin="0,0,-46,0" HorizontalAlignment="Right" Width="242"></TextBox>
+                                <Label Grid.Column="0" Grid.Row="4">Adresse 4 :</Label>
+                                <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding Consignee_address4, Mode=TwoWay}" Margin="0,0,-46,0" HorizontalAlignment="Right" Width="242"></TextBox>
 
 
-                        </Grid>
+                            </Grid>
 
-                    </GroupBox>
-                    <GroupBox Header="Recap Marchandise" Width="350" Height="100">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="30"></RowDefinition>
-                                <RowDefinition Height="30"></RowDefinition>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="90"></ColumnDefinition>
-                                <ColumnDefinition Width="120"></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
+                        </GroupBox>
+                        <GroupBox Header="Recap Marchandise" Width="350" Height="100">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30"></RowDefinition>
+                                    <RowDefinition Height="30"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="90"></ColumnDefinition>
+                                    <ColumnDefinition Width="120"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
 
-                            <Label Grid.Column="0" Grid.Row="0">Nbre Packages :</Label>
-                            <TextBox Grid.Column="1" Grid.Row="0" Name="txtBLNbrPackages"  ></TextBox>
-                            <Label Grid.Column="0" Grid.Row="1">Poids total :</Label>
-                            <TextBox Grid.Column="1" Grid.Row="1" Name="txtBLPoids" ></TextBox>
-                        </Grid>
-                    </GroupBox>
-                    <GroupBox  Header="Conteneur" Width="350" Height="300">
-                        <DataGrid Name="dtgCtr"   AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Num Conteneur" Binding="{Binding Ctn_reference, Mode=TwoWay}"></DataGridTextColumn>
-                                <DataGridTextColumn Header="Type" Width="Auto" Binding="{Binding Type_of_container, Mode=TwoWay}"></DataGridTextColumn>
-                                <DataGridTextColumn Header="Seal1" Width="auto" Binding="{Binding Marks1, Mode=TwoWay}"></DataGridTextColumn>
-                                <DataGridTextColumn Header="Seal2" Width="auto" Binding="{Binding Marks2, Mode=TwoWay}"></DataGridTextColumn>
-                                <DataGridTextColumn Header="Package" Width="Auto" Binding="{Binding Number_of_packages, Mode=TwoWay}"></DataGridTextColumn>
+                                <Label Grid.Column="0" Grid.Row="0">Nbre Packages :</Label>
+                                <TextBox Grid.Column="1" Grid.Row="0" Name="txtBLNbrPackages"  ></TextBox>
+                                <Label Grid.Column="0" Grid.Row="1">Poids total :</Label>
+                                <TextBox Grid.Column="1" Grid.Row="1" Name="txtBLPoids" ></TextBox>
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox  Header="Conteneur" Width="350" Height="300">
+                            <DataGrid Name="dtgCtr"   AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Num Conteneur" Binding="{Binding Ctn_reference, Mode=TwoWay}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Type" Width="Auto" Binding="{Binding Type_of_container, Mode=TwoWay}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Seal1" Width="auto" Binding="{Binding Marks1, Mode=TwoWay}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Seal2" Width="auto" Binding="{Binding Marks2, Mode=TwoWay}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Package" Width="Auto" Binding="{Binding Number_of_packages, Mode=TwoWay}"></DataGridTextColumn>
 
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </GroupBox>
-                    <GroupBox  Header="Marchandises" Width="350" Height="300">
-                        <DataGrid Name="dtgMchd" SelectionMode="Single"  AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" SelectionChanged="dtgMchd_SelectionChanged_1" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Type" Binding="{Binding Package_type_code,Mode=TwoWay}"></DataGridTextColumn>
-                                <DataGridTextColumn Header="Conteneur" Width="Auto" Binding="{Binding Ctn_reference}"></DataGridTextColumn>
-                                <DataGridTextColumn Header="nbr package" Width="Auto" Binding="{Binding Number_of_packages}"></DataGridTextColumn>
-                                <DataGridTextColumn Header="Shipping_marks" Width="auto" Binding="{Binding Shipping_marks}"></DataGridTextColumn>
-                                 
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </GroupBox>
-                    <GroupBox  Header="Details Marchandises" Width="750" Height="300">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="30"></RowDefinition>
-                                <RowDefinition Height="30"></RowDefinition>
-                                <RowDefinition Height="30"></RowDefinition>
-                                <RowDefinition Height="30"></RowDefinition>
-                                <RowDefinition Height="30"></RowDefinition>
-                                <RowDefinition Height="30"></RowDefinition>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="100"></ColumnDefinition>
-                                <ColumnDefinition Width="100"></ColumnDefinition>
-                                <ColumnDefinition Width="700"></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" Grid.Row="0">Type :</Label>
-                            <!--<TextBox Grid.Column="1" Grid.Row="0" Text="{Binding SelectedItem.Package_type_code, ElementName=dtgMchd}" ></TextBox>-->
-                            <ComboBox Name="cbGoodType" Grid.Column="1" Grid.Row="0" Text="{Binding SelectedItem.Package_type_code, ElementName=dtgMchd}">
-                                <ComboBoxItem>VEHICULE</ComboBoxItem>
-                                <ComboBoxItem>COLIS</ComboBoxItem>
-                            </ComboBox>
-                            <Label Grid.Column="0" Grid.Row="1">Description :</Label>
-                            <TextBox Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Text="{Binding SelectedItem.Goods_description, ElementName=dtgMchd}"></TextBox>
-                            <Label Grid.Column="0" Grid.Row="2">Nbr Colis :</Label>
-                            <TextBox Grid.Column="1" Grid.Row="2"  Text="{Binding SelectedItem.Number_of_packages, ElementName=dtgMchd}"></TextBox>
-                            <Label Grid.Column="0" Grid.Row="3">Shipping marks :</Label>
-                            <TextBox Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="3" Text="{Binding SelectedItem.Shipping_marks, ElementName=dtgMchd}"></TextBox>
-                            <!--<Button Grid.Row="4" Grid.Column="1" Name="btnGoodUpd" Click="btnGoodUpd_Click_1" >Modifier la Mchd</Button>-->
-                        </Grid>
-                    </GroupBox>
-                </WrapPanel>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </GroupBox>
+                        <GroupBox  Header="Marchandises" Width="350" Height="300">
+                            <DataGrid Name="dtgMchd" SelectionMode="Single"  AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical"  SelectionChanged="dtgMchd_SelectionChanged_1" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Type" Binding="{Binding Package_type_code,Mode=TwoWay}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Conteneur" Width="Auto" Binding="{Binding Ctn_reference}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="nbr package" Width="Auto" Binding="{Binding Number_of_packages}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Shipping_marks" Width="auto" Binding="{Binding Shipping_marks}"></DataGridTextColumn>
+
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </GroupBox>
+                        <GroupBox  Header="Details Marchandises" Width="780" Height="300">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30"></RowDefinition>
+                                    <RowDefinition Height="40"></RowDefinition>
+                                    <RowDefinition Height="30"></RowDefinition>
+                                    <RowDefinition Height="30"></RowDefinition>
+                                    <RowDefinition Height="30"></RowDefinition>
+                                    <RowDefinition Height="30"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="100"></ColumnDefinition>
+                                    <ColumnDefinition Width="100"></ColumnDefinition>
+                                    <ColumnDefinition Width="700"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Grid.Row="0">Type :</Label>
+                                <!--<TextBox Grid.Column="1" Grid.Row="0" Text="{Binding SelectedItem.Package_type_code, ElementName=dtgMchd}" ></TextBox>-->
+                                <ComboBox Name="cbGoodType" Grid.Column="1" Grid.Row="0" Text="{Binding SelectedItem.Package_type_code, ElementName=dtgMchd}">
+                                    <ComboBoxItem>VEHICULE</ComboBoxItem>
+                                    <ComboBoxItem>COLIS</ComboBoxItem>
+                                </ComboBox>
+                                <Label Grid.Column="0" Grid.Row="1">Description :</Label>
+                                <!--<TextBox Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1"   Text="{Binding SelectedItem.Goods_description, ElementName=dtgMchd}"></TextBox>-->
+                                <RichTextBox Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Name="rtb"  AcceptsReturn="False" MaxWidth="700"  HorizontalAlignment="Left" VerticalScrollBarVisibility="Auto" />
+
+                                <Label Grid.Column="0" Grid.Row="2">Nbr Colis :</Label>
+                                <TextBox Grid.Column="1" Grid.Row="2"  Text="{Binding SelectedItem.Number_of_packages, ElementName=dtgMchd}"></TextBox>
+                                <Label Grid.Column="0" Grid.Row="3">Shipping marks :</Label>
+                                <TextBox Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="3" Text="{Binding SelectedItem.Shipping_marks, ElementName=dtgMchd}"></TextBox>
+                                <Button Grid.Row="4" Grid.Column="1" Name="btnGoodUpd" Click="btnGoodUpd_Click_1" >Modifier la Mchd</Button>
+                            </Grid>
+                        </GroupBox>
+                    </WrapPanel>
+                </ScrollViewer>
             </GroupBox>
         </DockPanel>
     </DockPanel>

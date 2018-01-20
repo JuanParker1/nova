@@ -18298,6 +18298,10 @@ namespace VesselStopOverData
 		
 		private System.Nullable<int> _ID_QUOTATION;
 		
+		private System.Nullable<double> _JrVeh;
+		
+		private System.Nullable<int> _PoidsVeh;
+		
 		private EntitySet<LIGNE_PROFORMA> _LIGNE_PROFORMA;
 		
 		private EntitySet<LIGNE_AVOIR> _LIGNE_AVOIR;
@@ -18398,6 +18402,10 @@ namespace VesselStopOverData
     partial void OnREF_IDJEFChanged();
     partial void OnID_QUOTATIONChanging(System.Nullable<int> value);
     partial void OnID_QUOTATIONChanged();
+    partial void OnJrVehChanging(System.Nullable<double> value);
+    partial void OnJrVehChanged();
+    partial void OnPoidsVehChanging(System.Nullable<int> value);
+    partial void OnPoidsVehChanged();
     #endregion
 		
 		public ELEMENT_FACTURATION()
@@ -19135,6 +19143,46 @@ namespace VesselStopOverData
 					this._ID_QUOTATION = value;
 					this.SendPropertyChanged("ID_QUOTATION");
 					this.OnID_QUOTATIONChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_JrVeh", DbType="float")]
+		public System.Nullable<double> JrVeh
+		{
+			get
+			{
+				return this._JrVeh;
+			}
+			set
+			{
+				if ((this._JrVeh != value))
+				{
+					this.OnJrVehChanging(value);
+					this.SendPropertyChanging();
+					this._JrVeh = value;
+					this.SendPropertyChanged("JrVeh");
+					this.OnJrVehChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PoidsVeh", DbType="int")]
+		public System.Nullable<int> PoidsVeh
+		{
+			get
+			{
+				return this._PoidsVeh;
+			}
+			set
+			{
+				if ((this._PoidsVeh != value))
+				{
+					this.OnPoidsVehChanging(value);
+					this.SendPropertyChanging();
+					this._PoidsVeh = value;
+					this.SendPropertyChanged("PoidsVeh");
+					this.OnPoidsVehChanged();
 				}
 			}
 		}
@@ -40725,7 +40773,7 @@ namespace VesselStopOverData
 		
 		private string _StatutLP;
 		
-		private float _PUEF;
+		private double _PUEF;
 		
 		private float _QTEEF;
 		
@@ -40751,7 +40799,7 @@ namespace VesselStopOverData
     partial void OnCodeArticleChanged();
     partial void OnStatutLPChanging(string value);
     partial void OnStatutLPChanged();
-    partial void OnPUEFChanging(float value);
+    partial void OnPUEFChanging(double value);
     partial void OnPUEFChanged();
     partial void OnQTEEFChanging(float value);
     partial void OnQTEEFChanged();
@@ -40834,7 +40882,7 @@ namespace VesselStopOverData
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PUEF", DbType="float")]
-		public float PUEF
+		public double PUEF
 		{
 			get
 			{

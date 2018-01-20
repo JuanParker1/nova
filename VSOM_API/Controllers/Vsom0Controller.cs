@@ -1698,9 +1698,9 @@ namespace VSOM_API.Controllers
                 else
                 {
                     QuotationInvoice qi = new QuotationInvoice();
-                    qi.HT = details.Sum(e => e.Ht);
-                    qi.TVA = details.Sum(e => e.Tva);
-                    qi.MT = details.Sum(e => e.MT);
+                    //qi.HT = details.Sum(e => e.Ht);
+                    //qi.TVA = details.Sum(e => e.Tva);
+                    //qi.MT = details.Sum(e => e.MT);
                     qi.Lignes = details;
                     return Ok(qi);
                 }

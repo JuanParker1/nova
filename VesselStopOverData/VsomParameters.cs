@@ -1147,6 +1147,65 @@ namespace VesselStopOverData
                         Statut = elt.StatutEF
                     }).ToList<ElementFacturation>();
         }
+       /// <summary>
+       /// 
+       /// </summary>
+       /// <param name="statut"></param>
+       /// <param name="key"></param>
+       /// <returns></returns>
+        public List<ElementFacturation> GetElementFacturationByQuotation(string statut, int key)
+        {
+          var _v= (from elt in dcPar.GetTable<ELEMENT_FACTURATION>()
+                        where elt.ID_QUOTATION == key && elt.QTEEF != 0 && elt.PUEF != 0  select elt).ToList();
+
+            if (statut == "Proforma")
+            {
+                return (from elt in dcPar.GetTable<ELEMENT_FACTURATION>()
+                        where elt.ID_QUOTATION == key //&& elt.QTEEF != 0 && elt.PUEF != 0 
+                        //orderby elt.IdJEF, elt.LibEF ascending
+                        select new ElementFacturation
+                        {
+                            IdElt = elt.IdJEF,
+                            CodeArticle = elt.LIGNE_PRIX.CodeArticle.Value,
+                            LibArticle = elt.LibEF,
+                            Qte = elt.QTEEF.Value,
+                            Unite = elt.UnitEF,
+                            PrixUnitaire = elt.PUEF.Value,
+                            MontantHT = Math.Round(elt.PUEF.Value * elt.QTEEF.Value, 0, MidpointRounding.AwayFromZero),
+                            MontantTVA = Math.Round((elt.PUEF * elt.QTEEF * elt.TauxTVA / 100).Value, 0, MidpointRounding.AwayFromZero),
+                            MontantTTC = Math.Round((elt.PUEF * elt.QTEEF * (1 + elt.TauxTVA / 100)).Value, 0, MidpointRounding.AwayFromZero),
+                            IsProforma =  true ,
+                            IsFacture =  false,
+                            IsNew =  false,
+                            Statut = elt.StatutEF
+                        }).ToList<ElementFacturation>();
+            }
+
+            if (statut == "Proccessed")
+            {
+                return (from elt in dcPar.GetTable<ELEMENT_FACTURATION>()
+                        where elt.IdFD == key && elt.QTEEF != 0 && elt.PUEF != 0  
+                        orderby elt.IdJEF, elt.LibEF ascending
+                        select new ElementFacturation
+                        {
+                            IdElt = elt.IdJEF,
+                            CodeArticle = elt.LIGNE_PRIX.CodeArticle.Value,
+                            LibArticle = elt.LibEF,
+                            Qte = elt.QTEEF.Value,
+                            Unite = elt.UnitEF,
+                            PrixUnitaire = elt.PUEF.Value,
+                            MontantHT = Math.Round(elt.PUEF.Value * elt.QTEEF.Value, 0, MidpointRounding.AwayFromZero),
+                            MontantTVA = Math.Round((elt.PUEF * elt.QTEEF * elt.TauxTVA / 100).Value, 0, MidpointRounding.AwayFromZero),
+                            MontantTTC = Math.Round((elt.PUEF * elt.QTEEF * (1 + elt.TauxTVA / 100)).Value, 0, MidpointRounding.AwayFromZero),
+                            IsProforma = elt.LIGNE_PROFORMA.Count != 0 ? true : false,
+                            IsFacture = elt.IdFD != null ? true : false,
+                            IsNew = (elt.LIGNE_PROFORMA.Count == 0 && elt.IdFD == null) ? true : false,
+                            Statut = elt.StatutEF
+                        }).ToList<ElementFacturation>();
+            }
+
+            return null;
+        }
         public List<ElementFacturation> GetElementFacturationBLFree(int idBL)
         {
             return (from elt in dcPar.GetTable<ELEMENT_FACTURATION>()
@@ -1595,6 +1654,12 @@ namespace VesselStopOverData
                     select elt).ToList<ELEMENT_FACTURATION>();
         }
 
+        public List<ELEMENT_FACTURATION> GetEltSejourVehEnCours( int idVeh)
+        {
+            return (from elt in dcPar.GetTable<ELEMENT_FACTURATION>()
+                    where elt.IdVeh == idVeh && elt.StatutEF == "En cours" && elt.CodeArticle == "1801"
+                    select elt).ToList<ELEMENT_FACTURATION>();
+        }
         public List<ELEMENT_FACTURATION> GetElementDITByIdCtr(int idCtr)
         {
             return (from elt in dcPar.GetTable<ELEMENT_FACTURATION>()
@@ -2143,7 +2208,7 @@ namespace VesselStopOverData
         public List<AVOIR> GetAvoirsCurrentYear()
         {
             return (from av in dcPar.GetTable<AVOIR>()
-                    where av.DCFA.Value.Year == DateTime.Today.Year
+                    where av.DCFA.Value >=DateTime.Today.AddDays(-180)
                     orderby av.IdFA descending
                     select av).ToList<AVOIR>();
         }
@@ -2171,6 +2236,12 @@ namespace VesselStopOverData
                     select av).SingleOrDefault<AVOIR>();
         }
 
+        public List<AVOIR> GetAvoirByIdDoc(int idAvoir)
+        {
+            return (from av in dcPar.GetTable<AVOIR>()
+                    where av.IdDocSAP == idAvoir
+                    select av).ToList<AVOIR>();
+        }
         #endregion
 
         #region Facture

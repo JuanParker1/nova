@@ -38,17 +38,25 @@ namespace VesselStopOverPresentation.Remote
         {
             _view = new RMVSOM_Marchal().LoadQuotationForm(_view);
             this.DataContext = _view;
+            List<ElementFacturation> lef = null;
+
             if (_view.Statut == "Pending") { btnEnregistrer.IsEnabled = true; BtnFacturer.IsEnabled = false; btnPrint.IsEnabled = false; btnAnnuler.IsEnabled = true; txtClientFature.IsEnabled = false; }
 
             if (_view.Statut == "Proforma") { btnEnregistrer.IsEnabled = false; BtnFacturer.IsEnabled = true; btnPrint.IsEnabled = false;
-                btnAnnuler.IsEnabled = false; txtClientFature.IsEnabled = true; 
-            //TODO: recharger les element de facturation liée a cette quotation
+                btnAnnuler.IsEnabled = true; txtClientFature.IsEnabled = true; 
+                //TODO: recharger les element de facturation liée a cette quotation 
+                lef = new VSOMAccessors().GetElementFacturationByQuotation("Proforma", _view.NumQuotation);
+            
             }
             if (_view.Statut == "Proccessed") { btnEnregistrer.IsEnabled = false; BtnFacturer.IsEnabled = false; btnPrint.IsEnabled = true;
                 btnAnnuler.IsEnabled = false; txtClientFature.IsEnabled = false;
-                //TODO: recharger les element de facturation liée a cette quotation
-
+                //TODO: recharger les element de facturation liée a cette quotation 
+                lef = new VSOMAccessors().GetElementFacturationByQuotation("Proccessed",_view.Facture);
+                txtrefFacture.Text = _view.Facture.ToString();
             }
+
+            dataGridEltsFact.ItemsSource = null;
+            dataGridEltsFact.ItemsSource = lef;
         }
         private void btnEnregistrer_Click_1(object sender, RoutedEventArgs e)
         {

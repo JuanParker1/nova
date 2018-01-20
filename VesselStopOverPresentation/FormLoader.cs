@@ -1239,6 +1239,7 @@ namespace VesselStopOverPresentation
             form.btnTransfEmpl.IsEnabled = false;
             form.btnSortir.IsEnabled = false;
             form.btnEnGC.IsEnabled = false;
+            form.btnRollBackStationnement.IsEnabled = false;
 
             if (veh.StatVeh == "Non initié")
             {
@@ -1272,21 +1273,25 @@ namespace VesselStopOverPresentation
                 form.btnTransfEmpl.IsEnabled = true;
                 form.btnCuber.IsEnabled = true;
                 form.btnConstatSinistre.IsEnabled = true;
+                form.btnRollBackStationnement.IsEnabled = true;
             }
             else if (veh.StatVeh == "Enlèvement")
             {
                 form.btnTransfEmpl.IsEnabled = true;
                 form.btnConstatSinistre.IsEnabled = true;
+                form.btnRollBackStationnement.IsEnabled = true;
             }
             else if (veh.StatVeh == "Livraison")
             {
                 form.btnTransfEmpl.IsEnabled = true;
                 form.btnTransfertZoneSortie.IsEnabled = true;
                 form.btnConstatSinistre.IsEnabled = true;
+                form.btnRollBackStationnement.IsEnabled = true;
             }
             else if (veh.StatVeh == "Sortie en cours" || veh.StatVeh == "Zone Sortie")
             {
                 form.btnSortir.IsEnabled = true;
+                form.btnRollBackStationnement.IsEnabled = true;
             }
             else if (veh.StatVeh == "Livré")
             {

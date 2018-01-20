@@ -138,6 +138,38 @@ namespace VesselStopOverPresentation
             }
             catch (Exception ex)
             {
+                MessageBox.Show(ex.Message, "Echec de l'opération !", MessageBoxButton.OK, MessageBoxImage.Error);
+            
+            }
+        }
+
+        private void txtRechercher_KeyDown_1(object sender, KeyEventArgs e)
+        {
+
+        }
+
+        private void txtRechercher_PreviewKeyDown_1(object sender, KeyEventArgs e)
+        {
+            try
+            {
+                //   VSOMAccessors vsomAcc = new VSOMAccessors();
+                if (e.Key == Key.Enter)
+                {
+                    if (listRechercher.SelectedIndex == 3)
+                    {
+                        avoirs = vsomAcc.GetAvoirByIdDoc(int.Parse(txtRechercher.Text.Trim()));
+                        dataGrid.ItemsSource = avoirs;
+                        lblStatut.Content = avoirs.Count + " Avoir(s)";
+                    }
+                }
+            }
+            catch (ApplicationException ex)
+            {
+                MessageBox.Show(ex.Message, "Echec de l'opération !", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Echec de l'opération !", MessageBoxButton.OK, MessageBoxImage.Error);
 
             }
         }        

@@ -71,7 +71,12 @@
                 <Label Grid.Row="0" Grid.Column="4">Nature</Label>
                 <TextBox Grid.Row="0" Grid.Column="5" Text="{Binding Bol_nature, Mode=TwoWay}" ></TextBox>
                 <Label Grid.Row="0" Grid.Column="6">Localisation</Label>
-                <TextBox Grid.Row="0" Grid.Column="7" Text="{Binding Location_code, Mode=TwoWay}" ></TextBox>
+                <!--<TextBox Grid.Row="0" Grid.Column="7" Text="{Binding Location_code, Mode=TwoWay}" ></TextBox>-->
+                <ComboBox  Name="cbNature" Grid.Column="7" Grid.Row="0" Text="{Binding Location_code, Mode=TwoWay}">
+                    <ComboBoxItem>DIT</ComboBoxItem>
+                    <ComboBoxItem>SOCOMAR_AUTOS</ComboBoxItem>
+                    <ComboBoxItem>SOCOMAR_ N_9</ComboBoxItem>
+                </ComboBox>
                 <!--<Button Grid.Column="8" Grid.Row="0" HorizontalAlignment="Right" Width="116">Ajouter un BL</Button>-->
                 <Button Grid.Column="9" Grid.Row="0" HorizontalAlignment="Right" Name="btnUpdatBOL" Width="116" Click="btnUpdatBOL_Click_1">Modifier le BL</Button>
             </Grid>
@@ -94,7 +99,8 @@
                 </DataGrid>
             </GroupBox>
             <GroupBox DockPanel.Dock="Right" Header="" Background="#FAFAFA" BorderThickness="0"  >
-                <WrapPanel FlowDirection="LeftToRight" >
+                <ScrollViewer Margin="0,0,0,-12" >
+                <WrapPanel FlowDirection="LeftToRight"  Width="auto" Height="auto">
                     <GroupBox  Header="Shipper" Width="350" Height="200">
                         <Grid Name="grid_shipper">
                             <Grid.RowDefinitions>
@@ -209,7 +215,7 @@
                         </DataGrid>
                     </GroupBox>
                     <GroupBox  Header="Marchandises" Width="350" Height="300">
-                        <DataGrid Name="dtgMchd" SelectionMode="Single"  AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical" SelectionChanged="dtgMchd_SelectionChanged_1" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader">
+                        <DataGrid Name="dtgMchd" SelectionMode="Single"  AutoGenerateColumns="False" AlternatingRowBackground="#FAFAFA" GridLinesVisibility="Vertical"  SelectionChanged="dtgMchd_SelectionChanged_1" VerticalGridLinesBrush="Silver" RowHeight="20" BorderThickness="2" ClipboardCopyMode="IncludeHeader">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Type" Binding="{Binding Package_type_code,Mode=TwoWay}"></DataGridTextColumn>
                                 <DataGridTextColumn Header="Conteneur" Width="Auto" Binding="{Binding Ctn_reference}"></DataGridTextColumn>
@@ -219,11 +225,11 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </GroupBox>
-                    <GroupBox  Header="Details Marchandises" Width="750" Height="300">
+                    <GroupBox  Header="Details Marchandises" Width="780" Height="300">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="30"></RowDefinition>
-                                <RowDefinition Height="30"></RowDefinition>
+                                <RowDefinition Height="35"></RowDefinition>
                                 <RowDefinition Height="30"></RowDefinition>
                                 <RowDefinition Height="30"></RowDefinition>
                                 <RowDefinition Height="30"></RowDefinition>
@@ -241,8 +247,10 @@
                                 <ComboBoxItem>COLIS</ComboBoxItem>
                             </ComboBox>
                             <Label Grid.Column="0" Grid.Row="1">Description :</Label>
-                            <TextBox Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Text="{Binding SelectedItem.Goods_description, ElementName=dtgMchd}"></TextBox>
-                            <Label Grid.Column="0" Grid.Row="2">Nbr Colis :</Label>
+                            <!--<TextBox Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1"   Text="{Binding SelectedItem.Goods_description, ElementName=dtgMchd}"></TextBox>-->
+                                <RichTextBox Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Name="rtb"  AcceptsReturn="False" MaxWidth="700"  HorizontalAlignment="Left" VerticalScrollBarVisibility="Auto" />
+
+                                <Label Grid.Column="0" Grid.Row="2">Nbr Colis :</Label>
                             <TextBox Grid.Column="1" Grid.Row="2"  Text="{Binding SelectedItem.Number_of_packages, ElementName=dtgMchd}"></TextBox>
                             <Label Grid.Column="0" Grid.Row="3">Shipping marks :</Label>
                             <TextBox Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="3" Text="{Binding SelectedItem.Shipping_marks, ElementName=dtgMchd}"></TextBox>
@@ -250,7 +258,8 @@
                         </Grid>
                     </GroupBox>
                 </WrapPanel>
-            </GroupBox>
+                </ScrollViewer>
+                </GroupBox>
         </DockPanel>
     </DockPanel>
 </Window>

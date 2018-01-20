@@ -54,6 +54,9 @@ namespace VSOM_API
         public Nullable<int> IdFSoc { get; set; }
         public string CCARTICLE1 { get; set; }
         public Nullable<int> REF_IDJEF { get; set; }
+        public Nullable<int> ID_QUOTATION { get; set; }
+        public Nullable<int> JrVeh { get; set; }
+        public Nullable<int> PoidsVeh { get; set; }
     
         public virtual CONNAISSEMENT CONNAISSEMENT { get; set; }
         public virtual LIGNE_PRIX LIGNE_PRIX { get; set; }
